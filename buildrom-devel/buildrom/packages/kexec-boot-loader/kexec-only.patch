@@ -1,0 +1,115 @@
+Index: kexec-boot-loader.old/Makefile
+===================================================================
+--- kexec-boot-loader.old.orig/Makefile	2006-05-31 10:52:30.000000000 -0600
++++ kexec-boot-loader.old/Makefile	2006-07-24 17:36:40.000000000 -0600
+@@ -11,7 +11,7 @@
+ 
+ UCLIBCLIBS = $(UCLIBCPATH)/usr/lib/crt1.o $(UCLIBCPATH)/usr/lib/libc.a
+ 
+-FILES = main.o mount.o ui.o nand.o usb.o $(KEXEC_FILES)
++FILES = main.o $(KEXEC_FILES)
+ 
+ olpc-boot-loader: $(FILES)
+ 	$(CC) -Xlinker $(LDFLAGS) -nostdlib -o $@ $(FILES) $(UCLIBCLIBS)
+Index: kexec-boot-loader.old/main.c
+===================================================================
+--- kexec-boot-loader.old.orig/main.c	2006-05-31 14:45:18.000000000 -0600
++++ kexec-boot-loader.old/main.c	2006-07-24 17:37:05.000000000 -0600
+@@ -1,67 +1,49 @@
+ #include <stdio.h>
+ #include <sys/mount.h>
++#include <sys/stat.h>
++#include <fcntl.h>
++#include <unistd.h>
+ #include <errno.h>
+ #include "ui.h"
+ #include "mount.h"
+ 
+-
+-static char def_kernel_file[] = "bzImage";
+-char *kernel_file = def_kernel_file;
+-
+-static char def_kernel_cmdline[] = "root=/dev/ram rw";
+-char *kernel_cmdline = def_kernel_cmdline;
+-
+-char *initrd_file = NULL;
+-
+-char mntpoint[] = "/mntpoint";
+-
+-int mount_proc(void)
+-{
+-	return do_mount(0, "/proc", "proc");
++void no(char *err, char *what) {
++	print("no %s, %s\n", err, what);
++	exit(1);
+ }
+ 
+-int main (void)
++int stat_file(char *file)
+ {
+-	int ret;
++        struct stat st;
++        int ret, saved_errno;
+ 
+-	print("Kexec boot loader\n\n");
++        ret = stat(file, &st);
++        if (ret) {
++                saved_errno = errno;
++                print("failure to stat file at %s - errno=%d\n",
++                        file, saved_errno);
++        }
++        return ret;
++}
+ 
+-	mount_proc();
+ 
+-	create_mountpath(mntpoint);
++int main (int argc, char *argv[])
++{
++	int ret;
+ 
+-	do {
+-		ret = startup();
+-	} while (1);
++	char *kernel = argv[1], *cmd = argv[2], *init = argv[3];
+ 
+-	/* never return, we only get outside of this by booting
+-	 * another kernel.
+-	 */
+-}
++	printf("argc is %d, argv[1] %s, argv[2] %s, argv[3] %s\n", argc, argv[1], argv[2], argv[3]);
+ 
+-int startup(void)
+-{
+-	int opt;
+-	char c;
++	if (stat_file(kernel))
++		no("kernel", kernel);
+ 
+-	print("Select option:\n");
++ 	ret = my_load(cmd, kernel, init);
++	if (ret)
++		no("load", "failed");
+ 
+-	print("1 - boot from NAND flash (JFFS2)\n");
+-	print("2 - boot from USB device (EXT2)\n");
++	ret = my_exec();
++	if (ret)
++		no("exec", "failed");
+ 
+-	scanf("%1d", &opt);
+-
+-	select_options();
+-
+-	switch(opt) {
+-	case 1:
+-		return load_exec_nand_image(kernel_file, kernel_cmdline,
+-			initrd_file);
+-	case 2:
+-		return load_exec_usb_image(kernel_file, kernel_cmdline,
+-			initrd_file);
+-	default:
+-		print("unsupported option!\n");
+-		return 1;
+-	}
+ }

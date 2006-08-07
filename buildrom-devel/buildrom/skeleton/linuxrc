@@ -1,0 +1,66 @@
+#!/bin/sh
+
+CMDLINE="root=/dev/sda1 console=ttyS0,115200 console=tty0 rootdelay=10 rw"
+KERNEL="/bzImage"
+INITRD=""
+
+# Any of the above can be surplanted by /boot.conf
+
+if [ -f /boot.conf ]; then
+	. /boot.conf
+fi
+
+# This will load a bzImage from the USB key
+
+load_usb() {
+	mkdir /key
+
+	mount /dev/sda1 /key || {
+		echo "ERROR: Couldn't mount the USB key."
+		return
+	}
+
+	if [ ! -f /key$KERNEL ]; then
+		echo "ERROR: /key$KERNEL doesn't exist."
+		return
+	fi
+
+	/sbin/kbl-kexec /key$KERNEL "$CMDLINE" $INITRD
+	echo "ERROR: can't run kbl-kexec /key$KERNEL $CMDLINE $INITRD"
+}
+
+mkdir /proc
+mount -t proc proc /proc
+
+# Makedevs returns seemingly nasty error messages, even though the
+# files are still created (we're missing something in the minimal kernel 
+# that causes chown to return ENOSYS).
+# End result - we ignore the error messages
+
+/sbin/makedevs /dev < device.txt > /dev/null 2>&1
+
+# FIXME - bad!
+
+cd /bin
+./bootmenu
+RET=$?
+cd /
+clear
+
+# Handle the return values.  Modes 0 - 2 shouldn't return
+# If they are successful.  If they aren't successful, then 
+# we drop into a shell at the end.  Mode 3 puts us into the
+# shell regardless.
+
+if [ $RET -eq 0 ]; then
+	echo "ERROR: Wired mode isn't supported right now."
+elif [ $RET -eq 1 ]; then
+	echo "ERROR: Wireless mode isn't supported right now."
+elif [ $RET -eq 2 ]; then
+	load_usb
+elif [ $RET -eq -1 ]; then
+	echo "ERROR: The bootmenu was not successful."
+fi
+
+echo "NOTICE: Starting the shell..."
+exec /bin/ash

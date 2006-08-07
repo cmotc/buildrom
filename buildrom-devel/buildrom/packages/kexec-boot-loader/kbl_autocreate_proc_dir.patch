@@ -1,0 +1,15 @@
+diff -ur kexec-boot-loader.orig/main.c kexec-boot-loader/main.c
+--- kexec-boot-loader.orig/main.c	2006-05-31 15:45:18.000000000 -0500
++++ kexec-boot-loader/main.c	2006-07-09 15:22:02.000000000 -0500
+@@ -16,7 +16,9 @@
+ char mntpoint[] = "/mntpoint";
+ 
+ int mount_proc(void)
+-{
++{	
++	mode_t mode = 555;
++	mkdir("/proc",mode);
+ 	return do_mount(0, "/proc", "proc");
+ }
+ 
+

@@ -1,0 +1,13 @@
+Index: wireless_tools.28/Makefile
+===================================================================
+--- wireless_tools.28.orig/Makefile	2005-09-02 15:26:05.000000000 -0600
++++ wireless_tools.28/Makefile	2006-06-29 16:24:06.000000000 -0600
+@@ -135,7 +135,7 @@
+ 
+ # Compilation of the dynamic library
+ $(DYNAMIC): $(OBJS:.o=.so)
+-	$(CC) -shared -o $@ -Wl,-soname,$@ $(STRIPFLAGS) $(LIBS) -lc $^
++	$(CC) -shared -o $@ $(LDFLAGS) -Wl,-soname,$@ $(STRIPFLAGS) $(LIBS) -lc $^
+ 
+ # Compilation of the static library
+ $(STATIC): $(OBJS:.o=.so)

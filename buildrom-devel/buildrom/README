@@ -1,0 +1,27 @@
+Buildrom README
+
+I bend a grateful knee to my good friend Erik Andersen, and his buildroot
+system from which most of the ideas for this were derived.
+
+Introduction
+
+This is a simple makefile system that designed to build a ROM image for
+the OLPC board.  The intention is to build a minimal kernel, an initrd and
+the ROM all together with one step rather then the 6 or 8 individual steps
+one would take now.
+
+HOWTO
+
+To run the system, type 'make'.  You'll need a connection to the net to
+suck down tarballs for the individual packages.  
+
+Currently - the system will build the following packages (in order):
+
+uclibc
+busybox
+wireless-tools
+kernel
+mkelfImage
+
+The end result is a .elf file in the deploy/ directory, suitable for adding
+as the payload of a LinuxBIOS build.
