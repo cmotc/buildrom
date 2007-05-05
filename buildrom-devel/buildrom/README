@@ -5,23 +5,64 @@ system from which most of the ideas for this were derived.
 
 Introduction
 
-This is a simple makefile system that designed to build a ROM image for
-the OLPC board.  The intention is to build a minimal kernel, an initrd and
-the ROM all together with one step rather then the 6 or 8 individual steps
-one would take now.
+This is a simple makefile system that designed to build a ROM image for 
+LinuxBIOS based systems.  This system allows one to choose one of several
+different payloads for a variety of platforms.  The intention of buildROM
+is to build everythign together with one step, rather then the 6 or 8 
+individual steps that it would hae taken previously.
 
-HOWTO
+Payloads
+
+BuildROM supports 7 different payload configurations:
+
+* Custom - Allows you to specify an external ELF file
+* Etherboot
+* FILO
+* Kernel - build a kernel payload (just the kernel - no initramfs)
+* LAB - Build a kernel plus a Linux As Bootloader initramfs attached to it
+* OFW - Open Firmware 
+* Memtest - Memtest86
+
+Configuration
+
+To configure the system, type 'make oldconfig', and answer the questions.
+
+CONFIG_VERBOSE - show build output on stdout instead of a log file
+CONFIG_ADVANCED - select some advanced options:
+  CONFIG_USE_LZMA - Compress payloads with LZMA (requires LB support)
+  CONFIG_LB_USE_BUILD - Say 'y' here to specify an existing build 
+                        directory for LinuxBIOS.  This is useful if you
+			want build out of your development tree.  
+  CONFIG_LB_BUILDDIR - Specify your remote LinuxBIOS build directory here
+
+Some of the payload options have their own configuration:
+
+Custom:
+  CONFIG_CUSTOM_PAYLOAD - specify a filename for the custom payload
+
+Kernel:
+  CONFIG_CMDLINE - Specify a command line to use for the kernel build
+
+LaB:
+  CONFIG_KBL_KEXEC_ONLY - Build only the Kexec part of the KBL
+  CONFIG_KBL - Build Marcelo Toscatti's kernel boot loader
+  CONFIG_BUSYBOX - Build busybox
+  CONFIG_BOOTMENU - Build the OLPC bootmenu
+  CONFIG_OLPCFLASH - Build the 'olpcflash' utility
+
+memtest:
+  CONFIG_MEMTEST_SERIAL - say 'y' here to enable serial output for memtest
+
+etherboot:
+  CONFIG_ETHERBOOT_DRIVER - specify the name of the NIC driver for etherboot,
+  i.e 'natsemi'
+
+
+Building the ROM
 
 To run the system, type 'make'.  You'll need a connection to the net to
 suck down tarballs for the individual packages.  
 
-Currently - the system will build the following packages (in order):
+The end result is a .rom file in the deploy/ directory.
 
-uclibc
-busybox
-wireless-tools
-kernel
-mkelfImage
 
-The end result is a .elf file in the deploy/ directory, suitable for adding
-as the payload of a LinuxBIOS build.

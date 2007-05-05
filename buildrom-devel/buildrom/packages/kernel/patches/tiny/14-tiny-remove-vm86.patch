@@ -1,0 +1,162 @@
+
+Make vm86 support optional
+
+
+ tiny-mpm/arch/i386/kernel/Makefile   |    3 ++-
+ tiny-mpm/arch/i386/kernel/entry.S    |    6 +++++-
+ tiny-mpm/arch/i386/kernel/process.c  |    3 ++-
+ tiny-mpm/arch/i386/kernel/sys_i386.c |    1 +
+ tiny-mpm/arch/i386/kernel/traps.c    |   17 ++++++++++++++++-
+ tiny-mpm/arch/i386/kernel/vm86.c     |    1 -
+ tiny-mpm/init/Kconfig                |   10 ++++++++++
+ tiny-mpm/kernel/sys.c                |    2 ++
+ 8 files changed, 38 insertions(+), 5 deletions(-)
+
+Index: git/arch/i386/kernel/entry.S
+===================================================================
+--- git.orig/arch/i386/kernel/entry.S	2006-10-23 07:35:33.000000000 -0600
++++ git/arch/i386/kernel/entry.S	2006-10-24 13:44:08.000000000 -0600
+@@ -458,15 +458,21 @@
+ 
+ work_notifysig:				# deal with pending signals and
+ 					# notify-resume requests
+-	testl $VM_MASK, EFLAGS(%esp)
+ 	movl %esp, %eax
++
++#ifdef CONFIG_VM86
++	testl $VM_MASK, EFLAGS(%esp)
+ 	jne work_notifysig_v86		# returning to kernel-space or
+ 					# vm86-space
++#endif
++
+ 	xorl %edx, %edx
+ 	call do_notify_resume
+ 	jmp resume_userspace_sig
+ 
+ 	ALIGN
++
++#ifdef CONFIG_VM86
+ work_notifysig_v86:
+ #ifdef CONFIG_VM86
+ 	pushl %ecx			# save ti_flags for do_notify_resume
+@@ -482,6 +488,8 @@
+ 
+ 	# perform syscall exit tracing
+ 	ALIGN
++#endif
++
+ syscall_trace_entry:
+ 	movl $-ENOSYS,EAX(%esp)
+ 	movl %esp, %eax
+Index: git/arch/i386/kernel/process.c
+===================================================================
+--- git.orig/arch/i386/kernel/process.c	2006-10-23 07:35:33.000000000 -0600
++++ git/arch/i386/kernel/process.c	2006-10-24 13:44:08.000000000 -0600
+@@ -402,7 +402,9 @@
+ void release_thread(struct task_struct *dead_task)
+ {
+ 	BUG_ON(dead_task->mm);
++#ifdef CONFIG_VM86
+ 	release_vm86_irqs(dead_task);
++#endif
+ }
+ 
+ /*
+Index: git/arch/i386/kernel/traps.c
+===================================================================
+--- git.orig/arch/i386/kernel/traps.c	2006-10-23 07:35:33.000000000 -0600
++++ git/arch/i386/kernel/traps.c	2006-10-24 13:44:08.000000000 -0600
+@@ -547,8 +547,10 @@
+ 	tsk->thread.trap_no = trapnr;
+ 
+ 	if (regs->eflags & VM_MASK) {
++#ifdef CONFIG_VM86
+ 		if (vm86)
+ 			goto vm86_trap;
++#endif
+ 		goto trap_signal;
+ 	}
+ 
+@@ -569,11 +571,13 @@
+ 		return;
+ 	}
+ 
++#ifdef CONFIG_VM86
+ 	vm86_trap: {
+ 		int ret = handle_vm86_trap((struct kernel_vm86_regs *) regs, error_code, trapnr);
+ 		if (ret) goto trap_signal;
+ 		return;
+ 	}
++#endif
+ }
+ 
+ #define DO_ERROR(trapnr, signr, str, name) \
+@@ -628,6 +632,7 @@
+ #endif
+ DO_VM86_ERROR( 4, SIGSEGV, "overflow", overflow)
+ DO_VM86_ERROR( 5, SIGSEGV, "bounds", bounds)
++
+ DO_ERROR_INFO( 6, SIGILL,  "invalid opcode", invalid_op, ILL_ILLOPN, regs->eip)
+ DO_ERROR( 9, SIGFPE,  "coprocessor segment overrun", coprocessor_segment_overrun)
+ DO_ERROR(10, SIGSEGV, "invalid TSS", invalid_TSS)
+@@ -673,8 +678,10 @@
+ 	current->thread.error_code = error_code;
+ 	current->thread.trap_no = 13;
+ 
++#ifdef CONFIG_VM86
+ 	if (regs->eflags & VM_MASK)
+ 		goto gp_in_vm86;
++#endif
+ 
+ 	if (!user_mode(regs))
+ 		goto gp_in_kernel;
+@@ -684,10 +691,12 @@
+ 	force_sig(SIGSEGV, current);
+ 	return;
+ 
++#ifdef CONFIG_VM86
+ gp_in_vm86:
+ 	local_irq_enable();
+ 	handle_vm86_fault((struct kernel_vm86_regs *) regs, error_code);
+ 	return;
++#endif
+ 
+ gp_in_kernel:
+ 	if (!fixup_exception(regs)) {
+@@ -893,8 +902,10 @@
+ 			goto clear_dr7;
+ 	}
+ 
++#ifdef CONFIG_VM86
+ 	if (regs->eflags & VM_MASK)
+ 		goto debug_vm86;
++#endif
+ 
+ 	/* Save debug status register where ptrace can see it */
+ 	tsk->thread.debugreg[6] = condition;
+@@ -923,9 +934,11 @@
+ 	set_debugreg(0, 7);
+ 	return;
+ 
++#ifdef CONFIG_VM86
+ debug_vm86:
+ 	handle_vm86_trap((struct kernel_vm86_regs *) regs, error_code, 1);
+ 	return;
++#endif
+ 
+ clear_TF_reenable:
+ 	set_tsk_thread_flag(tsk, TIF_SINGLESTEP);
+@@ -1063,11 +1076,13 @@
+ 		 * Handle strange cache flush from user space exception
+ 		 * in all other cases.  This is undocumented behaviour.
+ 		 */
++#ifdef CONFIG_VM86
+ 		if (regs->eflags & VM_MASK) {
+ 			handle_vm86_fault((struct kernel_vm86_regs *)regs,
+ 					  error_code);
+ 			return;
+ 		}
++#endif
+ 		current->thread.trap_no = 19;
+ 		current->thread.error_code = error_code;
+ 		die_if_kernel("cache flush denied", regs, error_code);

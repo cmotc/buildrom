@@ -1,0 +1,21 @@
+Index: svn/cpu/x86/Linux/Makefile
+===================================================================
+--- svn.orig/cpu/x86/Linux/Makefile	2007-02-15 14:26:55.000000000 -0700
++++ svn/cpu/x86/Linux/Makefile	2007-02-15 14:52:41.000000000 -0700
+@@ -23,14 +23,14 @@
+ # Use x86forth when you need to compile new dictionaries that will
+ # run on x86 systems.
+ forth: ${OBJS}
+-	${CC} -o -m32 $@ ${OBJS}
++	${CC} -m32 -o $@ ${OBJS}
+ 	@ln -sf forth x86forth
+ 
+ # Compile with -O0 because with GCC4, higher optimization levels cause the
+ # functions to be reordered so the "inflate" entry point is no longer at
+ # the beginning.
+ inflate.o: ${ZIPDIR}/inflate.c
+-	${CC} -c -m32 -O0 -fpic $< -o $@
++	${CC} -m32 -c -O0 -fpic $< -o $@
+ 
+ ../build/inflate.bin: inflate.o
+ 	objcopy -O binary $< $@

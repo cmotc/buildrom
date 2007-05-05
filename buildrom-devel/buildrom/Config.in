@@ -1,0 +1,57 @@
+# The base kbuild file for buildrom
+
+mainmenu "Buildrom Configuration"
+
+config HAVE_DOT_CONFIG
+	bool
+	default y
+
+config VERBOSE
+	bool "See the build output on stdout"
+	default n
+	help
+	  See the entire build output on stdout.  Otherwise, it will
+	  be saved off in a series of logs
+
+config ADVANCED
+	bool "Enable advanced operations"
+	default n
+	help
+	  Allow yourself to do advanced developer things
+
+menu "LinuxBIOS configuration"
+
+config USE_LZMA
+	bool "Enable LZMA compression"
+	depends !PAYLOAD_OFW
+	default y
+	help
+	  Allow LZMA compression for the payload.  This doesn't work
+	  for OFW.
+
+
+config LB_USE_BUILD
+	bool "Specify a LinuxBIOS build dir"
+	depends ADVANCED
+	default n
+	help
+	  Say 'y' here to specify an existing directory to build 
+	  LinuxBIOS from - this is useful if you have local development
+	  tree you wish to work from
+
+config LB_BUILDDIR
+	string "LinuxBIOS build directory"
+	depends LB_USE_BUILD
+
+endmenu
+
+config PLATFORM
+	bool
+	default n
+
+config PAYLOAD
+	bool
+	default n
+
+source config/platforms/Config.in
+source config/payloads/Config.in

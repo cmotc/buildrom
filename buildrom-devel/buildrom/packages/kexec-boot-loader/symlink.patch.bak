@@ -1,0 +1,74 @@
+Index: kexec-boot-loader/main.c
+===================================================================
+--- kexec-boot-loader.orig/main.c	2006-07-25 10:37:59.000000000 -0600
++++ kexec-boot-loader/main.c	2006-07-25 11:10:34.000000000 -0600
+@@ -11,6 +11,36 @@
+ 	print("no %s, %s\n", err, what);
+ 	exit(1);
+ }
++			       					
++static int xreadlink(const char *base, const char *file, char *result,
++                     int len) 
++{	
++        struct stat s;
++        char *buf;
++        char *f = alloca(strlen(base) + strlen(file) + 5);
++	
++        if (file[0] == '/')
++		sprintf(f, "%s/.%s", base, file);
++        else
++		sprintf(f, "%s/%s", base, file);
++	
++        if (lstat(f, &s))
++                return -1;
++
++        if (S_ISLNK(s.st_mode)) {
++                buf = alloca(len + 1);
++                memset(buf, 0, len);
++
++                if (readlink(f, buf, len) == -1)
++                        return -1;
++
++                return xreadlink(base, buf, result, len);
++	}
++	
++        strncpy(result, f, len);
++        return 0;
++}
++
+ 
+ int stat_file(char *file)
+ {
+@@ -30,15 +60,27 @@
+ int main (int argc, char *argv[])
+ {
+ 	int ret;
++	char *kernel, *cmd = NULL, *init = NULL;
++	char rkernel[128];
+ 
+-	char *kernel = argv[1], *cmd = argv[2], *init = argv[3];
++	if (argc < 2) 
++		no("few", "arguments");
++       
++	kernel = argv[1];
++
++	if (argc >= 3)
++		cmd = argv[2];
++	
++	if (argc >= 4)
++		init = argv[3];
+ 
+-	printf("argc is %d, argv[1] %s, argv[2] %s, argv[3] %s\n", argc, argv[1], argv[2], argv[3]);
++	if (xreadlink(dirname(kernel), kernel, rkernel, sizeof(rkernel)))
++	  no("readlink", kernel);
+ 
+-	if (stat_file(kernel))
+-		no("kernel", kernel);
++	if (stat_file(rkernel))
++		no("kernel", rkernel);
+ 
+- 	ret = my_load(cmd, kernel, init);
++ 	ret = my_load(cmd, rkernel, init);
+ 	if (ret)
+ 		no("load", "failed");
+ 

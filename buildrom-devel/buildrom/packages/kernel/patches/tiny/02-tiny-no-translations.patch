@@ -1,0 +1,132 @@
+From 324c218a9c6a24d897c1b585665b247d0d3b525e Mon Sep 17 00:00:00 2001
+From: Richard A. Smith <smithbone@gmail.com>
+Date: Tue, 18 Jul 2006 00:04:36 -0500
+Subject: [PATCH] Refresh the no-translations patch from linux-tiny
+
+Signed-off-by: Richard A. Smith <smithbone@gmail.com>
+---
+ drivers/char/consolemap.c |   71 +++++++++++++++++++++++++++++++++++++++++++++
+ drivers/char/vt.c         |    4 +++
+ init/Kconfig              |    7 ++++
+ 3 files changed, 82 insertions(+), 0 deletions(-)
+
+Index: git/drivers/char/consolemap.c
+===================================================================
+--- git.orig/drivers/char/consolemap.c	2006-10-23 07:35:33.000000000 -0600
++++ git/drivers/char/consolemap.c	2006-10-24 13:35:03.000000000 -0600
+@@ -22,6 +22,8 @@
+ #include <linux/consolemap.h>
+ #include <linux/vt_kern.h>
+ 
++#ifdef CONFIG_CONSOLE_TRANSLATIONS
++
+ static unsigned short translations[][256] = {
+   /* 8-bit Latin-1 mapped to Unicode -- trivial mapping */
+   {
+@@ -667,3 +669,72 @@
+ }
+ 
+ EXPORT_SYMBOL(con_copy_unimap);
++
++#else
++
++unsigned char inverse_translate(struct vc_data *conp, int glyph)
++{
++	return glyph;
++}
++
++unsigned short *set_translate(int m, struct vc_data *vc)
++{
++	return NULL;
++}
++
++int con_set_trans_old(unsigned char * arg)
++{
++	return 0;
++}
++
++int con_get_trans_old(unsigned char * arg)
++{
++	return -EINVAL;
++}
++
++int con_set_trans_new(ushort * arg)
++{
++	return 0;
++}
++
++int con_get_trans_new(ushort * arg)
++{
++	return -EINVAL;
++}
++
++int con_clear_unimap(struct vc_data *vc, struct unimapinit *ui)
++{
++	return 0;
++}
++
++int con_set_unimap(struct vc_data *vc, ushort ct, struct unipair *list)
++{
++	return 0;
++}
++
++int con_set_default_unimap(struct vc_data *vc)
++{
++	return 0;
++}
++
++int con_copy_unimap(struct vc_data *d, struct vc_data *s)
++{
++	return 0;
++}
++
++int con_get_unimap(struct vc_data *vc, ushort ct, ushort *uct,
++		   struct unipair *list)
++{
++	return -EINVAL;
++}
++
++void con_free_unimap(struct vc_data *vc) { }
++
++int conv_uni_to_pc(struct vc_data *conp, long ucs)
++{
++	return ucs > 0xff ? -1: ucs;
++}
++
++void __init console_map_init(void) { }
++
++#endif
+Index: git/drivers/char/vt.c
+===================================================================
+--- git.orig/drivers/char/vt.c	2006-10-23 07:35:33.000000000 -0600
++++ git/drivers/char/vt.c	2006-10-24 13:35:42.000000000 -0600
+@@ -2058,7 +2058,11 @@
+ 		      tc = c;
+ 		    }
+ 		} else {	/* no utf or alternate charset mode */
++#ifdef CONFIG_CONSOLE_TRANSLATIONS
+ 		  tc = vc->vc_translate[vc->vc_toggle_meta ? (c | 0x80) : c];
++#else
++		  tc = c;
++#endif
+ 		}
+ 
+                 /* If the original code was a control character we
+Index: git/init/Kconfig
+===================================================================
+--- git.orig/init/Kconfig	2006-10-24 13:33:23.000000000 -0600
++++ git/init/Kconfig	2006-10-24 13:35:03.000000000 -0600
+@@ -446,6 +446,13 @@
+  	  performance threaded applications. Disabling this option saves about
+  	  5k.
+ 
++config CONSOLE_TRANSLATIONS
++ 	default y
++ 	bool "Enable character translations in console" if EMBEDDED
++ 	help
++ 	  This enables support for font mapping and Unicode translation
++          on virtual consoles.
++
+ endmenu		# General setup
+ 
+ config RT_MUTEXES

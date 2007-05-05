@@ -1,0 +1,136 @@
+From be9c554435101d6575298547db10e796360ae555 Mon Sep 17 00:00:00 2001
+From: Richard A. Smith <smithbone@gmail.com>
+Date: Mon, 17 Jul 2006 23:49:18 -0500
+Subject: [PATCH] refresh the no-aio patch from linux-tiny
+
+Signed-off-by: Richard A. Smith <smithbone@gmail.com>
+---
+ fs/aio.c        |   53 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ init/Kconfig    |    8 ++++++++
+ kernel/sys_ni.c |    5 +++++
+ kernel/sysctl.c |    2 ++
+ 4 files changed, 68 insertions(+), 0 deletions(-)
+
+Index: git/fs/aio.c
+===================================================================
+--- git.orig/fs/aio.c	2006-10-24 13:39:06.000000000 -0600
++++ git/fs/aio.c	2006-10-24 13:39:13.000000000 -0600
+@@ -35,6 +35,8 @@
+ #include <asm/uaccess.h>
+ #include <asm/mmu_context.h>
+ 
++#ifdef CONFIG_AIO
++
+ #if DEBUG > 1
+ #define dprintk		printk
+ #else
+@@ -1789,3 +1791,54 @@
+ EXPORT_SYMBOL(aio_complete);
+ EXPORT_SYMBOL(aio_put_req);
+ EXPORT_SYMBOL(wait_on_sync_kiocb);
++
++#else
++
++ssize_t fastcall wait_on_sync_kiocb(struct kiocb *iocb)
++{
++	return 0;
++}
++
++void fastcall exit_aio(struct mm_struct *mm)
++{
++}
++
++void fastcall __put_ioctx(struct kioctx *ctx)
++{
++}
++
++int fastcall aio_put_req(struct kiocb *req)
++{
++	return 0;
++}
++
++struct kioctx *lookup_ioctx(unsigned long ctx_id)
++{
++	return 0;
++}
++
++void fastcall kick_iocb(struct kiocb *iocb)
++{
++}
++
++int fastcall aio_complete(struct kiocb *iocb, long res, long res2)
++{
++	return 0;
++}
++
++int fastcall io_submit_one(struct kioctx *ctx, struct iocb __user *user_iocb,
++			 struct iocb *iocb)
++{
++	return -EINVAL;
++}
++
++struct kiocb *lookup_kiocb(struct kioctx *ctx, struct iocb *iocb, u32 key)
++{
++	return 0;
++}
++
++EXPORT_SYMBOL(aio_complete);
++EXPORT_SYMBOL(aio_put_req);
++EXPORT_SYMBOL(wait_on_sync_kiocb);
++
++#endif
+Index: git/init/Kconfig
+===================================================================
+--- git.orig/init/Kconfig	2006-10-24 13:39:06.000000000 -0600
++++ git/init/Kconfig	2006-10-24 13:39:13.000000000 -0600
+@@ -438,6 +438,14 @@
+ 	  option allows the disabling of the VM event counters.
+ 	  /proc/vmstat will only show page counts.
+ 
++config AIO
++ 	default y
++ 	bool "Enable AIO support" if EMBEDDED
++ 	help
++ 	  This option enables POSIX async IO which may be used by some high
++ 	  performance threaded applications. Disabling this option saves about
++ 	  5k.
++
+ endmenu		# General setup
+ 
+ config RT_MUTEXES
+Index: git/kernel/sys_ni.c
+===================================================================
+--- git.orig/kernel/sys_ni.c	2006-10-24 13:39:06.000000000 -0600
++++ git/kernel/sys_ni.c	2006-10-24 13:39:13.000000000 -0600
+@@ -112,6 +112,11 @@
+ cond_syscall(sys_vm86);
+ cond_syscall(compat_sys_ipc);
+ cond_syscall(compat_sys_sysctl);
++cond_syscall(sys_io_setup);
++cond_syscall(sys_io_destroy);
++cond_syscall(sys_io_submit);
++cond_syscall(sys_io_cancel);
++cond_syscall(sys_io_getevents);
+ 
+ /* arch-specific weak syscall entries */
+ cond_syscall(sys_pciconfig_read);
+Index: git/kernel/sysctl.c
+===================================================================
+--- git.orig/kernel/sysctl.c	2006-10-24 13:39:06.000000000 -0600
++++ git/kernel/sysctl.c	2006-10-24 13:39:13.000000000 -0600
+@@ -1127,6 +1127,7 @@
+ 		.mode		= 0644,
+ 		.proc_handler	= &proc_dointvec,
+ 	},
++#ifdef CONFIG_AIO
+ 	{
+ 		.ctl_name	= FS_AIO_NR,
+ 		.procname	= "aio-nr",
+@@ -1143,6 +1144,7 @@
+ 		.mode		= 0644,
+ 		.proc_handler	= &proc_doulongvec_minmax,
+ 	},
++#endif
+ #ifdef CONFIG_INOTIFY_USER
+ 	{
+ 		.ctl_name	= FS_INOTIFY,

@@ -1,0 +1,14 @@
+Index: LinuxBIOSv2/src/arch/i386/init/crt0.S.lb
+===================================================================
+--- LinuxBIOSv2.orig/src/arch/i386/init/crt0.S.lb	2006-08-28 11:24:58.000000000 -0600
++++ LinuxBIOSv2/src/arch/i386/init/crt0.S.lb	2006-08-28 15:18:04.000000000 -0600
+@@ -65,6 +65,9 @@
+ 
+ 	cld				/* clear direction flag */
+ 	
++	/* Invalidate the cache (if they are enabled) */
++	wbinvd
++	
+ 	/* copy linuxBIOS from it's initial load location to 
+ 	 * the location it is compiled to run at.
+ 	 * Normally this is copying from FLASH ROM to RAM.

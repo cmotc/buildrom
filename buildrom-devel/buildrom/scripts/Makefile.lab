@@ -1,0 +1,47 @@
+# Targets specifically for the LAB payload
+
+$(OUTPUT_DIR)/initrd.uncompressed: $(PAYLOAD-y)
+	@ cp -af $(SKELETON_DIR)/* $(INITRD_DIR)
+	@ chmod 0755 $(INITRD_DIR)/linuxrc
+
+	@ echo "Cleaning up shared libraries..."
+
+	find $(INITRD_DIR) -type f -perm +100 -exec file -rNF '' {} \; | \
+	awk ' /executable.*dynamically/ { print $$1}' > $(INITRD_DIR)/.list
+
+	(cd $(INITRD_DIR); export CFLAGS="$(CROSS_CFLAGS)"; \
+	python $(BIN_DIR)/mklibs.py \
+	--root $(STAGING_DIR) -d ./ `cat $(INITRD_DIR)/.list` > /dev/null)
+	rm -f $(INITRD_DIR)/.list
+
+	echo "BUILDROM LAB $(ROM_VERSION)" > $(INITRD_DIR)/buildrom-version
+	echo -n "Build timestamp: " >> $(INITRD_DIR)/buildrom-version 
+	date "+%Y%m%d %H:%M:%S" >> $(INITRD_DIR)/buildrom-version
+
+	echo "Building the initrd..."
+	install -d $(OUTPUT_DIR)
+	cd $(INITRD_DIR); find . | cpio -o -H newc 2> /dev/null > $@
+
+$(OUTPUT_DIR)/initrd: $(OUTPUT_DIR)/initrd.uncompressed
+	@  gzip -9 -c -n $< > $@
+
+$(OUTPUT_DIR)/lab-payload-uncompressed.elf: $(OUTPUT_DIR)/initrd.uncompressed
+	@ echo "Building the uncompressed ELF payload..."
+	@ rm -f $@
+	@ $(STAGING_DIR)/sbin/mkelfImage --command-line="$(COMMAND_LINE)" \
+	--ramdisk=$(OUTPUT_DIR)/initrd.uncompressed \
+	$(OUTPUT_DIR)/vmlinux $@
+	@ chmod 0644 $@
+
+$(OUTPUT_DIR)/lab-payload.elf: $(OUTPUT_DIR)/initrd
+	@ echo "Building the ELF payload..."
+	@ rm -f $@
+	@ $(STAGING_DIR)/sbin/mkelfImage --command-line="$(COMMAND_LINE)" \
+	--ramdisk=$(OUTPUT_DIR)/initrd $(OUTPUT_DIR)/bzImage $@
+	@ chmod 0644 $@
+	@ $(BIN_DIR)/checkrom.sh $@
+
+$(OUTPUT_DIR)/lab-payload.elf.lzma: $(OUTPUT_DIR)/lab-payload-uncompressed.elf
+	@ echo "Compressing the ELF payload with lzma..."
+	@ $(STAGING_DIR)/bin/lzma e $< 2> /dev/null $@ 
+	@ $(BIN_DIR)/checkrom.sh $@

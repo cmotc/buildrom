@@ -1,0 +1,22 @@
+
+CFLAGS+=	-DLINUXBIOS -DCONFIG_TSC_CURRTICKS  -DCONSOLE_SERIAL -DCOMCONSOLE=0x3f8 -DCOMPRESERVE -DCONFIG_PCI_DIRECT -DELF_IMAGE 
+
+CFLAGS+= -fstrength-reduce -fomit-frame-pointer -march=i386
+GCC_VERSION	 = $(subst ., ,$(shell $(CC) -dumpversion))
+GCC_MAJORVERSION = $(firstword $(GCC_VERSION))
+ifeq ($(GCC_MAJORVERSION),2)
+CFLAGS+=	-malign-jumps=1 -malign-loops=1 -malign-functions=1
+else
+CFLAGS+=	-falign-jumps=1 -falign-loops=1 -falign-functions=1
+endif
+GCC_MINORVERSION = $(word 2, $(GCC_VERSION))
+ifneq ($(GCC_MINORVERSION),4)
+CFLAGS+=	-mcpu=i386
+endif
+
+LDFLAGS+=	-N
+
+ifeq "$(shell uname -s)" "FreeBSD"
+CFLAGS+=	-DIMAGE_FREEBSD -DELF_IMAGE -DAOUT_IMAGE
+endif
+

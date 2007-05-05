@@ -1,0 +1,7 @@
+# Generic payload target
+# Used by: OFW, etherboot, memtest
+
+$(PAYLOAD_ELF): $(PAYLOAD-y)
+$(PAYLOAD_COMPRESSED): $(PAYLOAD_ELF)
+	@ echo "Compressing the ELF payload with lzma..."
+	@ $(STAGING_DIR)/bin/lzma e $< 2> /dev/null $@ 

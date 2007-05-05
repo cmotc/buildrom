@@ -32,8 +32,8 @@ TARGET_ARCH="i386"
 # CONFIG_386 is not set
 # CONFIG_486 is not set
 # CONFIG_586 is not set
-# CONFIG_586MMX is not set
-CONFIG_686=y
+CONFIG_586MMX=y
+# CONFIG_686 is not set
 # CONFIG_PENTIUMII is not set
 # CONFIG_PENTIUMIII is not set
 # CONFIG_PENTIUM4 is not set

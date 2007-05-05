@@ -1,73 +1,97 @@
 BASE_DIR=$(shell pwd)
 
-include Config.mk
-include Vars.mk
+SCRIPT_DIR=$(BASE_DIR)/scripts
+KCONFIG_DIR=$(SCRIPT_DIR)/kconfig
+CONFIG_DIR=$(BASE_DIR)/config
 
-PKGLIST=uclibc kernel $(INITRD_PACKAGES)
+SOURCE_DIR=$(BASE_DIR)/sources
+BUILD_DIR=$(BASE_DIR)/work
+INITRD_DIR=$(BASE_DIR)/initrd-rootfs
+STAGING_DIR=$(BASE_DIR)/staging
+SKELETON_DIR=$(BASE_DIR)/skeleton
+OUTPUT_DIR=$(BASE_DIR)/deploy
+PACKAGE_DIR=$(BASE_DIR)/packages
+BIN_DIR=$(BASE_DIR)/bin
 
-ifeq ($(LINUXBIOS_PACKAGE),y)
-PKGLIST += linuxbios
+ifeq (.config, $(wildcard .config))
+dot-config := 1
+else
+dot-config := 0
+config-targets := 1
 endif
+
+ifneq ($(filter config %config,$(MAKECMDGOALS)),)
+config-targets := 1
+dot-config := 0
+endif
+
+ifeq ($(dot-config),0)
+all: .config
+
+.config: oldconfig
+	@echo "Configuration completed - type make to build your ROM"
+else
+-include .config
+
+include $(CONFIG_DIR)/platforms/platforms.conf
+include $(CONFIG_DIR)/payloads/payloads.conf
+
+# Include the global settings and other checks
+include $(SCRIPT_DIR)/Build.settings
+
+# Construct the list of packages we will be building
+
+PKGLIST = linuxbios $(PAYLOAD-y) $(HOSTTOOLS-y) 
+
+# Construct the various targets
 
 PKG_clean=$(patsubst %, %-clean, $(PKGLIST))
 PKG_distclean=$(patsubst %, %-distclean, $(PKGLIST))
 
-# Payload target should be defined in Config.mk - but if it makes it here,
-# then just select the default
-
-PAYLOAD_TARGET ?= $(OUTPUT_DIR)/olpc-payload.elf
-
-all: $(TARGETS)
+all: $(HOSTTOOLS-y) payload linuxbios
 
 payload: $(PAYLOAD_TARGET)
-
-$(OUTPUT_DIR)/initrd.uncompressed: uclibc $(INITRD_PACKAGES)
-	@ cp -af $(SKELETON_DIR)/* $(INITRD_DIR)
-	@ chmod 0755 $(INITRD_DIR)/linuxrc
-
-	@ echo "Cleaning unneeded libraries..."
-	@ ( export LDD="$(STAGING_DIR)/bin/ldd"; \
-	    for file in `$(BASE_DIR)/bin/checklibs.pl \
-	    --verify --silent --script $(INITRD_DIR)`; \
-	    do rm $(INITRD_DIR)/lib/$$file; done )
-
-	@ echo "Building the initrd..."
-	@ install -d $(OUTPUT_DIR)
-	@ cd $(INITRD_DIR); find . | cpio -o -H newc 2> /dev/null > $@
-
-$(OUTPUT_DIR)/initrd: $(OUTPUT_DIR)/initrd.uncompressed
-	@  gzip -9 -c -n $< > $@
-
-# Note that we refuse to continue if the ELF image is too big
-
-$(OUTPUT_DIR)/olpc-payload-uncompressed.elf: kernel $(OUTPUT_DIR)/initrd.uncompressed mkelfimage
-	@ echo "Building the uncompressed ELF payload..."
-	@ rm -f $@
-	@ $(STAGING_DIR)/sbin/mkelfImage --command-line="$(COMMAND_LINE)" \
-	--ramdisk=$(OUTPUT_DIR)/initrd.uncompressed \
-	$(OUTPUT_DIR)/vmlinux $@
-	@ chmod 0644 $@
-
-$(OUTPUT_DIR)/olpc-payload.elf: kernel $(OUTPUT_DIR)/initrd mkelfimage
-	@ echo "Building the ELF payload..."
-	@ rm -f $@
-	@ $(STAGING_DIR)/sbin/mkelfImage --command-line="$(COMMAND_LINE)" \
-	--ramdisk=$(OUTPUT_DIR)/initrd $(OUTPUT_DIR)/bzImage $@
-	@ chmod 0644 $@
-	@ $(BIN_DIR)/checkrom.sh $@
-
-$(OUTPUT_DIR)/olpc-payload.elf.nrv2b: nrv2b $(OUTPUT_DIR)/olpc-payload-uncompressed.elf
-	@ echo "Compressing the ELF payload with nrv2b..."
-	@ $(STAGING_DIR)/bin/nrv2b e \
-	$(OUTPUT_DIR)/olpc-payload-uncompressed.elf \
-	2>/dev/null $@
-	@ $(BIN_DIR)/checkrom.sh $@
 
 clean: $(PKG_clean)
 	@ rm -rf $(INITRD_DIR) $(OUTPUT_DIR)
 
 distclean:  $(PKG_distclean)
 	@ rm -rf $(OUTPUT_DIR) $(STAGING_DIR) $(INITRD_DIR)	
+	@ rm -f $(BASE_DIR).config
 
-# Finally, include all of the package targets
-include $(PACKAGE_DIR)/*/*.mk
+# Include the payload builder
+
+ifneq ($(PAYLOAD_BUILD),)
+include $(PAYLOAD_BUILD)
+endif
+
+# The following code gets all the make targets, but filters out the kernel
+# targets which are implicitly set by the platform configuration
+
+MKTARGETS:= $(shell ls $(PACKAGE_DIR)/*/*.mk)
+
+include $(filter-out $(PACKAGE_DIR)/kernel/% $(PACKAGE_DIR)/linuxbios/%,$(MKTARGETS)) 
+
+include $(KERNEL_MK) $(LINUXBIOS_MK)
+
+endif
+
+super-distclean: 
+	@ make -C $(KCONFIG_DIR) clean
+	@ rm -rf $(BUILD_DIR)
+	@ rm -f .config tmpconfig.h .kconfig.d .config.old
+
+ifeq ($(config-targets),1)
+
+$(KCONFIG_DIR)/conf:
+	make -C $(KCONFIG_DIR) conf
+
+textconfig: $(KCONFIG_DIR)/conf
+	@$(KCONFIG_DIR)/conf $(BASE_DIR)/Config.in
+
+oldconfig: $(KCONFIG_DIR)/conf
+	@$(KCONFIG_DIR)/conf -o $(BASE_DIR)/Config.in
+
+defconfig: $(KCONFIG_DIR)/conf
+	@$(KCONFIG_DIR)/conf -d $(BASE_DIR)/Config.in
+endif

@@ -1,0 +1,20 @@
+#!/bin/sh
+# Try to boot from the NAND flash
+# Usage:  boot-nand
+# boot-func shouldn't return - if it does, then we assume error
+
+. /bin/boot.functions
+
+DIR=/flash
+
+mkdir $DIR
+mount -t jffs2 mtd0 /flash
+
+if [ $? -eq 0 ]; then
+	doboot $DIR
+	message "ERROR:  Couldn't boot from the NAND flash."
+	exit 1
+fi
+
+message "ERROR:  Couldn't mount the NAND flash."
+exit 1

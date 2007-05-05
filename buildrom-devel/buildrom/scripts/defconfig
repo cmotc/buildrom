@@ -1,0 +1,41 @@
+#
+# Automatically generated make config: don't edit
+# Busybox version: 
+# Wed Mar 14 15:09:23 2007
+#
+CONFIG_HAVE_DOT_CONFIG=y
+# CONFIG_VERBOSE is not set
+# CONFIG_ADVANCED is not set
+
+#
+# LinuxBIOS configuration
+#
+CONFIG_USE_LZMA=y
+# CONFIG_LB_USE_BUILD is not set
+CONFIG_LB_BUILDDIR=""
+CONFIG_PLATFORM=y
+CONFIG_PAYLOAD=y
+
+#
+# Platform Configuration
+#
+CONFIG_PLATFORM_NORWICH=y
+# CONFIG_PLATFORM_OLPC is not set
+
+#
+# Payload Configuration
+#
+CONFIG_PAYLOAD_LAB=y
+# CONFIG_PAYLOAD_OFW is not set
+# CONFIG_PAYLOAD_ETHERBOOT is not set
+# CONFIG_PAYLOAD_MEMTEST is not set
+
+#
+# LAB Configuration
+#
+CONFIG_KBL_KEXEC_ONLY=y
+CONFIG_KBL=y
+CONFIG_BUSYBOX=y
+CONFIG_BOOTMENU=y
+# CONFIG_OLPCFLASH is not set
+# CONFIG_MEMTEST_SERIAL is not set

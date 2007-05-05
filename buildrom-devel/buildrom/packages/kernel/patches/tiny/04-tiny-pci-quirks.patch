@@ -1,0 +1,86 @@
+From 01c3ed6f33af0bc22621fa7af678b2ad115d63d4 Mon Sep 17 00:00:00 2001
+From: Richard A. Smith <smithbone@gmail.com>
+Date: Tue, 18 Jul 2006 00:15:55 -0500
+Subject: [PATCH] refresh pci-quirks patch from linux-tiny
+
+Signed-off-by: Richard A. Smith <smithbone@gmail.com>
+---
+ drivers/pci/quirks.c |   27 +++++++++++++++++----------
+ init/Kconfig         |    8 ++++++++
+ 2 files changed, 25 insertions(+), 10 deletions(-)
+
+Index: git/drivers/pci/quirks.c
+===================================================================
+--- git.orig/drivers/pci/quirks.c	2006-10-23 07:35:33.000000000 -0600
++++ git/drivers/pci/quirks.c	2006-10-24 13:36:48.000000000 -0600
+@@ -34,6 +34,10 @@
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MELLANOX,PCI_DEVICE_ID_MELLANOX_TAVOR,quirk_mellanox_tavor);
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MELLANOX,PCI_DEVICE_ID_MELLANOX_TAVOR_BRIDGE,quirk_mellanox_tavor);
+ 
++int isa_dma_bridge_buggy;		/* Exported */
++int pci_pci_problems;
++
++#ifdef CONFIG_PCI_QUIRKS
+ /* Deal with broken BIOS'es that neglect to enable passive release,
+    which can cause problems in combination with the 82441FX/PPro MTRRs */
+ static void __devinit quirk_passive_release(struct pci_dev *dev)
+@@ -54,14 +58,13 @@
+ }
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_82441,	quirk_passive_release );
+ 
+-/*  The VIA VP2/VP3/MVP3 seem to have some 'features'. There may be a workaround
+-    but VIA don't answer queries. If you happen to have good contacts at VIA
+-    ask them for me please -- Alan 
+-    
+-    This appears to be BIOS not version dependent. So presumably there is a 
+-    chipset level fix */
+-int isa_dma_bridge_buggy;		/* Exported */
+-    
++/*  The VIA VP2/VP3/MVP3 seem to have some 'features'. There may be a
++    workaround but VIA don't answer queries. If you happen to have
++    good contacts at VIA ask them for me please -- Alan
++
++    This appears to be BIOS not version dependent. So presumably there
++    is a chipset level fix */
++
+ static void __devinit quirk_isa_dma_hangs(struct pci_dev *dev)
+ {
+ 	if (!isa_dma_bridge_buggy) {
+@@ -81,8 +84,6 @@
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NEC,	PCI_DEVICE_ID_NEC_CBUS_2,	quirk_isa_dma_hangs );
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NEC,	PCI_DEVICE_ID_NEC_CBUS_3,	quirk_isa_dma_hangs );
+ 
+-int pci_pci_problems;
+-
+ /*
+  *	Chipsets where PCI->PCI transfers vanish or hang
+  */
+@@ -1858,3 +1859,9 @@
+ #ifdef CONFIG_HOTPLUG
+ EXPORT_SYMBOL(pci_fixup_device);
+ #endif
++
++#else
++void pci_fixup_device(enum pci_fixup_pass pass, struct pci_dev *dev)
++{
++}
++#endif /* CONFIG_PCI_QUIRKS */
+Index: git/init/Kconfig
+===================================================================
+--- git.orig/init/Kconfig	2006-10-24 13:36:04.000000000 -0600
++++ git/init/Kconfig	2006-10-24 13:36:48.000000000 -0600
+@@ -459,6 +459,14 @@
+  	help
+  	  This enables the filesystem extended attribute syscalls.
+ 
++config PCI_QUIRKS
++ 	default y
++ 	bool "Enable PCI quirk workarounds" if EMBEDDED
++ 	help
++ 	  This enables workarounds for various PCI chipset bugs/quirks.
++ 	  Disable this only if you know your target machine is unaffected
++ 	  by PCI quirks.
++
+ endmenu		# General setup
+ 
+ config RT_MUTEXES

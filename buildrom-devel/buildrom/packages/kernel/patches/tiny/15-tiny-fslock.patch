@@ -1,0 +1,224 @@
+
+configurable POSIX file locking API
+
+
+ tiny-mpm/fs/Makefile         |    3 ++-
+ tiny-mpm/fs/locks.c          |    1 +
+ tiny-mpm/fs/proc/proc_misc.c |    4 ++++
+ tiny-mpm/include/linux/fs.h  |   42 +++++++++++++++++++++++++++++++++++++++++-
+ tiny-mpm/init/Kconfig        |    6 ++++++
+ tiny-mpm/kernel/sys.c        |    1 +
+ 6 files changed, 55 insertions(+), 2 deletions(-)
+
+Index: git/init/Kconfig
+===================================================================
+--- git.orig/init/Kconfig	2006-10-24 13:44:02.000000000 -0600
++++ git/init/Kconfig	2006-10-24 13:44:14.000000000 -0600
+@@ -459,6 +459,12 @@
+  	help
+  	  This enables the filesystem extended attribute syscalls.
+ 
++config FILE_LOCKING
++	default y
++	bool "Enable POSIX file locking API" if EMBEDDED
++	help
++	  This enables standard file locking support.
++
+ config PCI_QUIRKS
+  	default y
+  	bool "Enable PCI quirk workarounds" if EMBEDDED
+Index: git/fs/proc/proc_misc.c
+===================================================================
+--- git.orig/fs/proc/proc_misc.c	2006-10-23 07:35:33.000000000 -0600
++++ git/fs/proc/proc_misc.c	2006-10-24 13:44:14.000000000 -0600
+@@ -618,6 +618,7 @@
+ 	return proc_calc_metrics(page, start, off, count, eof, len);
+ }
+ 
++#ifdef CONFIG_FILE_LOCKING
+ static int locks_read_proc(char *page, char **start, off_t off,
+ 				 int count, int *eof, void *data)
+ {
+@@ -627,6 +628,7 @@
+ 		*eof = 1;
+ 	return len;
+ }
++#endif
+ 
+ static int execdomains_read_proc(char *page, char **start, off_t off,
+ 				 int count, int *eof, void *data)
+@@ -686,7 +688,9 @@
+ #endif
+ 		{"filesystems",	filesystems_read_proc},
+ 		{"cmdline",	cmdline_read_proc},
++#ifdef CONFIG_FILE_LOCKING
+ 		{"locks",	locks_read_proc},
++#endif
+ 		{"execdomains",	execdomains_read_proc},
+ 		{NULL,}
+ 	};
+Index: git/include/linux/fs.h
+===================================================================
+--- git.orig/include/linux/fs.h	2006-10-23 07:35:33.000000000 -0600
++++ git/include/linux/fs.h	2006-10-24 13:44:14.000000000 -0600
+@@ -835,6 +835,9 @@
+ 
+ #include <linux/fcntl.h>
+ 
++extern void send_sigio(struct fown_struct *fown, int fd, int band);
++
++#ifdef CONFIG_FILE_LOCKING
+ extern int fcntl_getlk(struct file *, struct flock __user *);
+ extern int fcntl_setlk(unsigned int, struct file *, unsigned int,
+ 			struct flock __user *);
+@@ -845,7 +848,6 @@
+ 			struct flock64 __user *);
+ #endif
+ 
+-extern void send_sigio(struct fown_struct *fown, int fd, int band);
+ extern int fcntl_setlease(unsigned int fd, struct file *filp, long arg);
+ extern int fcntl_getlease(struct file *filp);
+ 
+@@ -871,6 +873,32 @@
+ extern int lock_may_read(struct inode *, loff_t start, unsigned long count);
+ extern int lock_may_write(struct inode *, loff_t start, unsigned long count);
+ 
++#else /* !CONFIG_FILE_LOCKING */
++#define fcntl_getlk(a, b) (-EINVAL)
++#define fcntl_setlk(a, b, c, d) (-EACCES)
++#if BITS_PER_LONG == 32
++#define fcntl_getlk64(a, b) (-EINVAL)
++#define fcntl_setlk64(a, b, c, d) (-EACCES)
++#endif
++#define fcntl_setlease(a, b, c) (0)
++#define fcntl_getlease(a) (0)
++#define locks_init_lock(a)
++#define locks_copy_lock(a, b)
++#define locks_remove_posix(a, b)
++#define locks_remove_flock(a)
++#define posix_test_lock(a, b) (0)
++#define posix_lock_file(a, b) (-ENOLCK)
++#define posix_lock_file_wait(a, b) (-ENOLCK)
++#define posix_block_lock(a, b)
++#define posix_unblock_lock(a, b)
++#define posix_locks_deadlock(a, b) (0)
++#define __break_lease(a, b) (0)
++#define lease_get_mtime(a, b)
++#define lock_may_read(a, b, c) (1)
++#define lock_may_write(a, b, c) (1)
++#define steal_locks(a)
++#endif /* !CONFIG_FILE_LOCKING */
++
+ struct fasync_struct {
+ 	int	magic;
+ 	int	fa_fd;
+@@ -1446,6 +1474,7 @@
+ #define FLOCK_VERIFY_READ  1
+ #define FLOCK_VERIFY_WRITE 2
+ 
++#ifdef CONFIG_FILE_LOCKING
+ extern int locks_mandatory_locked(struct inode *);
+ extern int locks_mandatory_area(int, struct inode *, struct file *, loff_t, size_t);
+ 
+@@ -1486,6 +1515,18 @@
+ 	return 0;
+ }
+ 
++#else /* !CONFIG_FILE_LOCKING */
++
++#define locks_mandatory_locked(a) (0)
++#define locks_mandatory_area(a, b, c, d, e) (0)
++#define MANDATORY_LOCK(inode) (0)
++#define locks_verify_locked(a) (0)
++#define locks_verify_area(a, b, c, d, e) (0 && (b))
++#define locks_verify_truncate(a, b, c) (0)
++#define break_lease(a, b) (0)
++
++#endif /* !CONFIG_FILE_LOCKING */
++
+ /* fs/open.c */
+ 
+ extern int do_truncate(struct dentry *, loff_t start, unsigned int time_attrs,
+Index: git/kernel/sys_ni.c
+===================================================================
+--- git.orig/kernel/sys_ni.c	2006-10-24 13:41:52.000000000 -0600
++++ git/kernel/sys_ni.c	2006-10-24 13:44:14.000000000 -0600
+@@ -129,6 +129,7 @@
+ cond_syscall(sys_removexattr);
+ cond_syscall(sys_lremovexattr);
+ cond_syscall(sys_fremovexattr);
++cond_syscall(sys_flock);
+ 
+ /* arch-specific weak syscall entries */
+ cond_syscall(sys_pciconfig_read);
+Index: git/fs/Makefile
+===================================================================
+--- git.orig/fs/Makefile	2006-10-24 13:41:52.000000000 -0600
++++ git/fs/Makefile	2006-10-24 13:44:32.000000000 -0600
+@@ -7,7 +7,7 @@
+ 
+ obj-y :=	open.o read_write.o file_table.o super.o \
+ 		char_dev.o stat.o exec.o pipe.o namei.o fcntl.o \
+-		ioctl.o readdir.o select.o fifo.o locks.o dcache.o inode.o \
++		ioctl.o readdir.o select.o fifo.o dcache.o inode.o \
+ 		attr.o bad_inode.o file.o filesystems.o namespace.o aio.o \
+ 		seq_file.o libfs.o fs-writeback.o \
+ 		pnode.o drop_caches.o splice.o sync.o utimes.o
+@@ -20,6 +20,7 @@
+ 
+ obj-$(CONFIG_INOTIFY)		+= inotify.o
+ obj-$(CONFIG_INOTIFY_USER)	+= inotify_user.o
++obj-$(CONFIG_FILE_LOCKING)	+= locks.o
+ obj-$(CONFIG_XATTR)		+= xattr.o
+ obj-$(CONFIG_EPOLL)		+= eventpoll.o
+ obj-$(CONFIG_COMPAT)		+= compat.o compat_ioctl.o
+Index: git/kernel/sysctl.c
+===================================================================
+--- git.orig/kernel/sysctl.c	2006-10-24 13:41:52.000000000 -0600
++++ git/kernel/sysctl.c	2006-10-24 13:44:14.000000000 -0600
+@@ -1100,6 +1100,7 @@
+ 		.extra1		= &minolduid,
+ 		.extra2		= &maxolduid,
+ 	},
++#ifdef CONFIG_FILE_LOCKING
+ 	{
+ 		.ctl_name	= FS_LEASES,
+ 		.procname	= "leases-enable",
+@@ -1108,6 +1109,7 @@
+ 		.mode		= 0644,
+ 		.proc_handler	= &proc_dointvec,
+ 	},
++#endif
+ #ifdef CONFIG_DNOTIFY
+ 	{
+ 		.ctl_name	= FS_DIR_NOTIFY,
+@@ -1119,6 +1121,8 @@
+ 	},
+ #endif
+ #ifdef CONFIG_MMU
++#ifdef CONFIG_FILE_LOCKING
++
+ 	{
+ 		.ctl_name	= FS_LEASE_TIME,
+ 		.procname	= "lease-break-time",
+@@ -1127,6 +1131,7 @@
+ 		.mode		= 0644,
+ 		.proc_handler	= &proc_dointvec,
+ 	},
++#endif
+ #ifdef CONFIG_AIO
+ 	{
+ 		.ctl_name	= FS_AIO_NR,
+Index: git/fs/Kconfig
+===================================================================
+--- git.orig/fs/Kconfig	2006-10-24 13:41:52.000000000 -0600
++++ git/fs/Kconfig	2006-10-24 13:44:14.000000000 -0600
+@@ -1565,7 +1565,7 @@
+ 
+ config NFS_FS
+ 	tristate "NFS file system support"
+-	depends on INET
++	depends on INET && FILE_LOCKING
+ 	select LOCKD
+ 	select SUNRPC
+ 	select NFS_ACL_SUPPORT if NFS_V3_ACL

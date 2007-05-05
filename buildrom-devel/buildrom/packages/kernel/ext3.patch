@@ -1,0 +1,24 @@
+Index: git/fs/ext2/super.c
+===================================================================
+--- git.orig/fs/ext2/super.c	2006-10-24 13:39:06.000000000 -0600
++++ git/fs/ext2/super.c	2006-10-24 13:39:08.000000000 -0600
+@@ -748,10 +748,15 @@
+ 	 */
+ 	features = EXT2_HAS_INCOMPAT_FEATURE(sb, ~EXT2_FEATURE_INCOMPAT_SUPP);
+ 	if (features) {
+-		printk("EXT2-fs: %s: couldn't mount because of "
+-		       "unsupported optional features (%x).\n",
+-		       sb->s_id, le32_to_cpu(features));
+-		goto failed_mount;
++		if (!(sb->s_flags & MS_RDONLY) ||
++		   (features != cpu_to_le32(EXT3_FEATURE_INCOMPAT_RECOVER))) {
++			printk("EXT2-fs: %s: couldn't mount because of "
++		       		"unsupported optional features (%x).\n",
++		       		sb->s_id, le32_to_cpu(features));
++				goto failed_mount;
++		} else
++			printk("EXT2-fs: %s: ignoring journal recovery while "
++				"mounting as read-only!\n", sb->s_id);
+ 	}
+ 	if (!(sb->s_flags & MS_RDONLY) &&
+ 	    (features = EXT2_HAS_RO_COMPAT_FEATURE(sb, ~EXT2_FEATURE_RO_COMPAT_SUPP))){

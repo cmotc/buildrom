@@ -1,0 +1,71 @@
+Index: busybox-1.1.3/networking/libiproute/ip_common.h
+===================================================================
+--- busybox-1.1.3.orig/networking/libiproute/ip_common.h	2006-03-22 14:16:18.000000000 -0700
++++ busybox-1.1.3/networking/libiproute/ip_common.h	2006-10-24 15:05:27.000000000 -0600
+@@ -1,5 +1,7 @@
+ #ifndef _IP_COMMON_H
+ #define _IP_COMMON_H 1
++
++
+ extern int preferred_family;
+ extern char * _SL_;
+ 
+Index: busybox-1.1.3/networking/libiproute/ipaddress.c
+===================================================================
+--- busybox-1.1.3.orig/networking/libiproute/ipaddress.c	2006-03-22 14:16:18.000000000 -0700
++++ busybox-1.1.3/networking/libiproute/ipaddress.c	2006-10-24 15:05:51.000000000 -0600
+@@ -21,6 +21,8 @@
+ 
+ #include <net/if.h>
+ #include <net/if_arp.h>
++#include <linux/if_link.h>
++#include <linux/if_addr.h>
+ 
+ #include "rt_names.h"
+ #include "utils.h"
+@@ -28,6 +30,11 @@
+ 
+ #include "libbb.h"
+ 
++#define IFLA_MAX (__IFLA_MAX - 1)
++
++#define IFLA_RTA(r)  ((struct rtattr*)(((char*)(r)) + NLMSG_ALIGN(sizeof(struct ifinfomsg))))
++#define IFLA_PAYLOAD(n) NLMSG_PAYLOAD(n,sizeof(struct ifinfomsg))
++
+ static struct
+ {
+ 	int ifindex;
+@@ -225,7 +232,7 @@
+ 		return 0;
+ 
+ 	memset(rta_tb, 0, sizeof(rta_tb));
+-	parse_rtattr(rta_tb, IFA_MAX, IFA_RTA(ifa), n->nlmsg_len - NLMSG_LENGTH(sizeof(*ifa)));
++	parse_rtattr(rta_tb, IFA_MAX, TA_RTA(ifa), n->nlmsg_len - NLMSG_LENGTH(sizeof(*ifa)));
+ 
+ 	if (!rta_tb[IFA_LOCAL])
+ 		rta_tb[IFA_LOCAL] = rta_tb[IFA_ADDRESS];
+@@ -575,7 +582,7 @@
+ 				if (filter.pfx.family || filter.label) {
+ 					struct rtattr *tb[IFA_MAX+1];
+ 					memset(tb, 0, sizeof(tb));
+-					parse_rtattr(tb, IFA_MAX, IFA_RTA(ifa), IFA_PAYLOAD(n));
++					parse_rtattr(tb, IFA_MAX, TA_RTA(ifa), TA_PAYLOAD(n));
+ 					if (!tb[IFA_LOCAL])
+ 						tb[IFA_LOCAL] = tb[IFA_ADDRESS];
+ 
+Index: busybox-1.1.3/networking/libiproute/ll_map.c
+===================================================================
+--- busybox-1.1.3.orig/networking/libiproute/ll_map.c	2006-03-22 14:16:18.000000000 -0700
++++ busybox-1.1.3/networking/libiproute/ll_map.c	2006-10-24 15:05:40.000000000 -0600
+@@ -18,6 +18,11 @@
+ #include "libnetlink.h"
+ #include "ll_map.h"
+ 
++#define IFLA_MAX (__IFLA_MAX - 1)
++
++#define IFLA_RTA(r)  ((struct rtattr*)(((char*)(r)) + NLMSG_ALIGN(sizeof(struct ifinfomsg))))
++#define IFLA_PAYLOAD(n) NLMSG_PAYLOAD(n,sizeof(struct ifinfomsg))
++
+ struct idxmap
+ {
+ 	struct idxmap * next;

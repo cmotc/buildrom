@@ -57,4 +57,12 @@ wireless-tools-clean:
 wireless-tools-distclean:
 	@ rm -rf $(WIRELESS_DIR)/*
 
-.PHONY: wireless-tools
+wireless-tools-bom:
+	@ echo "Package: wireless-tools"
+	@ echo "Source: $(WIRELESS_URL)/$(WIRELESS_SOURCE)"
+	@ echo -n "Patches: "
+	@ for file in $(WIRELESS_PATCH); do \
+		echo -n `basename $$file`; \
+	done
+	@ echo ""
+	@ echo ""

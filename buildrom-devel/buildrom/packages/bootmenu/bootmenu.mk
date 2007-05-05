@@ -1,11 +1,11 @@
-BOOTMENU_URL=http://crank.laptop.org/~jcrouse/
-BOOTMENU_SOURCE=bootmenu-0.1.tar.gz
+BOOTMENU_URL=http://dev.laptop.org/~jcrouse/bootmenu
+BOOTMENU_SOURCE=bootmenu-0.3.tar.gz
 BOOTMENU_DIR=$(BUILD_DIR)/bootmenu
-BOOTMENU_SRC_DIR=$(BOOTMENU_DIR)/bootmenu-0.1
+BOOTMENU_SRC_DIR=$(BOOTMENU_DIR)/bootmenu-0.3
 BOOTMENU_STAMP_DIR=$(BOOTMENU_DIR)/stamps
 BOOTMENU_LOG_DIR=$(BOOTMENU_DIR)/logs
 
-ifeq ($(VERBOSE),y)
+ifeq ($(CONFIG_VERBOSE),y)
 BOOTMENU_BUILD_LOG=/dev/stdout
 BOOTMENU_INSTALL_LOG=/dev/stdout
 else
@@ -24,14 +24,15 @@ $(BOOTMENU_STAMP_DIR)/.unpacked: $(SOURCE_DIR)/$(BOOTMENU_SOURCE)
 
 $(BOOTMENU_SRC_DIR)/bootmenu: $(BOOTMENU_STAMP_DIR)/.unpacked
 	@ echo "Building bootmenu..."
-	@ $(MAKE) -C $(BOOTMENU_SRC_DIR) > $(BOOTMENU_BUILD_LOG) 2>&1
+	$(MAKE) LDFLAGS="$(CROSS_CFLAGS) $(LDFLAGS)" -C $(BOOTMENU_SRC_DIR) > $(BOOTMENU_BUILD_LOG) 2>&1
 
 $(INITRD_DIR)/bin/bootmenu: $(BOOTMENU_SRC_DIR)/bootmenu
 	@ install -d $(INITRD_DIR)/bin
 	@ install -m 0755 $(BOOTMENU_SRC_DIR)/bootmenu \
 	$(INITRD_DIR)/bin/bootmenu
-	@ install -d $(INITRD_DIR)/bin/images
-	@ install -m 0644 $(BOOTMENU_SRC_DIR)/images/*.ppm $(INITRD_DIR)/bin/images
+	@ $(STRIPCMD) $(INITRD_DIR)/bin/bootmenu
+	@ install -d $(INITRD_DIR)/images
+	@ install -m 0644 $(BOOTMENU_SRC_DIR)/images/*.ppm $(INITRD_DIR)/images
 
 $(BOOTMENU_STAMP_DIR) $(BOOTMENU_LOG_DIR):
 	@ mkdir -p $@
@@ -45,3 +46,7 @@ bootmenu-clean:
 bootmenu-distclean:
 	@ rm -rf $(BOOTMENU_DIR)/*
 
+bootmenu-bom:
+	@ echo "Package: bootmenu"
+	@ echo "Source: $(BOOTMENU_URL)/$(BOOTMENU_SOURCE)"
+	@ echo ""

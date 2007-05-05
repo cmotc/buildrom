@@ -1,0 +1,20 @@
+
+uninline a buffer.c function
+
+
+ tiny-mpm/fs/buffer.c |    2 +-
+ 1 files changed, 1 insertion(+), 1 deletion(-)
+
+Index: git/fs/buffer.c
+===================================================================
+--- git.orig/fs/buffer.c	2006-10-23 07:35:33.000000000 -0600
++++ git/fs/buffer.c	2006-10-24 13:36:53.000000000 -0600
+@@ -569,7 +569,7 @@
+ /*
+  * The buffer's backing address_space's private_lock must be held
+  */
+-static inline void __remove_assoc_queue(struct buffer_head *bh)
++static void __remove_assoc_queue(struct buffer_head *bh)
+ {
+ 	list_del_init(&bh->b_assoc_buffers);
+ 	WARN_ON(!bh->b_assoc_map);

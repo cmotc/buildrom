@@ -5,7 +5,7 @@ UCLIBC_SRC_DIR=$(UCLIBC_DIR)/uClibc-0.9.28
 UCLIBC_STAMP_DIR=$(UCLIBC_DIR)/stamps
 UCLIBC_LOG_DIR=$(UCLIBC_DIR)/logs
 
-ifeq ($(VERBOSE),y)
+ifeq ($(CONFIG_VERBOSE),y)
 UCLIBC_BUILD_LOG=/dev/stdout
 UCLIBC_INSTALL_LOG=/dev/stdout
 else
@@ -13,11 +13,8 @@ UCLIBC_BUILD_LOG=$(UCLIBC_LOG_DIR)/build.log
 UCLIBC_INSTALL_LOG=$(UCLIBC_LOG_DIR)/install.log
 endif
 
-ifeq ($(UCLIBC_DYNAMIC),y)
-UCLIBC_TARGET=$(INITRD_DIR)/lib/libc.so.0 $(STAGING_DIR)/bin/ldd
-else
-UCLIBC_TARGET=$(STAGING_DIR)/lib/libc.a $(STAGING_DIR)/bin/ldd
-endif
+# Default, if its not set in the platform config
+UCLIBC_ARCH ?= $(TARGET_ARCH)
 
 $(SOURCE_DIR)/$(UCLIBC_SOURCE):
 	@ mkdir -p $(SOURCE_DIR)
@@ -34,8 +31,9 @@ $(UCLIBC_SRC_DIR)/.config: $(UCLIBC_STAMP_DIR)/.unpacked
 $(UCLIBC_SRC_DIR)/lib/libc.a: $(UCLIBC_SRC_DIR)/.config
 	@ echo "Building uclibc..." 
 	@ ( unset CFLAGS; unset LDFLAGS; \
-	$(MAKE) -C $(UCLIBC_SRC_DIR) CC="$(CC)" HOSTCC="$(HOST_CC)" \
-	KERNEL_SOURCE="$(KERNEL_SRC_DIR)" \
+	$(MAKE) -C $(UCLIBC_SRC_DIR) TARGET_ARCH="$(UCLIBC_ARCH)" \
+	CC="$(CC) $(CROSS_CFLAGS)" LD="$(LD) $(CROSS_LDFLAGS)" \
+	HOSTCC="$(HOST_CC)" KERNEL_SOURCE="$(KERNEL_SRC_DIR)" \
 	RUNTIME_PREFIX="/" \
 	SHARED_LIB_LOADER_PATH="/lib" \
 	SHARED_LIB_LOADER_PREFIX="/lib" \
@@ -55,18 +53,10 @@ $(STAGING_DIR)/bin/ldd: $(UCLIBC_SRC_DIR)/utils/ldd
 	@ install -m 755 -d $(STAGING_DIR)/bin
 	@ install -m 755 $< $@
 
-$(INITRD_DIR)/lib/libc.so.0: $(STAGING_DIR)/lib/libc.a
-	@ install -d $(INITRD_DIR)
-	@ $(MAKE) -C $(UCLIBC_SRC_DIR) \
-	PREFIX=$(INITRD_DIR) \
-	DEVEL_PREFIX=/usr/ \
-	RUNTIME_PREFIX=/ \
-	install_runtime >> $(UCLIBC_INSTALL_LOG) 2>&1
-
 $(UCLIBC_STAMP_DIR) $(UCLIBC_LOG_DIR):
 	@ mkdir -p $@
 
-uclibc: $(UCLIBC_STAMP_DIR) $(UCLIBC_LOG_DIR) $(UCLIBC_TARGET)
+uclibc: $(UCLIBC_STAMP_DIR) $(UCLIBC_LOG_DIR) $(STAGING_DIR)/lib/libc.a
 
 uclibc-clean:
 	@ echo "Cleaning uclibc..."
@@ -75,4 +65,7 @@ uclibc-clean:
 uclibc-distclean:
 	@ rm -rf $(UCLIBC_DIR)/*
 
-.PHONY: uclibc-message
+uclibc-bom:
+	@ echo "Package: uclibc"
+	@ echo "Source: $(UCLIBC_URL)/$(UCLIBC_SOURCE)"
+	@ echo ""

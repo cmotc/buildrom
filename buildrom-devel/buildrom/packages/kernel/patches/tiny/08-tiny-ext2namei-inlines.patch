@@ -1,0 +1,20 @@
+
+uninline ext2_add_nondir
+
+
+ tiny-mpm/fs/ext2/namei.c |    2 +-
+ 1 files changed, 1 insertion(+), 1 deletion(-)
+
+Index: linux-2.6.18-rc4-olpc1/fs/ext2/namei.c
+===================================================================
+--- linux-2.6.18-rc4-olpc1.orig/fs/ext2/namei.c	2006-08-08 11:13:24.000000000 -0600
++++ linux-2.6.18-rc4-olpc1/fs/ext2/namei.c	2006-09-14 09:23:18.000000000 -0600
+@@ -36,7 +36,7 @@
+ #include "acl.h"
+ #include "xip.h"
+ 
+-static inline int ext2_add_nondir(struct dentry *dentry, struct inode *inode)
++static int ext2_add_nondir(struct dentry *dentry, struct inode *inode)
+ {
+ 	int err = ext2_add_link(dentry, inode);
+ 	if (!err) {

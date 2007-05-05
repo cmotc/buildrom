@@ -1,0 +1,123 @@
+# This menu selects the desired packages for the Linux as bootloader
+# payload
+
+menu "Payload Configuration"
+
+choice
+	prompt "Desired payload"
+	default PAYLOAD_KERNEL
+	help
+	  Buildrom can build a number of different payloads for the ROM
+
+config PAYLOAD_CUSTOM
+	bool "Custom Payload"
+	select PAYLOAD
+
+config PAYLOAD_ETHERBOOT
+	bool "Etherboot"
+	select PAYLOAD
+
+config PAYLOAD_FILO
+	bool "FILO"
+	select PAYLOAD
+
+config PAYLOAD_KERNEL
+	bool "Linux kernel payload"
+	select PAYLOAD
+
+config PAYLOAD_LAB
+	bool "Linux As Bootloader"
+	select PAYLOAD
+
+config PAYLOAD_OFW
+	bool "OpenFirmware"
+	select PAYLOAD
+
+config PAYLOAD_MEMTEST
+	bool "Memtest86+"
+	select PAYLOAD
+
+endchoice
+
+menu "Custom Payload"
+depends PAYLOAD_CUSTOM
+config CUSTOM_PAYLOAD
+	string "Custom payload filename"
+	default ""
+	help
+	  Specify a filename for the custom ELF payload you wish to attach
+	  to the ROM.  You can also specify the custom payload with the
+	  CUSTOM_PAYLOAD environment variable.
+
+endmenu
+ 
+menu "Kernel Configuration"
+depends PAYLOAD_KERNEL
+
+config CMDLINE
+	string "Kernel command line"
+	default ""
+	help
+	  Specify the kernel command line to use for the kernel.  This is
+	  passed to mkelfimage when the kernel is built.
+endmenu
+
+menu "LAB Configuration"
+depends PAYLOAD_LAB
+
+config KBL_KEXEC_ONLY
+	bool
+	default n
+
+config KBL
+	bool "Reduced size kexec-tools"
+	default y
+	select KBL_KEXEC_ONLY
+	help
+	  Say 'Y' here to include the the Kexec Bootloader as a cheep
+	  substitute for kexec-tools
+
+config BUSYBOX
+	bool "Busybox"
+	default y
+	help
+	  Say 'Y' here to include the busybox tools
+
+config BOOTMENU
+	bool "Bootmenu"
+	default y
+	help
+	  Say 'Y' here to include the bootmenu selector
+	
+config OLPCFLASH
+	bool "OLPC flash utility"
+	depends PLATFORM_OLPC
+	default y
+	help
+	  Say 'Y' here to include the OLPC flash utility
+
+endmenu
+
+menu "Memtest86 Configuration"
+depends PAYLOAD_MEMTEST
+
+config MEMTEST_SERIAL
+       bool "Configure memtest for serial output"
+       default y
+       help
+         Turn on serial output for memtest86+
+
+endmenu
+
+menu "Etherboot Configuration"
+depends PAYLOAD_ETHERBOOT
+
+config ETHERBOOT_DRIVER
+	string "Etherboot NIC driver to support"
+	default "rtl8139"
+	help
+	  Specify the etherboot NIC driver to build a ROM for.  See the
+	  Etherboot project for more details
+
+endmenu
+endmenu

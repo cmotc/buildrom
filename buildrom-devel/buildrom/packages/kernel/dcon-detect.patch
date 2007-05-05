@@ -1,0 +1,197 @@
+[PATCH] Detect if the OLPC DCON was detected by the BIOS
+
+From: Jordan Crouse <jordan.crouse@amd.com>
+
+If the OLPC DCON is present, then we'll adjust the mode database
+accordingly (since there is really only 1 mode available anyway).
+
+Signed-off-by: Jordan Crouse <jordan.crouse@amd.com>
+---
+
+ arch/i386/Kconfig               |    7 +++++++
+ arch/i386/kernel/Makefile       |    1 +
+ arch/i386/kernel/olpc.c         |   38 ++++++++++++++++++++++++++++++++++++++
+ drivers/video/geode/gxfb_core.c |   39 +++++++++++++++++++++++++++++++++++----
+ 4 files changed, 81 insertions(+), 4 deletions(-)
+
+Index: linux-2.6.18-rc4-olpc1/arch/i386/Kconfig
+===================================================================
+--- linux-2.6.18-rc4-olpc1.orig/arch/i386/Kconfig	2006-08-08 11:13:24.000000000 -0600
++++ linux-2.6.18-rc4-olpc1/arch/i386/Kconfig	2006-10-03 10:44:14.000000000 -0600
+@@ -1113,6 +1113,13 @@
+ 	def_bool y
+ 	depends on AGP_AMD64
+ 
++config OLPC
++	bool "OLPC Support"
++	default n
++	help
++	  Add support for detecting the unique features of the OLPC 
++	  Childrens Machine
++	  
+ source "drivers/pcmcia/Kconfig"
+ 
+ source "drivers/pci/hotplug/Kconfig"
+Index: linux-2.6.18-rc4-olpc1/arch/i386/kernel/Makefile
+===================================================================
+--- linux-2.6.18-rc4-olpc1.orig/arch/i386/kernel/Makefile	2006-08-08 11:13:24.000000000 -0600
++++ linux-2.6.18-rc4-olpc1/arch/i386/kernel/Makefile	2006-10-03 10:44:14.000000000 -0600
+@@ -44,6 +44,7 @@
+ EXTRA_AFLAGS   := -traditional
+ 
+ obj-$(CONFIG_SCx200)		+= scx200.o
++obj-$(CONFIG_OLPC)		+= olpc.o
+ 
+ # vsyscall.o contains the vsyscall DSO images as __initdata.
+ # We must build both images before we can assemble it.
+Index: linux-2.6.18-rc4-olpc1/arch/i386/kernel/olpc.c
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ linux-2.6.18-rc4-olpc1/arch/i386/kernel/olpc.c	2006-10-03 10:44:14.000000000 -0600
+@@ -0,0 +1,38 @@
++/* Support for the OLPC Childrens Machine
++ * Copyright (C) 2006, Advanced Micro Devices, Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++
++#include <linux/config.h>
++#include <linux/kernel.h>
++#include <linux/init.h>
++#include <linux/mc146818rtc.h>
++
++int olpc_dcon_present;
++
++/* REV_A CMOS map:
++ * bit 440;  DCON present bit
++ */
++
++#define OLPC_CMOS_DCON_OFFSET (440 / 8)
++#define OLPC_CMOS_DCON_MASK   0x01
++
++static int __init olpc_init(void) {
++
++  unsigned char val;
++
++  /* Read the DCON present bit and set the flag accordingly */
++
++  val = CMOS_READ(OLPC_CMOS_DCON_OFFSET);
++  olpc_dcon_present = (val & OLPC_CMOS_DCON_MASK);
++
++  return 0;
++}
++
++subsys_initcall(olpc_init);
++EXPORT_SYMBOL(olpc_dcon_present);
++
+Index: linux-2.6.18-rc4-olpc1/drivers/video/geode/gxfb_core.c
+===================================================================
+--- linux-2.6.18-rc4-olpc1.orig/drivers/video/geode/gxfb_core.c	2006-08-08 11:13:24.000000000 -0600
++++ linux-2.6.18-rc4-olpc1/drivers/video/geode/gxfb_core.c	2006-10-03 10:46:58.000000000 -0600
+@@ -38,6 +38,7 @@
+ static char *mode_option;
+ 
+ /* Modes relevant to the GX (taken from modedb.c) */
++
+ static const struct fb_videomode gx_modedb[] __initdata = {
+ 	/* 640x480-60 VESA */
+ 	{ NULL, 60, 640, 480, 39682,  48, 16, 33, 10, 96, 2,
+@@ -103,11 +104,33 @@
+ 	{ NULL, 85, 1600, 1200, 4357, 304, 64, 46, 1, 192, 3,
+ 	  FB_SYNC_HOR_HIGH_ACT | FB_SYNC_VERT_HIGH_ACT,
+ 	  FB_VMODE_NONINTERLACED, FB_MODE_IS_VESA },
+-	{ "OLPC-1", 50, 1200, 900, 17460, 24, 8, 4, 5, 8, 3,
++	/* 1200x900-75 - CRT timings for the OLPC mode */
++	{ NULL, 75, 1200, 900, 8049, 104, 240, 29, 54, 136, 3,
++	  FB_SYNC_HOR_HIGH_ACT | FB_SYNC_VERT_HIGH_ACT,
++	  FB_VMODE_NONINTERLACED, 0 }
++};
++
++#ifdef CONFIG_OLPC
++
++/* If the DCON is not detected - then we need to choose a default mode
++ * in OLPC mode
++ */
++
++static const struct fb_videomode gx_nodcon_default = {
++	NULL, 60, 1024, 768, 15384, 160, 24, 29, 3, 136, 6,
++	0, FB_VMODE_NONINTERLACED, FB_MODE_IS_VESA
++};
++
++static const struct fb_videomode gx_dcon_modedb[] __initdata = {
++	/* The only mode the DCON has is 1200x900 */
++	{ NULL, 50, 1200, 900, 17460, 24, 8, 4, 5, 8, 3,
+ 	  FB_SYNC_HOR_HIGH_ACT | FB_SYNC_VERT_HIGH_ACT,
+ 	  FB_VMODE_NONINTERLACED, 0 }
+ };
+ 
++extern int olpc_dcon_present;
++#endif
++
+ static int gxfb_check_var(struct fb_var_screeninfo *var, struct fb_info *info)
+ {
+ 	if (var->xres > 1600 || var->yres > 1200)
+@@ -313,6 +336,10 @@
+ 	int ret;
+ 	unsigned long val;
+ 
++	struct fb_videomode *modedb_default = NULL;
++	struct fb_videomode *modedb_ptr;
++	int modedb_size;
++
+ 	info = gxfb_init_fbinfo(&pdev->dev);
+ 	if (!info)
+ 		return -ENOMEM;
+@@ -336,15 +363,34 @@
+ 	else
+ 		par->enable_crt = 1;
+ 
++	/* If the OLPC DCON is present, then we use a special
++	 * mode database (don't say we support modes that we don't).
++	 */
++
++	modedb_ptr = (struct fb_videomode *) gx_modedb;
++	modedb_size = ARRAY_SIZE(gx_modedb);
++
++#ifdef CONFIG_OLPC
++	if (olpc_dcon_present) {
++		printk(KERN_INFO "gxfb:  DCON detected.\n");
++		modedb_ptr = (struct fb_videomode *) gx_dcon_modedb;
++		modedb_size = ARRAY_SIZE(gx_dcon_modedb);
++	}
++	else {
++		/* Specify the 1024x768@60 default for non DCON users */
++		modedb_default = &gx_nodcon_default;
++	}
++#endif
++
+ 	ret = fb_find_mode(&info->var, info, mode_option,
+-			   gx_modedb, ARRAY_SIZE(gx_modedb), NULL, 16);
++			   modedb_ptr, modedb_size, modedb_default, 16);
++
+ 	if (ret == 0 || ret == 4) {
+ 		dev_err(&pdev->dev, "could not find valid video mode\n");
+ 		ret = -EINVAL;
+ 		goto err;
+ 	}
+ 
+-       
+ 	/* Clear the frame buffer of garbage. */
+         memset_io(info->screen_base, 0, info->fix.smem_len);
+ 
+Index: linux-2.6.18-rc4-olpc1/drivers/video/modedb.c
+===================================================================
+--- linux-2.6.18-rc4-olpc1.orig/drivers/video/modedb.c	2006-08-08 11:13:24.000000000 -0600
++++ linux-2.6.18-rc4-olpc1/drivers/video/modedb.c	2006-10-03 10:44:14.000000000 -0600
+@@ -506,7 +506,7 @@
+ 	dbsize = ARRAY_SIZE(modedb);
+     }
+     if (!default_mode)
+-	default_mode = &modedb[DEFAULT_MODEDB_INDEX];
++	default_mode = &db[DEFAULT_MODEDB_INDEX];
+     if (!default_bpp)
+ 	default_bpp = 8;
+ 

@@ -1,0 +1,73 @@
+# Set any settings that remain unset from the configuration
+
+# Borrowed from the kernel
+
+try-run= $(shell set -e; \
+	   TMP=".$$$$.tmp"; \
+	   if ($(1)) > /dev/null 2>&1; \
+	   then echo "$(2)"; \
+	   else echo "$(3)"; \
+	   fi; rm -rf "$$TMP")
+
+cc-option= $(call try-run,\
+	$(CC) $(1) -S -xc /dev/null -o "$$TMP", $(1), $(2))
+
+CC ?= gcc
+STRIP ?= strip
+AS ?= as
+LC ?= ld
+
+BUILD_ARCH=$(shell uname -m)
+
+CROSS_CFLAGS=
+CROSS_ASFLAGS=
+CROSS_LDFLAGS=
+
+ifeq ($(BUILD_ARCH),x86_64)
+ifneq ($(BUILD_ARCH), $(TARGET_ARCH))
+CROSS_ASFLAGS=-m32
+CROSS_CFLAGS=-m32
+CROSS_LDFLAGS=-melf_i386
+endif
+endif
+
+# Get the GCC version
+
+GCCVER:=$(shell $(CC) --version | head -n 1 | awk '{print $$3}')
+GCCMAJ:=$(word 1, $(subst ., ,$(GCCVER)))
+GCCMIN:=$(word 2, $(subst ., ,$(GCCVER)))
+
+# Do a bit of groking of the GCC params
+
+GCCDIR:=$(shell $(CC) --print-search-dirs | grep install | awk '{print $$2}')
+LIBGCC:=$(shell $(CC) $(CROSS_CFLAGS) -print-libgcc-file-name)
+
+CFLAGS:=-nostdinc $(CROSS_CFLAGS) $(CFLAGS_platform) -Os -isystem $(STAGING_DIR)/include \
+-isystem $(GCCDIR)/include
+
+ASFLAGS=$(CROSS_ASFLAGS) $(ASFLAGS_platform)
+
+STACKPROTECT += $(call cc-option, -fno-stack-protector,)
+CFLAGS += $(STACKPROTECT)
+
+# Borrowed from busybox
+STRIPCMD := $(STRIP) -s --remove-section=.note --remove-section=.comment
+
+# This extra variable is needed because we need the original LDFLAGS
+# (without any cross flags) for at least busybox, and probably others too
+
+LDFLAGS_orig = -nostdlib -L$(STAGING_DIR)/lib \
+-Wl,-rpath-link,$(STAGING_DIR)/lib -Wl,--dynamic-linker,/lib/ld-uClibc.so.0 \
+$(LDFLAGS_platform)
+
+LDFLAGS=$(CROSS_LDFLAGS) $(LDFLAGS_orig)
+
+LIBS = $(STAGING_DIR)/lib/crt1.o -lc $(LIBGCC)
+
+HOST_CC=gcc
+HOST_CFLAGS=
+HOST_LDFLAGS=
+
+HOSTCC=$(HOST_CC)
+
+export CC CFLAGS LDFLAGS ASFLAGS LIBS

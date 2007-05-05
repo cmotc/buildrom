@@ -1,0 +1,89 @@
+
+Unroll crc32 calculation on small systems
+
+
+ tiny-mpm/init/Kconfig    |   12 ++++++++++++
+ tiny-mpm/lib/Makefile    |    2 ++
+ tiny-mpm/lib/crc32.c     |    2 ++
+ tiny-mpm/lib/crc32defs.h |    9 ++++++++-
+ 4 files changed, 24 insertions(+), 1 deletion(-)
+
+Index: git/init/Kconfig
+===================================================================
+--- git.orig/init/Kconfig	2006-10-24 13:41:52.000000000 -0600
++++ git/init/Kconfig	2006-10-24 13:44:02.000000000 -0600
+@@ -467,12 +467,25 @@
+  	  Disable this only if you know your target machine is unaffected
+  	  by PCI quirks.
+ 
++config CRC32_TABLES
++	depends CRC32
++	default y
++	bool "Calculate CRC32 with tables" if EMBEDDED
++	help
++	  This option enables use of tables for CRC calculation. Disabling
++          reduces kernel size by about 2K. This may actually result in
++          faster code on machines with limited memory bandwidth.
++
+ endmenu		# General setup
+ 
+ config RT_MUTEXES
+ 	boolean
+ 	select PLIST
+ 
++config CRC32_CALC
++	default !CRC32_TABLES
++	bool
++
+ config TINY_SHMEM
+ 	default !SHMEM
+ 	bool
+Index: git/lib/Makefile
+===================================================================
+--- git.orig/lib/Makefile	2006-10-23 07:35:33.000000000 -0600
++++ git/lib/Makefile	2006-10-24 13:43:43.000000000 -0600
+@@ -58,7 +58,9 @@
+ hostprogs-y	:= gen_crc32table
+ clean-files	:= crc32table.h
+ 
++ifeq ($(CONFIG_CRC32_TABLES),y)
+ $(obj)/crc32.o: $(obj)/crc32table.h
++endif
+ 
+ quiet_cmd_crc32 = GEN     $@
+       cmd_crc32 = $< > $@
+Index: git/lib/crc32.c
+===================================================================
+--- git.orig/lib/crc32.c	2006-10-23 07:35:33.000000000 -0600
++++ git/lib/crc32.c	2006-10-24 13:43:43.000000000 -0600
+@@ -36,7 +36,9 @@
+ #define tole(x) (x)
+ #define tobe(x) (x)
+ #endif
++#ifdef CONFIG_CRC32_TABLES
+ #include "crc32table.h"
++#endif
+ 
+ MODULE_AUTHOR("Matt Domsch <Matt_Domsch@dell.com>");
+ MODULE_DESCRIPTION("Ethernet CRC32 calculations");
+Index: git/lib/crc32defs.h
+===================================================================
+--- git.orig/lib/crc32defs.h	2006-10-23 07:35:33.000000000 -0600
++++ git/lib/crc32defs.h	2006-10-24 13:43:43.000000000 -0600
+@@ -7,8 +7,15 @@
+ #define CRCPOLY_BE 0x04c11db7
+ 
+ /* How many bits at a time to use.  Requires a table of 4<<CRC_xx_BITS bytes. */
++
++#ifdef CONFIG_CRC32_CALC /* config symbols not visible to gen_crc32table */
++#define CRC_LE_BITS 1
++#define CRC_BE_BITS 1
++#endif
++
+ /* For less performance-sensitive, use 4 */
+-#ifndef CRC_LE_BITS 
++
++#ifndef CRC_LE_BITS
+ # define CRC_LE_BITS 8
+ #endif
+ #ifndef CRC_BE_BITS

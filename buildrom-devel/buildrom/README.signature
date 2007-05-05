@@ -1,0 +1,35 @@
+Description of the fimrware signature
+
+Pulled from http://dev.laptop.org/ticket/153.
+
+Here's the format:
+
+At offset f.ffc0 in FLASH:
+BW2   Q1A82  Q1A
+------.....  ---
+  |     |     |
+  |     |     |---First 3 characters of revision
+  |     |
+  |     |---Revision
+  |
+  |--- Model
+
+Revision is:
+
+Q - Manufacturer, i.e. Quanta
+1 - board revision number
+A - Major firmware revision
+82- Minor firmware revision
+
+------- Quanta describes their release sequence:
+
+Let me explain our ISO sequence: Qxxxx First x: 1 for A test, 2 for B test, 3 for C test Second x: A~Z: milestone Third x: 1~9: change when test team release to customer, manufacture (outside R&D) Forth x: 1~9: change when sw team release to test team.(inside R&D)
+
+Take EC as example: Q1A11 when sw team release to test team. Test team find some problems, can not relase out Q1A12 when sw team fix the problem and release to test team again Test team test OK, and release out
+
+Next version sw team release will be Q1A21
+
+As I mentioned we will use file name to distinguish the release.
+
+EC release will be PQ1A21.bin (Leading by P) BIOS release will be BQ2A11.bin (leading by B) 
+

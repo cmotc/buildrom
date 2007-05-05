@@ -5,7 +5,7 @@ MKELFIMAGE_SRC_DIR=$(MKELFIMAGE_DIR)/mkelfImage-2.5
 MKELFIMAGE_STAMP_DIR=$(MKELFIMAGE_DIR)/stamps
 MKELFIMAGE_LOG_DIR=$(MKELFIMAGE_DIR)/logs
 
-ifeq ($(VERBOSE),y)
+ifeq ($(CONFIG_VERBOSE),y)
 MKELFIMAGE_BUILD_LOG=/dev/stdout
 MKELFIMAGE_CONFIG_LOG=/dev/stdout
 else
@@ -18,6 +18,7 @@ $(SOURCE_DIR)/$(MKELFIMAGE_SOURCE):
 	@ wget -P $(SOURCE_DIR) $(MKELFIMAGE_URL)/$(MKELFIMAGE_SOURCE)
 
 $(MKELFIMAGE_STAMP_DIR)/.unpacked: $(SOURCE_DIR)/$(MKELFIMAGE_SOURCE)
+	@ echo "Unpacking mkelfimage..."
 	@ tar -C $(MKELFIMAGE_DIR) -zxf $(SOURCE_DIR)/$(MKELFIMAGE_SOURCE)
 	@ touch $@	
 
@@ -42,8 +43,12 @@ $(MKELFIMAGE_STAMP_DIR) $(MKELFIMAGE_LOG_DIR):
 mkelfimage: $(MKELFIMAGE_STAMP_DIR) $(MKELFIMAGE_LOG_DIR) $(STAGING_DIR)/sbin/mkelfImage
 
 mkelfimage-clean:
-	@ $(MAKE) -C $(MKELFIMAGE_SRC_DIR) clean > /dev/null 2>&1
+	$(MAKE) -C $(MKELFIMAGE_SRC_DIR) clean 
 
 mkelfimage-distclean:
 	@ rm -rf $(MKELFIMAGE_DIR)/*
 
+mkelfimage-bom:
+	echo "Package: mkelfimage"
+	echo "Source: $(MKELFIMAGE_URL)/$(MKELFIMAGE_SOURCE)"
+	echo ""

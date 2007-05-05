@@ -1,0 +1,18 @@
+menu "Platform Configuration"
+
+choice
+	prompt "Platform target for the ROM"
+	default PLATFORM_NORWICH
+	help
+	  Select the target to build the LinuxBIOS ROM for
+
+config PLATFORM_NORWICH
+       bool "AMD Geode LX 'Norwich'"
+       select PLATFORM
+
+config PLATFORM_OLPC
+       bool "OLPC Laptop"
+       select PLATFORM
+
+endchoice
+endmenu

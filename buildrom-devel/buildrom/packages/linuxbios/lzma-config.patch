@@ -1,0 +1,15 @@
+Index: LinuxBIOSv2/targets/olpc/rev_a/Config.SPI.lb
+===================================================================
+--- LinuxBIOSv2.orig/targets/olpc/rev_a/Config.SPI.lb	2006-09-15 11:54:44.000000000 -0600
++++ LinuxBIOSv2/targets/olpc/rev_a/Config.SPI.lb	2006-09-15 11:55:04.000000000 -0600
+@@ -5,8 +5,8 @@
+ 
+ # Don't let LinuxBIOS compress the payload
+ #option CONFIG_COMPRESSED_ROM_STREAM_NRV2B=0
+-#option CONFIG_COMPRESSED_ROM_STREAM_LZMA=1
+-#option CONFIG_PRECOMPRESSED_ROM_STREAM=0
++option CONFIG_COMPRESSED_ROM_STREAM_LZMA=1
++option CONFIG_PRECOMPRESSED_ROM_STREAM=1
+ 
+ # leave 64k for vsa and 64k for EC code
+ option ROM_SIZE=(1024*1024)-(64*1024)-(64*1024)
