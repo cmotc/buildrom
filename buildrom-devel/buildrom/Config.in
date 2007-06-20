@@ -43,6 +43,18 @@ config LB_BUILDDIR
 	string "LinuxBIOS build directory"
 	depends LB_USE_BUILD
 
+config LB_CUSTOM_REV
+	bool "Override the platform LinuxBIOS revision"
+	depends ADVANCED && !LB_USE_BUILD
+	default n
+	help
+	  Say 'y' here to overide the default LinuxBIOS SVN revsion
+  	  from the platform configuration
+
+config LB_REVISION
+	string "LinuxBIOS revision"
+	depends LB_CUSTOM_REV
+
 endmenu
 
 config PLATFORM
