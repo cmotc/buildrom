@@ -4,4 +4,4 @@
 $(PAYLOAD_ELF): $(PAYLOAD-y)
 $(PAYLOAD_COMPRESSED): $(PAYLOAD_ELF)
 	@ echo "Compressing the ELF payload with lzma..."
-	@ $(STAGING_DIR)/bin/lzma e $< 2> /dev/null $@ 
+	@ $(STAGING_DIR)/bin/lzma e $< $@  2> /dev/null

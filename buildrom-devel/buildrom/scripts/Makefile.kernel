@@ -9,5 +9,5 @@ $(OUTPUT_DIR)/kernel-payload.elf: $(PAYLOAD-y)
 
 $(OUTPUT_DIR)/kernel-payload.elf.lzma: $(OUTPUT_DIR)/kernel-payload.elf
 	@ echo "Compressing the ELF payload with lzma..."
-	@ $(STAGING_DIR)/bin/lzma e $< 2> /dev/null $@ 
+	@ $(STAGING_DIR)/bin/lzma e $< $@  2> /dev/null
 	@ $(BIN_DIR)/checkrom.sh $@

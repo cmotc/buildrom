@@ -53,7 +53,7 @@ $(ETHERBOOT_STAMP_DIR) $(ETHERBOOT_LOG_DIR):
 
 etherboot: $(ETHERBOOT_STAMP_DIR) $(ETHERBOOT_LOG_DIR) $(ETHERBOOT_OUTPUT) 
 	@ mkdir -p $(OUTPUT_DIR)
-	@ cp $(ETHERBOOT_OUTPUT) $(PAYLOAD_TARGET)
+	@ cp $(ETHERBOOT_OUTPUT) $(PAYLOAD_ELF)
 
 etherboot-clean:
 	@ echo "Cleaning etherboot..."

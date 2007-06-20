@@ -50,7 +50,7 @@ $(FILO_STAMP_DIR) $(FILO_LOG_DIR):
 
 filo: $(FILO_STAMP_DIR) $(FILO_LOG_DIR) $(FILO_SRC_DIR)/filo.elf
 	@ mkdir -p $(OUTPUT_DIR)
-	@ cp $(FILO_SRC_DIR)/filo.elf $(PAYLOAD_TARGET)
+	@ cp $(FILO_SRC_DIR)/filo.elf $(PAYLOAD_ELF)
 
 filo-clean:
 	@ echo "Cleaning filo..."
