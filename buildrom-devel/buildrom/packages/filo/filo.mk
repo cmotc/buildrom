@@ -22,7 +22,7 @@ FILO_TARBALL=filo-svn-$(FILO_TAG).tar.gz
 
 $(SOURCE_DIR)/$(FILO_TARBALL): 
 	@ mkdir -p $(SOURCE_DIR)/filo
-	@ $(BIN_DIR)/fetchsvn.sh $(FILO_URL) $(SOURCE_DIR)/linuxbios \
+	@ $(BIN_DIR)/fetchsvn.sh $(FILO_URL) $(SOURCE_DIR)/filo \
 	$(FILO_TAG) $(SOURCE_DIR)/$(FILO_TARBALL) \
 	> $(FILO_FETCH_LOG) 2>&1
 
