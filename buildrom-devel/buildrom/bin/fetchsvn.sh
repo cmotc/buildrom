@@ -6,6 +6,13 @@ DIR=$2
 REV=$3
 TARBALL=$4
 
+SVNV=`svn --version --quiet`
+
+if [ $? -ne 0 ]; then
+	echo "You don't have SVN installed."
+	exit 1
+fi
+
 # Simple case - the repository doesn't exist
 
 if [ ! -d $DIR/svn/.svn ]; then
