@@ -14,12 +14,12 @@ config PLATFORM_OLPC
        bool "OLPC Laptop"
        select PLATFORM
 
-config PLATFORM_MSM800SEV
-       bool "Digital Logic msm800sev"
+config PLATFORM_DBE61
+       bool "Artec Group dbe61"
        select PLATFORM
 
-config PLATFORM_DB800
-       bool "AMD DB800"
+config PLATFORM_MSM800SEV
+       bool "Digital Logic msm800sev"
        select PLATFORM
 
 endchoice
