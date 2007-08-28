@@ -22,5 +22,9 @@ config PLATFORM_MSM800SEV
        bool "Digital Logic msm800sev"
        select PLATFORM
 
+config PLATFORM_DB800
+	bool "AMD DB800"
+	select PLATFORM
+
 endchoice
 endmenu
