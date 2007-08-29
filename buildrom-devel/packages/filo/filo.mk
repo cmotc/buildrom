@@ -27,7 +27,7 @@ $(SOURCE_DIR)/$(FILO_TARBALL):
 	> $(FILO_FETCH_LOG) 2>&1
 
 $(FILO_STAMP_DIR)/.unpacked: $(SOURCE_DIR)/$(FILO_TARBALL)
-	@ echo "Unpacking busybox..."
+	@ echo "Unpacking filo..."
 	@ tar -C $(FILO_DIR) -zxf $(SOURCE_DIR)/$(FILO_TARBALL)
 	@ touch $@      
 
