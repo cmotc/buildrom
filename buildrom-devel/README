@@ -8,8 +8,8 @@ Introduction
 This is a simple makefile system that designed to build a ROM image for 
 LinuxBIOS based systems.  This system allows one to choose one of several
 different payloads for a variety of platforms.  The intention of buildROM
-is to build everythign together with one step, rather then the 6 or 8 
-individual steps that it would hae taken previously.
+is to build everything together with one step, rather then the 6 or 8 
+individual steps that it would have taken previously.
 
 Payloads
 
