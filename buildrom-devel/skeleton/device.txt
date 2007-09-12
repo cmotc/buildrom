@@ -6,5 +6,12 @@ tty1	c	640	0	0	4	1
 console        c       640     0       0       5       1
 sda    b       660     0       0       8       0
 sda1   b       660     0       0       8       1
+sda2   b       660     0       0       8       2
+sda3   b       660     0       0       8       3
+sda4   b       660     0       0       8       4
+sda5   b       660     0       0       8       5
+sda6   b       660     0       0       8       6
+sda7   b       660     0       0       8       7
+sda8   b       660     0       0       8       8
 mem    c       640     0       0       1       1
 fb0    c       640     0       0       29      0

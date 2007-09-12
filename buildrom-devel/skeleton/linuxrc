@@ -1,16 +1,12 @@
 #!/bin/sh
 
-# We need boot functions for message()
+/sbin/makedevs /dev < device.txt > /output.makedevs.txt 2>&1
+
 . /bin/boot.functions
 
 boot_default() {
-	sh /bin/boot-nand
-	sh /bin/boot-usb
+	sh /bin/boot-hdd
 }
-
-# Make the null device by hand, since we use it in the makedevs step.
-
-mknod /dev/null c 1 3
 
 mkdir /proc
 mount -t proc proc /proc
@@ -18,45 +14,15 @@ mount -t proc proc /proc
 # For debug purposes
 mount -t usbfs usbfs /proc/bus/usb
 
-# Makedevs returns seemingly nasty error messages, even though the
-# files are still created (we're missing something in the minimal kernel 
-# that causes chown to return ENOSYS).
-# End result - we ignore the error messages
-
-/sbin/makedevs /dev < device.txt > /dev/null 2>&1
-
 # Show the version 
-cat /buildrom-version
 cat /buildrom-version > /dev/tty$VT
 
-# FIXME - bad!
-
-message "Starting bootmenu."
+message "Trying to boot from hdd."
 cd /bin
-./bootmenu
+./boot-hdd
 RET=$?
 cd /
 
-# Bootmenu now returns 0 if the timeout happened (meaning, 
-# we want to boot the default - which in this case is nand
-# then USB key.  $RET > 0 means to select the menu item
-
-# NOTE:  Should 3 be boot_default, or boot-usb only?
-
-if [ $RET -eq 0 ]; then
-	message "NOTICE: Booting default"
-	boot_default
-elif [ $RET -eq 1 ]; then
-	message "ERROR: Wired mode isn't supported right now."
-elif [ $RET -eq 2 ]; then
-	message "ERROR: Wireless mode isn't supported right now."
-elif [ $RET -eq 3 ]; then
-	sh /bin/boot-usb
-elif [ $RET -eq -1 ]; then
-	message "ERROR: The bootmenu was not successful."
-fi
-
 message "NOTICE: Starting the shell..."
-
 openvt $VT /bin/ash
 exec /bin/ash

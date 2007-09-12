@@ -4,16 +4,10 @@
 # Note - these are being kept for compatablity purposes
 # The best solution is to use olpc-boot.sh
 
-CMDLINE="root=/dev/sda1 console=ttyS0,115200 console=tty0 rootdelay=10 rw"
-KERNEL="/bzImage"
-INITRD=""
+CMDLINE="root=/dev/sda1 ro console=tty0 console=ttyS0,115200"
+KERNEL="/boot/vmlinuz"
+INITRD="/boot/initrd.img"
 VT="1"
-
-# Any of the above can be over-ridden by /boot.conf
-
-if [ -f /boot.conf ]; then
-	. /boot.conf
-fi
 
 message() {
 	echo $1 > /dev/tty$VT
@@ -26,25 +20,14 @@ doboot() {
 	# Switch to the mounted directory to make life easier for the script
 	cd $DIR 
 
-	if [ -x ./boot/olpc-boot.sh ]; then
-		. ./boot/olpc-boot.sh
-		message "Unable to execute the olpc-boot.sh script"
-		return
+	# Any of the above can be over-ridden by /boot.conf
+
+	if [ -f $DIR/etc/boot.conf ]; then
+		. $DIR/etc/boot.conf
 	fi
 
-	if [ -x ./olpc-boot.sh ]; then
-		. ./olpc-boot.sh
-		message "Unable to execute the olpc-boot.sh script"
-		return
-	fi
+	$DIR/sbin/kexec -l $DIR/$KERNEL --command-line="$CMDLINE"
+	$DIR/sbin/kexec -e
 
-	# For backwards compatablity - try to find the kernel
-
-	if [ ! -f $DIR$KERNEL ]; then
-		message "ERROR: $DIR$KERNEL doesn't exist."
-		return
-	fi
-
-	/sbin/kbl-kexec $DIR$KERNEL "$CMDLINE" $INITRD
-	message "ERROR: can't run kbl-kexec $DIR$KERNEL $CMDLINE $INITRD"
+	message "ERROR: can't run kexec $DIR$KERNEL $CMDLINE $INITRD"
 }
