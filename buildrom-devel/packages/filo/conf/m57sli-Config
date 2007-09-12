@@ -1,0 +1,50 @@
+# Use grub instead of autoboot?
+USE_GRUB = 1
+# Grub menu.lst path
+MENULST_FILE = "hde1:/boot/grub/menu.lst"
+# Driver for hard disk, CompactFlash, and CD-ROM on IDE bus
+IDE_DISK = 1
+# Add a short delay when polling status registers
+# (required on some broken SATA controllers)
+IDE_DISK_POLL_DELAY = 1
+# Driver for USB Storage
+USB_DISK = 1
+# VGA text console
+VGA_CONSOLE = 1
+PC_KEYBOARD = 1
+# Enable the serial console
+SERIAL_CONSOLE = 1
+# Serial console; real external serial port
+SERIAL_IOBASE = 0x3f8
+SERIAL_SPEED = 115200
+# Filesystems
+FSYS_EXT2FS = 1
+FSYS_ISO9660 = 1
+# Support for boot disk image in bootable CD-ROM (El Torito)
+ELTORITO = 1
+# PCI support
+SUPPORT_PCI = 1
+# Enable this to scan PCI busses above bus 0
+# AMD64 based boards do need this.
+PCI_BRUTE_SCAN = 1
+# Loader for standard Linux kernel image, a.k.a. /vmlinuz
+LINUX_LOADER = 1
+
+# Debugging
+#DEBUG_ALL = 1
+#DEBUG_ELFBOOT = 1
+#DEBUG_ELFNOTE = 1
+#DEBUG_LINUXBIOS = 1
+#DEBUG_MALLOC = 1
+#DEBUG_MULTIBOOT = 1
+#DEBUG_SEGMENT = 1
+#DEBUG_SYS_INFO = 1
+#DEBUG_TIMER = 1
+#DEBUG_BLOCKDEV = 1
+#DEBUG_PCI = 1
+#DEBUG_VIA_SOUND = 1
+#DEBUG_LINUXLOAD = 1
+#DEBUG_IDE = 1
+#DEBUG_USB = 1
+#DEBUG_ELTORITO = 1
+
