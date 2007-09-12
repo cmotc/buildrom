@@ -26,5 +26,9 @@ config PLATFORM_DB800
 	bool "AMD DB800"
 	select PLATFORM
 
+config PLATFORM_M57SLI
+       bool "Gigabyte M57SLI"
+       select PLATFORM
+
 endchoice
 endmenu
