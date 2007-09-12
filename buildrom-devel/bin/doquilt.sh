@@ -22,6 +22,13 @@ if [ $# -eq 0 ]; then
 	exit 0
 fi
 
+# Sometimes the patch order matches. In that case, we can pass the entire patch subdirectory
+# to this script as the second argument, and we'll copy it into $DIR/patches/
+if [ -d $1 ]; then
+	cp -pr $1/* $DIR/patches/
+	shift
+fi
+
 while [ $# -gt 0 ]; do
     echo `basename $1` >> $DIR/patches/series
     cp $1 $DIR/patches
