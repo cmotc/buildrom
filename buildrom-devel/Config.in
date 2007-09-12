@@ -10,7 +10,7 @@ config VERBOSE
 	bool "See the build output on stdout"
 	default n
 	help
-	  See the entire build output on stdout.  Otherwise, it will
+	  See the entire build output on stdout. Otherwise, it will
 	  be saved off in a series of logs
 
 config ADVANCED
@@ -24,10 +24,11 @@ menu "LinuxBIOS configuration"
 config USE_LZMA
 	bool "Enable LZMA compression"
 	depends !PAYLOAD_OFW
+	depends !PAYLOAD_FILO
 	default y
 	help
-	  Allow LZMA compression for the payload.  This doesn't work
-	  for OFW.
+	  Allow LZMA compression for the payload. This doesn't work
+	  for FILO or OFW. 
 
 
 config LB_USE_BUILD
