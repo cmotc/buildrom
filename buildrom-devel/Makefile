@@ -94,4 +94,10 @@ oldconfig: $(KCONFIG_DIR)/conf
 
 defconfig: $(KCONFIG_DIR)/conf
 	@$(KCONFIG_DIR)/conf -d $(BASE_DIR)/Config.in
+
+menuconfig:
+	@make -C $(KCONFIG_DIR)/lxdialog lxdialog
+	@make -C $(KCONFIG_DIR) mconf
+	@$(KCONFIG_DIR)/mconf $(BASE_DIR)/Config.in
+
 endif
