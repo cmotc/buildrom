@@ -21,9 +21,20 @@ $(KERNEL_STAMP_DIR)/.unpacked: $(SOURCE_DIR)/$(KERNEL_SOURCE)
 	@ mkdir -p $(KERNEL_DIR)
 	@ echo "Unpacking kernel..."
 	@ tar -C $(KERNEL_DIR) -jxf $(SOURCE_DIR)/$(KERNEL_SOURCE)
-	@ touch $@	
+	@ touch $@
 
+$(KERNEL_STAMP_DIR)/.unpacked-tiny: $(SOURCE_DIR)/$(TINY_SOURCE)	
+	@ mkdir -p $(KERNEL_DIR)
+	@ mkdir -p $(KERNEL_DIR)/tiny
+	@ echo "Unpacking tiny patches..."
+	@ tar -C $(KERNEL_DIR)/tiny -xzf $(SOURCE_DIR)/$(TINY_SOURCE)
+	@ touch $@
+
+ifneq ($(TINY_SOURCE),)
+$(KERNEL_STAMP_DIR)/.patched: $(KERNEL_STAMP_DIR)/.unpacked $(KERNEL_STAMP_DIR)/.unpacked-tiny
+else
 $(KERNEL_STAMP_DIR)/.patched: $(KERNEL_STAMP_DIR)/.unpacked
+endif
 	@ echo "Patching kernel..."
 	@ $(BIN_DIR)/doquilt.sh $(KERNEL_SRC_DIR) $(KERNEL_PATCHES)
 	@ touch $@
