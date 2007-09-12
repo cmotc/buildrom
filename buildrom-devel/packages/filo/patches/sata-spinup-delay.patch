@@ -1,0 +1,12 @@
+Index: main/filo.c
+===================================================================
+--- svn/main/filo.c (revision 34)
++++ svn/main/filo.c (working copy)
+@@ -60,6 +60,7 @@
+     
+     /* Initialize */
+     init();
++    delay (5);
+     grub_main();
+     return 0;   
+ }
