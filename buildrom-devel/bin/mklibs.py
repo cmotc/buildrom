@@ -472,6 +472,10 @@ needed_symbols = Set()              # Set of (name, weakness-flag)
 # to be the only one and including it on alpha as well
 # doesn't hurt. I guess all archs can live with this.
 needed_symbols.add(("sys_siglist", 1))
+# For some reason this symbol is needed by busybox but not included in the
+# stripped libc...
+# Ward Vandewege, 2007-08-30
+needed_symbols.add(("__ctype_toupper", 1))
 
 while True:
     debug(DEBUG_NORMAL, "library reduction pass", `passnr`)
