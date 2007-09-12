@@ -8,6 +8,11 @@ FILO_LOG_DIR=$(FILO_DIR)/logs
 
 FILO_PATCHES=$(PACKAGE_DIR)/filo/patches/make.patch
 
+ifeq ($(CONFIG_PLATFORM_M57SLI),y)
+	FILO_PATCHES += $(PACKAGE_DIR)/filo/patches/sata-spinup-delay.patch
+endif
+
+
 ifeq ($(CONFIG_VERBOSE),y)
 FILO_FETCH_LOG=/dev/stdout
 FILO_BUILD_LOG=/dev/stdout
