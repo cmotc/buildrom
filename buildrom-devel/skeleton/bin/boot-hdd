@@ -1,0 +1,17 @@
+#!/bin/sh
+
+. /bin/boot.functions
+
+DIR=/hdd/
+
+mkdir $DIR
+mount -oro /dev/sda1 $DIR
+
+if [ $? -eq 0 ]; then
+	doboot $DIR
+	message "ERROR:  Couldn't boot from the hdd."
+	exit 1
+fi
+
+message "ERROR:  Couldn't mount the hdd."
+exit 1
