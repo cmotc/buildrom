@@ -25,7 +25,8 @@ BuildROM supports 7 different payload configurations:
 
 Configuration
 
-To configure the system, type 'make oldconfig', and answer the questions.
+To configure the system, type 'make menuconfig' (or 'make oldconfig'),
+and select your desired options, or answer the questions:
 
 CONFIG_VERBOSE - show build output on stdout instead of a log file
 CONFIG_ADVANCED - select some advanced options:
