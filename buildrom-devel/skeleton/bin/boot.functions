@@ -5,8 +5,8 @@
 # The best solution is to use olpc-boot.sh
 
 CMDLINE="root=/dev/sda1 ro console=tty0 console=ttyS0,115200"
-KERNEL="/boot/vmlinuz"
-INITRD="/boot/initrd.img"
+KERNEL="vmlinuz"
+INITRD="initrd.img"
 VT="1"
 
 message() {
@@ -20,14 +20,19 @@ doboot() {
 	# Switch to the mounted directory to make life easier for the script
 	cd $DIR 
 
-	# Any of the above can be over-ridden by /boot.conf
+	# Any of the above can be over-ridden by /lab.conf
 
-	if [ -f $DIR/etc/boot.conf ]; then
-		. $DIR/etc/boot.conf
+	if [ -f $DIR/lab.conf ]; then
+		. $DIR/lab.conf
 	fi
 
-	$DIR/sbin/kexec -l $DIR/$KERNEL --command-line="$CMDLINE"
-	$DIR/sbin/kexec -e
+	if [ "$INITRD" = "" ]; then
+		$DIR/kexec -l $DIR/$KERNEL --command-line="$CMDLINE"
+	else
+		$DIR/kexec -l $DIR/$KERNEL --initrd=$DIR/$INITRD --command-line="$CMDLINE"
+	fi
 
-	message "ERROR: can't run kexec $DIR$KERNEL $CMDLINE $INITRD"
+	$DIR/kexec -e
+
+	message "ERROR: can't run kexec $DIR/$KERNEL $CMDLINE $INITRD"
 }
