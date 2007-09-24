@@ -14,6 +14,8 @@ config PAYLOAD_CUSTOM
 	select PAYLOAD
 
 config PAYLOAD_ETHERBOOT
+	depends !PLATFORM_M57SLI
+	depends !PLATFORM_TYAN_S2891
 	bool "Etherboot"
 	select PAYLOAD
 
@@ -30,10 +32,14 @@ config PAYLOAD_LAB
 	select PAYLOAD
 
 config PAYLOAD_OFW
+	depends !PLATFORM_M57SLI
+	depends !PLATFORM_TYAN_S2891
 	bool "OpenFirmware"
 	select PAYLOAD
 
 config PAYLOAD_MEMTEST
+	depends !PLATFORM_M57SLI
+	depends !PLATFORM_TYAN_S2891
 	bool "Memtest86+"
 	select PAYLOAD
 
