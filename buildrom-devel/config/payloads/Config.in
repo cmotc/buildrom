@@ -31,11 +31,11 @@ config PAYLOAD_LAB
 	bool "Linux As Bootloader"
 	select PAYLOAD
 
-config PAYLOAD_OFW
-	depends !PLATFORM_M57SLI
-	depends !PLATFORM_TYAN_S2891
-	bool "OpenFirmware"
-	select PAYLOAD
+#config PAYLOAD_OFW
+#	depends !PLATFORM_M57SLI
+#	depends !PLATFORM_TYAN_S2891
+#	bool "OpenFirmware"
+#	select PAYLOAD
 
 config PAYLOAD_MEMTEST
 	depends !PLATFORM_M57SLI
