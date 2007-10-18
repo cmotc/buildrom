@@ -1,4 +1,0 @@
-This directory contains the binary bits that make up various parts of the 
-ROM:
-
-olpc_vsa.64k.bin - VSA code for the ROM.  Stored from 32k to 64k in the ROM.
