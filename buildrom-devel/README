@@ -48,8 +48,6 @@ LaB:
   CONFIG_KBL_KEXEC_ONLY - Build only the Kexec part of the KBL
   CONFIG_KBL - Build Marcelo Toscatti's kernel boot loader
   CONFIG_BUSYBOX - Build busybox
-  CONFIG_BOOTMENU - Build the OLPC bootmenu
-  CONFIG_OLPCFLASH - Build the 'olpcflash' utility
 
 memtest:
   CONFIG_MEMTEST_SERIAL - say 'y' here to enable serial output for memtest

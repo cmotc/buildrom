@@ -89,19 +89,6 @@ config BUSYBOX
 	help
 	  Say 'Y' here to include the busybox tools
 
-config BOOTMENU
-	bool "Bootmenu"
-	default y
-	help
-	  Say 'Y' here to include the bootmenu selector
-	
-config OLPCFLASH
-	bool "OLPC flash utility"
-	depends PLATFORM_OLPC
-	default y
-	help
-	  Say 'Y' here to include the OLPC flash utility
-
 endmenu
 
 menu "Memtest86 Configuration"
