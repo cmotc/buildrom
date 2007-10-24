@@ -30,6 +30,10 @@ config PLATFORM_M57SLI
        bool "Gigabyte M57SLI"
        select PLATFORM
 
+config PLATFORM_TYAN_S2882
+       bool "Tyan S2882"
+       select PLATFORM
+
 config PLATFORM_TYAN_S2891
        bool "Tyan S2891"
        select PLATFORM

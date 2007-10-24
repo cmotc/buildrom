@@ -1,0 +1,62 @@
+Index: LinuxBIOSv2/targets/tyan/s2882/Config.lb
+===================================================================
+--- LinuxBIOSv2/targets/tyan/s2882/Config.lb	(revision 2867)
++++ LinuxBIOSv2/targets/tyan/s2882/Config.lb	(working copy)
+@@ -5,47 +5,19 @@
+ target s2882
+ mainboard tyan/s2882
+ 
+-# Tyan s2882
+-romimage "normal"
+-#       48K for SCSI FW or ATI ROM
+-        option ROM_SIZE = 512*1024-48*1024
+-#       48K for SCSI FW and 48K for ATI ROM
+-#        option ROM_SIZE = 512*1024-48*1024-48*1024
+-#       64K for Etherboot
+-#        option ROM_SIZE = 512*1024-64*1024
+-	option USE_FALLBACK_IMAGE=0
+-#        option ROM_IMAGE_SIZE=0x11800
+-#	option ROM_IMAGE_SIZE=0x16000
+-	option ROM_IMAGE_SIZE=0x20000
+-        option XIP_ROM_SIZE=0x20000
+-	option LINUXBIOS_EXTRA_VERSION="$(shell cat ../../VERSION)_Normal"
+-#       payload ../../../payloads/tg3--ide_disk.zelf
+-#        payload ../../../payloads/filo.elf
+-#        payload ../../../payloads/filo_mem.elf
+-#       payload ../../../payloads/filo.zelf
+-#        payload ../../../payloads/tg3--filo.zelf
+-#       payload ../../../payloads/e1000--filo.zelf
+-#        payload ../../../payloads/tg3--e1000--filo.zelf
+-	payload ../../../../payloads/tg3--filo_hda2_vga.zelf
+-#        payload ../../../payloads/tg3--eepro100--e1000--filo_hda2.zelf
+-end
++option ROM_SIZE=0x100000
++# 36K for ATI ROM in 1M
++option FALLBACK_SIZE=(ROM_SIZE-0x9000)
+ 
++# Tyan s2882
+ romimage "fallback" 
+ 	option USE_FALLBACK_IMAGE=1
+-#        option ROM_IMAGE_SIZE=0x11800
+-#	option ROM_IMAGE_SIZE=0x16000
+-	option ROM_IMAGE_SIZE=0x20000
+-        option XIP_ROM_SIZE=0x20000
++  option CONFIG_COMPRESSED_PAYLOAD_LZMA=1
++  option CONFIG_PRECOMPRESSED_PAYLOAD=1
++  option ROM_IMAGE_SIZE=0x17000
++  option XIP_ROM_SIZE=0x40000
+ 	option LINUXBIOS_EXTRA_VERSION="$(shell cat ../../VERSION)_Fallback"
+-#       payload ../../../payloads/tg3--ide_disk.zelf
+-#        payload ../../../payloads/filo.elf
+-#        payload ../../../payloads/filo_mem.elf
+-#       payload ../../../payloads/filo.zelf
+-#        payload ../../../payloads/tg3--filo.zelf
+-#       payload ../../../payloads/e1000--filo.zelf
+-#        payload ../../../payloads/tg3--e1000--filo.zelf
+-	payload ../../../../payloads/tg3--filo_hda2_vga.zelf
+-#        payload ../../../payloads/tg3--eepro100--e1000--filo_hda2.zelf
++	payload ../payload.elf
+ end
+ 
+-buildrom ./linuxbios.rom ROM_SIZE "normal" "fallback"
++buildrom ./linuxbios.rom ROM_SIZE "fallback"
