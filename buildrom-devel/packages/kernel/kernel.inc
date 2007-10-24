@@ -45,7 +45,7 @@ $(KERNEL_SRC_DIR)/.config: $(KERNEL_STAMP_DIR)/.patched
 $(KERNEL_SRC_DIR)/arch/i386/boot/bzImage: $(KERNEL_SRC_DIR)/.config
 	@ echo "Building kernel..."
 	@ $(MAKE) -C $(KERNEL_SRC_DIR) ARCH=i386 \
-	KERNEL_CC=$(CC) KERNEL_LD=$(LD) > $(KERNEL_BUILD_LOG) 2>&1
+	KERNEL_CC="$(CC)" KERNEL_LD="$(LD)" > $(KERNEL_BUILD_LOG) 2>&1
 
 $(OUTPUT_DIR)/bzImage: $(KERNEL_SRC_DIR)/arch/i386/boot/bzImage
 	@ install -d $(OUTPUT_DIR)
