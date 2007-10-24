@@ -36,7 +36,7 @@ $(MEMTEST_STAMP_DIR)/.configured: $(MEMTEST_STAMP_DIR)/.unpacked
 	
 $(MEMTEST_SRC_DIR)/memtest: $(MEMTEST_CONFIG_TARGET)
 	@ echo "Building memtest..."
-	@ $(MAKE) -C $(MEMTEST_SRC_DIR) CCFLAGS="$(CFLAGS)" memtest > $(MEMTEST_BUILD_LOG) 2>&1
+	@ $(MAKE) -C $(MEMTEST_SRC_DIR) AS="$(AS)" CC="$(CC)" LD="$(LD)" CCFLAGS="$(CFLAGS)" memtest > $(MEMTEST_BUILD_LOG) 2>&1
 
 $(MEMTEST_STAMP_DIR) $(MEMTEST_LOG_DIR):
 	@ mkdir -p $@

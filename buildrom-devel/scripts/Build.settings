@@ -15,6 +15,7 @@ cc-option= $(call try-run,\
 find-tool=$(shell set -e; if which $(1) > /dev/null 2>&1; \
 	then echo "y"; else echo "n"; fi)
 
+
 CC ?= gcc
 STRIP ?= strip
 AS ?= as
@@ -28,9 +29,15 @@ CROSS_LDFLAGS=
 
 ifeq ($(BUILD_ARCH),x86_64)
 ifneq ($(BUILD_ARCH), $(TARGET_ARCH))
+
+CC += -m32
+AS += --32
+LD += -melf_i386
+
 CROSS_ASFLAGS=-m32
 CROSS_CFLAGS=-m32
 CROSS_LDFLAGS=-melf_i386
+
 endif
 endif
 
@@ -73,4 +80,4 @@ HOST_LDFLAGS=
 
 HOSTCC=$(HOST_CC)
 
-export CC CFLAGS LDFLAGS ASFLAGS LIBS
+export CC AS CFLAGS LDFLAGS ASFLAGS LIBS

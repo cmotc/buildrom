@@ -32,7 +32,7 @@ $(UCLIBC_SRC_DIR)/lib/libc.a: $(UCLIBC_SRC_DIR)/.config
 	@ echo "Building uclibc..." 
 	@ ( unset CFLAGS; unset LDFLAGS; \
 	$(MAKE) -C $(UCLIBC_SRC_DIR) TARGET_ARCH="$(UCLIBC_ARCH)" \
-	CC="$(CC) $(CROSS_CFLAGS)" LD="$(LD) $(CROSS_LDFLAGS)" \
+	CC="$(CC)" LD="$(LD)" \
 	HOSTCC="$(HOST_CC)" KERNEL_SOURCE="$(KERNEL_SRC_DIR)" \
 	RUNTIME_PREFIX="/" \
 	SHARED_LIB_LOADER_PATH="/lib" \
