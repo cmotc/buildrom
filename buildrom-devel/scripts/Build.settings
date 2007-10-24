@@ -12,6 +12,9 @@ try-run= $(shell set -e; \
 cc-option= $(call try-run,\
 	$(CC) $(1) -S -xc /dev/null -o "$$TMP", $(1), $(2))
 
+find-tool=$(shell set -e; if which $(1) > /dev/null 2>&1; \
+	then echo "y"; else echo "n"; fi)
+
 CC ?= gcc
 STRIP ?= strip
 AS ?= as

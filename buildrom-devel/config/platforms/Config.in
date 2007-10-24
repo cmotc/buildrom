@@ -34,5 +34,8 @@ config PLATFORM_TYAN_S2891
        bool "Tyan S2891"
        select PLATFORM
 
+config PLATFORM_SERENGETI_CHEETAH
+       bool "AMD Serengeti_Cheetah"
+       select PLATFORM
 endchoice
 endmenu
