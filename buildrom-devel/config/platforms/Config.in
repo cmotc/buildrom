@@ -1,45 +1,79 @@
 menu "Platform Configuration"
 
 choice
+	prompt "Vendor for the platform target"
+	default VENDOR_AMD
+	help
+	  Select the vendor for the plaform you are building for
+
+config VENDOR_AMD
+	bool "AMD"
+
+config VENDOR_ARTEC
+	bool "Artec Group"
+
+config VENDOR_DIGITALLOGIC
+	bool "Digital Logic"
+
+config VENDOR_GIGABYTE
+	bool "GIGABYTE"
+
+config VENDOR_PCENGINES
+	bool "PC Engines"
+
+config VENDOR_TYAN
+	bool "Tyan"
+endchoice
+
+choice
 	prompt "Platform target for the ROM"
 	default PLATFORM_NORWICH
 	help
-	  Select the target to build the LinuxBIOS ROM for
+	  Select the platform you are building for
 
 config PLATFORM_NORWICH
        bool "AMD Geode LX 'Norwich'"
+       depends VENDOR_AMD
        select PLATFORM
 
 config PLATFORM_DBE61
-       bool "Artec Group dbe61"
+       bool "Artec Group DBE61"
+       depends VENDOR_ARTEC
        select PLATFORM
 
 config PLATFORM_ALIX1C
        bool "PC Engines ALIX1.C"
+       depends VENDOR_PCENGINES
        select PLATFORM
 
 config PLATFORM_MSM800SEV
-       bool "Digital Logic msm800sev"
+       bool "Advanced Digital Logic MSM800SEV"
+       depends VENDOR_DIGITALLOGIC
        select PLATFORM
 
 config PLATFORM_DB800
 	bool "AMD DB800"
+	depends VENDOR_AMD
 	select PLATFORM
 
 config PLATFORM_M57SLI
-       bool "Gigabyte M57SLI"
+       bool "GIGABYTE GA-M57SLI-S4"
+       depends VENDOR_GIGABYTE
        select PLATFORM
 
 config PLATFORM_TYAN_S2882
        bool "Tyan S2882"
+       depends VENDOR_TYAN
        select PLATFORM
 
 config PLATFORM_TYAN_S2891
        bool "Tyan S2891"
+       depends VENDOR_TYAN
        select PLATFORM
 
 config PLATFORM_SERENGETI_CHEETAH
-       bool "AMD Serengeti_Cheetah"
+       bool "AMD Serengeti-Cheetah"
+       depends VENDOR_AMD
        select PLATFORM
 endchoice
 endmenu
