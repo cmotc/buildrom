@@ -1,4 +1,4 @@
-# Build file for the PCENGINES ALIX1.C LAB kernel
+# Build file for the PC Engines ALIX1.C LAB kernel
 
 KERNEL_URL=http://kernel.org/pub/linux/kernel/v2.6/
 KERNEL_SOURCE=linux-$(KERNEL_VERSION).tar.bz2

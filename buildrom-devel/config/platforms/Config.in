@@ -4,21 +4,21 @@ choice
 	prompt "Vendor for the platform target"
 	default VENDOR_AMD
 	help
-	  Select the vendor for the plaform you are building for
+	  Select the vendor for the platform you are building for.
 
 config VENDOR_AMD
 	bool "AMD"
 
-config VENDOR_ARTEC
+config VENDOR_ARTEC_GROUP
 	bool "Artec Group"
 
-config VENDOR_DIGITALLOGIC
-	bool "Digital Logic"
+config VENDOR_ADVANCED_DIGITAL_LOGIC
+	bool "Advanced Digital Logic"
 
 config VENDOR_GIGABYTE
 	bool "GIGABYTE"
 
-config VENDOR_PCENGINES
+config VENDOR_PC_ENGINES
 	bool "PC Engines"
 
 config VENDOR_TYAN
@@ -29,7 +29,7 @@ choice
 	prompt "Platform target for the ROM"
 	default PLATFORM_NORWICH
 	help
-	  Select the platform you are building for
+	  Select the platform you are building for.
 
 config PLATFORM_NORWICH
        bool "AMD Geode LX 'Norwich'"
@@ -38,17 +38,17 @@ config PLATFORM_NORWICH
 
 config PLATFORM_DBE61
        bool "Artec Group DBE61"
-       depends VENDOR_ARTEC
+       depends VENDOR_ARTEC_GROUP
        select PLATFORM
 
 config PLATFORM_ALIX1C
        bool "PC Engines ALIX1.C"
-       depends VENDOR_PCENGINES
+       depends VENDOR_PC_ENGINES
        select PLATFORM
 
 config PLATFORM_MSM800SEV
        bool "Advanced Digital Logic MSM800SEV"
-       depends VENDOR_DIGITALLOGIC
+       depends VENDOR_ADVANCED_DIGITAL_LOGIC
        select PLATFORM
 
 config PLATFORM_DB800
@@ -56,7 +56,7 @@ config PLATFORM_DB800
 	depends VENDOR_AMD
 	select PLATFORM
 
-config PLATFORM_M57SLI
+config PLATFORM_GA_M57SLI_S4
        bool "GIGABYTE GA-M57SLI-S4"
        depends VENDOR_GIGABYTE
        select PLATFORM

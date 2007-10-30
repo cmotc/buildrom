@@ -1,4 +1,4 @@
-# Build file for the Gigabyte M57SLI-S4 LAB kernel
+# Build file for the GIGABYTE GA-M57SLI-S4 LAB kernel
 
 KERNEL_URL=http://kernel.org/pub/linux/kernel/v2.6/
 KERNEL_SOURCE=linux-$(KERNEL_VERSION).tar.bz2
