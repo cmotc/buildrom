@@ -61,6 +61,11 @@ config PLATFORM_GA_M57SLI_S4
        depends VENDOR_GIGABYTE
        select PLATFORM
 
+config PLATFORM_GA_2761GXDK
+	bool "GIGABYTE GA-2761GXDK"
+	depends VENDOR_GIGABYTE
+	select PLATFORM
+
 config PLATFORM_TYAN_S2882
        bool "Tyan S2882"
        depends VENDOR_TYAN

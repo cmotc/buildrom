@@ -24,10 +24,12 @@ config PAYLOAD_FILO
 	select PAYLOAD
 
 config PAYLOAD_KERNEL
+	depends !PLATFORM_GA_2761GXDK
 	bool "Linux kernel payload"
 	select PAYLOAD
 
 config PAYLOAD_LAB
+	depends !PLATFORM_GA_2761GXDK
 	bool "Linux As Bootloader"
 	select PAYLOAD
 
