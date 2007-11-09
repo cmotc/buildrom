@@ -26,13 +26,25 @@ doboot() {
 		. $DIR/lab.conf
 	fi
 
-	if [ "$INITRD" = "" ]; then
-		$DIR/kexec -l $DIR/$KERNEL --command-line="$CMDLINE"
-	else
-		$DIR/kexec -l $DIR/$KERNEL --initrd=$DIR/$INITRD --command-line="$CMDLINE"
-	fi
+  if [ "$INITRD" = "" ] && [ "$MODULE1" = "" ]; then
+    $DIR/kexec -l $DIR/$KERNEL --command-line="$CMDLINE"
+  elif [ "$INITRD" != "" ] && [ "$MODULE1" = "" ]; then
+    $DIR/kexec -l $DIR/$KERNEL --initrd=$DIR/$INITRD --command-line="$CMDLINE"
+  elif [ "$INITRD" = "" ] && [ "$MODULE1" != "" ]; then
+    if [ "$MODULE2" != "" ]; then
+      $DIR/kexec -l $DIR/$KERNEL --module="$DIR/$MODULE1" --module="$DIR/$MODULE2" --command-line="$CMDLINE"
+    else
+      $DIR/kexec -l $DIR/$KERNEL --module="$DIR/$MODULE1" --command-line="$CMDLINE"
+    fi
+  elif [ "$INITRD" != "" ] && [ "$MODULE1" != "" ]; then
+    if [ "$MODULE2" != "" ]; then
+      $DIR/kexec -l $DIR/$KERNEL --initrd=$DIR/$INITRD --module="$DIR/$MODULE1" --module="$DIR/$MODULE2" --command-line="$CMDLINE"
+    else
+      $DIR/kexec -l $DIR/$KERNEL --initrd=$DIR/$INITRD --module="$DIR/$MODULE1" --command-line="$CMDLINE"
+    fi
+  fi
 
 	$DIR/kexec -e
 
-	message "ERROR: can't run kexec $DIR/$KERNEL $CMDLINE $INITRD"
+	message "ERROR: can't run kexec $DIR/$KERNEL $CMDLINE $INITRD $MODULE1 $MODULE2"
 }
