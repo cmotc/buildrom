@@ -26,6 +26,7 @@ BUILD_ARCH=$(shell uname -m)
 CROSS_CFLAGS=
 CROSS_ASFLAGS=
 CROSS_LDFLAGS=
+UCLIBC_LOADER = /lib/ld-uClibc.so.0
 
 ifeq ($(BUILD_ARCH),x86_64)
 ifneq ($(BUILD_ARCH), $(TARGET_ARCH))
@@ -34,6 +35,8 @@ CROSS_ASFLAGS=--32
 CROSS_CFLAGS=-m32
 CROSS_LDFLAGS=-melf_i386
 
+else
+UCLIBC_LOADER = /lib/ld64-uClibc.so.0
 endif
 endif
 
@@ -63,7 +66,7 @@ STRIPCMD := $(STRIP) -s --remove-section=.note --remove-section=.comment
 # (without any cross flags) for at least busybox, and probably others too
 
 LDFLAGS_orig = -nostdlib -L$(STAGING_DIR)/lib \
--Wl,-rpath-link,$(STAGING_DIR)/lib -Wl,--dynamic-linker,/lib/ld-uClibc.so.0 \
+-Wl,-rpath-link,$(STAGING_DIR)/lib -Wl,--dynamic-linker,$(UCLIBC_LOADER) \
 $(LDFLAGS_platform)
 
 LDFLAGS=$(CROSS_LDFLAGS) $(LDFLAGS_orig)

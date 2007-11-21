@@ -68,7 +68,7 @@ $(LINUXBIOS_STAMP_DIR)/.patched: $(LINUXBIOS_STAMP_DIR)/.unpacked
 	@ touch $@
 
 $(LINUXBIOS_STAMP_DIR)/.configured: $(LINUXBIOS_STAMP_DIR)/.patched
-	@ echo "Building target config file..."
+	@ echo "Building target..."
 	@( cd $(LINUXBIOS_TARGET_DIR); \
 	./buildtarget $(LINUXBIOS_CONFIG_NAME) > $(LINUXBIOS_CONFIG_LOG) 2>&1)
 	@ touch $@

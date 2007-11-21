@@ -62,7 +62,20 @@ config PLATFORM
 	bool
 	default n
 
-config PAYLOAD
+config PLATFORM_SUPPORT_64BIT
+	bool
+	default n
+
+config PAYLOAD_64BIT
+	bool
+	default n
+
+config TARGET_32BIT
+	bool
+	depends !TARGET_64BIT
+	default y
+
+config TARGET_64BIT
 	bool
 	default n
 

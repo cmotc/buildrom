@@ -1,7 +1,18 @@
+# Defaults, if not set in the platform config
+ifeq ($(CONFIG_TARGET_64BIT),y)
+UCLIBC_VER ?= 0.9.29
+UCLIBC_ARCH ?= x86_64
+UCLIBC_CONFIG ?= defconfig-x86_64
+else
+UCLIBC_VER ?= 0.9.28
+UCLIBC_ARCH ?= i386
+UCLIBC_CONFIG ?= defconfig
+endif
+
 UCLIBC_URL=http://www.uclibc.org/downloads
-UCLIBC_SOURCE=uClibc-0.9.28.tar.bz2
+UCLIBC_SOURCE=uClibc-$(UCLIBC_VER).tar.bz2
 UCLIBC_DIR=$(BUILD_DIR)/uclibc
-UCLIBC_SRC_DIR=$(UCLIBC_DIR)/uClibc-0.9.28
+UCLIBC_SRC_DIR=$(UCLIBC_DIR)/uClibc-$(UCLIBC_VER)
 UCLIBC_STAMP_DIR=$(UCLIBC_DIR)/stamps
 UCLIBC_LOG_DIR=$(UCLIBC_DIR)/logs
 
@@ -13,9 +24,6 @@ UCLIBC_BUILD_LOG=$(UCLIBC_LOG_DIR)/build.log
 UCLIBC_INSTALL_LOG=$(UCLIBC_LOG_DIR)/install.log
 endif
 
-# Default, if its not set in the platform config
-UCLIBC_ARCH ?= $(TARGET_ARCH)
-
 $(SOURCE_DIR)/$(UCLIBC_SOURCE):
 	@ mkdir -p $(SOURCE_DIR)
 	@ wget -P $(SOURCE_DIR) $(UCLIBC_URL)/$(UCLIBC_SOURCE)
@@ -26,7 +34,7 @@ $(UCLIBC_STAMP_DIR)/.unpacked: $(SOURCE_DIR)/$(UCLIBC_SOURCE)
 	@ touch $@	
 
 $(UCLIBC_SRC_DIR)/.config: $(UCLIBC_STAMP_DIR)/.unpacked
-	@ cp $(PACKAGE_DIR)/uclibc/conf/defconfig $(UCLIBC_SRC_DIR)/.config
+	@ cat $(PACKAGE_DIR)/uclibc/conf/$(UCLIBC_CONFIG) | sed -e s:^KERNEL_HEADERS=.*:KERNEL_HEADERS=\"$(KERNEL_SRC_DIR)/include\": > $(UCLIBC_SRC_DIR)/.config
 
 $(UCLIBC_SRC_DIR)/lib/libc.a: $(UCLIBC_SRC_DIR)/.config
 	@ echo "Building uclibc..." 

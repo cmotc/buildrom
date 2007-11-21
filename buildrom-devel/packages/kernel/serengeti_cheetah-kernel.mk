@@ -2,11 +2,8 @@
 
 KERNEL_URL=http://kernel.org/pub/linux/kernel/v2.6/
 KERNEL_SOURCE=linux-$(KERNEL_VERSION).tar.bz2
-KERNEL_CONFIG=$(PACKAGE_DIR)/kernel/conf/defconfig-serengeti_cheetah
 
-#TINY_DIR=$(PACKAGE_DIR)/kernel/patches/tiny
-#KERNEL_PATCHES += $(shell ls $(TINY_DIR)/*.patch)
-
+# Kernel config is set in the platform configuration
 
 $(SOURCE_DIR)/$(KERNEL_SOURCE):
 	@ mkdir -p $(SOURCE_DIR)

@@ -60,25 +60,31 @@ config PLATFORM_GA_M57SLI_S4
        bool "GIGABYTE GA-M57SLI-S4"
        depends VENDOR_GIGABYTE
        select PLATFORM
+       select PLATFORM_SUPPORT_64BIT
 
 config PLATFORM_GA_2761GXDK
 	bool "GIGABYTE GA-2761GXDK"
 	depends VENDOR_GIGABYTE
 	select PLATFORM
+	select PLATFORM_SUPPORT_64BIT
 
 config PLATFORM_TYAN_S2882
        bool "Tyan S2882"
        depends VENDOR_TYAN
        select PLATFORM
+       select PLATFORM_SUPPORT_64BIT
 
 config PLATFORM_TYAN_S2891
        bool "Tyan S2891"
        depends VENDOR_TYAN
        select PLATFORM
+       select PLATFORM_SUPPORT_64BIT
 
 config PLATFORM_SERENGETI_CHEETAH
        bool "AMD Serengeti-Cheetah"
        depends VENDOR_AMD
        select PLATFORM
+       select PLATFORM_SUPPORT_64BIT
+
 endchoice
 endmenu

@@ -15,6 +15,8 @@ BUSYBOX_BUILD_LOG=$(BUSYBOX_LOG_DIR)/build.log
 BUSYBOX_INSTALL_LOG=$(BUSYBOX_LOG_DIR)/install.log
 endif
 
+BUSYBOX_CONFIG ?= defconfig
+
 $(SOURCE_DIR)/$(BUSYBOX_SOURCE):
 	@ mkdir -p $(SOURCE_DIR)
 	@ wget -P $(SOURCE_DIR) $(BUSYBOX_URL)/$(BUSYBOX_SOURCE)
@@ -30,7 +32,7 @@ $(BUSYBOX_STAMP_DIR)/.patched: $(BUSYBOX_STAMP_DIR)/.unpacked
 	@ touch $@
 
 $(BUSYBOX_SRC_DIR)/.config: $(BUSYBOX_STAMP_DIR)/.patched
-	@ cp $(PACKAGE_DIR)/busybox/conf/defconfig $@
+	@ cp $(PACKAGE_DIR)/busybox/conf/$(BUSYBOX_CONFIG) $@
 
 $(BUSYBOX_SRC_DIR)/busybox: $(BUSYBOX_SRC_DIR)/.config
 	@ echo "Building busybox..."

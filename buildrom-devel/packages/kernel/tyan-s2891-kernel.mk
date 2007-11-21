@@ -2,7 +2,8 @@
 
 KERNEL_URL=http://kernel.org/pub/linux/kernel/v2.6/
 KERNEL_SOURCE=linux-$(KERNEL_VERSION).tar.bz2
-KERNEL_CONFIG=$(PACKAGE_DIR)/kernel/conf/defconfig-tyan-s2891
+
+# KERNEL_CONFIG is defined in the platform configuration
 
 TINY_URL=http://elinux.org/images/0/0e/
 TINY_SOURCE=Tiny-quilt-2.6.22.1-1.tar.gz

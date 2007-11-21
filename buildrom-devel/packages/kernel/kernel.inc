@@ -7,6 +7,14 @@ KERNEL_SRC_DIR=$(KERNEL_DIR)/$(KERNEL_BASE_DIR)
 KERNEL_STAMP_DIR=$(KERNEL_DIR)/stamps
 KERNEL_LOG_DIR=$(KERNEL_DIR)/logs
 
+ifeq ($(CONFIG_TARGET_64BIT),y)
+KERNEL_BZIMAGE=$(KERNEL_SRC_DIR)/arch/x86_64/boot/bzImage
+KERNEL_BUILD_ARCH=x86_64
+else
+KERNEL_BZIMAGE=$(KERNEL_SRC_DIR)/arch/i386/boot/bzImage
+KERNEL_BUILD_ARCH=i386
+endif
+
 ifeq ($(CONFIG_VERBOSE),y)
 KERNEL_FETCH_LOG=/dev/stdout
 KERNEL_BUILD_LOG=/dev/stdout
@@ -42,23 +50,23 @@ endif
 $(KERNEL_SRC_DIR)/.config: $(KERNEL_STAMP_DIR)/.patched
 	@ cat $(KERNEL_CONFIG) | sed -e s:^CONFIG_LOCALVERSION=.*:CONFIG_LOCALVERSION=\"$(ROM_VERSION)\": > $(KERNEL_SRC_DIR)/.config
 
-$(KERNEL_SRC_DIR)/arch/i386/boot/bzImage: $(KERNEL_SRC_DIR)/.config
+$(KERNEL_BZIMAGE): $(KERNEL_SRC_DIR)/.config
 	@ echo "Building kernel..."
-	@ $(MAKE) -C $(KERNEL_SRC_DIR) ARCH=i386 \
+	@ $(MAKE) -C $(KERNEL_SRC_DIR) ARCH=$(KERNEL_BUILD_ARCH) \
 	KERNEL_CC="$(CC)" KERNEL_LD="$(LD)" > $(KERNEL_BUILD_LOG) 2>&1
 
-$(OUTPUT_DIR)/bzImage: $(KERNEL_SRC_DIR)/arch/i386/boot/bzImage
+$(OUTPUT_DIR)/bzImage: $(KERNEL_BZIMAGE)
 	@ install -d $(OUTPUT_DIR)
 	@ install -m 0644 $< $@ 
 
-$(OUTPUT_DIR)/vmlinux: $(KERNEL_SRC_DIR)/arch/i386/boot/bzImage
+$(OUTPUT_DIR)/vmlinux: $(KERNEL_BZIMAGE)
 	@ install -d $(OUTPUT_DIR)
 	@ install -m 0644 $(KERNEL_SRC_DIR)/vmlinux $@
 	
 $(KERNEL_STAMP_DIR)/.headers: $(KERNEL_SRC_DIR)/.config $(STAGING_DIR)/host/bin/unifdef
 	@ echo "Installing kernel headers..."
 	@( export PATH=$(PATH):$(STAGING_DIR)/host/bin; \
-	$(MAKE) -C $(KERNEL_SRC_DIR) ARCH=i386 \
+	$(MAKE) -C $(KERNEL_SRC_DIR) ARCH=$(KERNEL_BUILD_ARCH) \
 	INSTALL_HDR_PATH=$(STAGING_DIR)/ headers_install > $(KERNEL_INSTALL_LOG) 2>&1)
 	@ touch $@
 

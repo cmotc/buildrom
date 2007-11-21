@@ -11,39 +11,51 @@ choice
 
 config PAYLOAD_CUSTOM
 	bool "Custom Payload"
-	select PAYLOAD
 
 config PAYLOAD_ETHERBOOT
 	depends !PLATFORM_M57SLI
 	depends !PLATFORM_TYAN_S2891
 	bool "Etherboot"
-	select PAYLOAD
 
 config PAYLOAD_FILO
 	bool "FILO"
-	select PAYLOAD
 
 config PAYLOAD_KERNEL
 	depends !PLATFORM_GA_2761GXDK
 	bool "Linux kernel payload"
-	select PAYLOAD
+	select PAYLOAD_64BIT
 
 config PAYLOAD_LAB
 	depends !PLATFORM_GA_2761GXDK
 	bool "Linux As Bootloader"
-	select PAYLOAD
+	select PAYLOAD_64BIT
 
 #config PAYLOAD_OFW
 #	depends !PLATFORM_M57SLI
 #	depends !PLATFORM_TYAN_S2891
 #	bool "OpenFirmware"
-#	select PAYLOAD
 
 config PAYLOAD_MEMTEST
 	depends !PLATFORM_M57SLI
 	depends !PLATFORM_TYAN_S2891
 	bool "Memtest86+"
-	select PAYLOAD
+
+endchoice
+
+choice
+	prompt "Desired target architecture"
+	depends PLATFORM_SUPPORT_64BIT && PAYLOAD_64BIT
+	default CHOOSE_32BIT
+	help
+	  Chose the target architecture for the payload.
+
+config CHOOSE_64BIT
+	bool "x86_64 (64 bit)"
+	select TARGET_64BIT
+
+config CHOOSE_32BIT
+	bool "x86 (32 bit)"
+	select TARGET_32BIT
 
 endchoice
 

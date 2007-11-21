@@ -7,19 +7,10 @@ endif
 endif
 
 LINUXBIOS_BASE_DIR=svn
-LINUXBIOS_URL=svn://openbios.org/repos/trunk/LinuxBIOSv2
+LINUXBIOS_URL=svn://linuxbios.org/repos/trunk/LinuxBIOSv2
 LINUXBIOS_TARBALL=linuxbios-svn-$(LINUXBIOS_TAG).tar.gz
 LINUXBIOS_PAYLOAD_TARGET=$(LINUXBIOS_BUILD_DIR)/payload.elf
 TARGET_ROM = $(LINUXBIOS_VENDOR)-$(LINUXBIOS_BOARD).rom
-
-# Make sure we have the tools we need to accomplish this
-HAVE_IASL:=$(call find-tool,iasl)
-
-ifeq ($(HAVE_IASL),n)
-$(error To build LinuxBIOS, you need to install the 'iasl' tool)
-endif
-
-LINUXBIOS_PATCHES += $(PACKAGE_DIR)/linuxbios/patches/s-c-buildrom-payload.patch
 
 include $(PACKAGE_DIR)/linuxbios/linuxbios.inc
 
