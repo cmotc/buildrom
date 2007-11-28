@@ -1,11 +1,5 @@
 # Targets specifically for the LAB payload
 
-ifeq ($(CONFIG_TARGET_64BIT), y)
-MKELFIMAGE_KERNEL = bzImage
-else
-MKELFIMAGE_KERNEL = vmlinux
-endif
-
 $(OUTPUT_DIR)/initrd.uncompressed: $(PAYLOAD-y)
 	@ cp -af $(SKELETON_DIR)/* $(INITRD_DIR)
 	@ chmod 0755 $(INITRD_DIR)/linuxrc
@@ -36,14 +30,14 @@ $(OUTPUT_DIR)/lab-payload-uncompressed.elf: $(OUTPUT_DIR)/initrd.uncompressed
 	@ rm -f $@
 	@ $(STAGING_DIR)/sbin/mkelfImage --command-line="$(COMMAND_LINE)" \
 	--ramdisk=$(OUTPUT_DIR)/initrd.uncompressed \
-	$(OUTPUT_DIR)/$(MKELFIMAGE_KERNEL) $@
+	$(OUTPUT_DIR)/vmlinux $@
 	@ chmod 0644 $@
 
 $(OUTPUT_DIR)/lab-payload.elf: $(OUTPUT_DIR)/initrd
 	@ echo "Building the ELF payload..."
 	@ rm -f $@
 	@ $(STAGING_DIR)/sbin/mkelfImage --command-line="$(COMMAND_LINE)" \
-	--ramdisk=$(OUTPUT_DIR)/initrd $(OUTPUT_DIR)/$(MKELFIMAGE_KERNEL) $@
+	--ramdisk=$(OUTPUT_DIR)/initrd $(OUTPUT_DIR)/vmlinux $@
 	@ chmod 0644 $@
 	@ $(BIN_DIR)/checkrom.sh $@
 

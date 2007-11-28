@@ -1,9 +1,10 @@
-MKELFIMAGE_URL=http://www.infradead.org/~jcrouse
-MKELFIMAGE_SOURCE=mkelfImage-2.5.tar.gz
+MKELFIMAGE_URL=ftp://ftp.lnxi.com/pub/mkelfImage/
+MKELFIMAGE_SOURCE=mkelfImage-2.7.tar.gz
 MKELFIMAGE_DIR=$(BUILD_DIR)/mkelfimage
-MKELFIMAGE_SRC_DIR=$(MKELFIMAGE_DIR)/mkelfImage-2.5
+MKELFIMAGE_SRC_DIR=$(MKELFIMAGE_DIR)/mkelfImage-2.7
 MKELFIMAGE_STAMP_DIR=$(MKELFIMAGE_DIR)/stamps
 MKELFIMAGE_LOG_DIR=$(MKELFIMAGE_DIR)/logs
+MKELFIMAGE_PATCHES=$(PACKAGE_DIR)/mkelfimage/mkelfImage-2.7-x86_64.patch
 
 ifeq ($(CONFIG_VERBOSE),y)
 MKELFIMAGE_BUILD_LOG=/dev/stdout
@@ -22,7 +23,12 @@ $(MKELFIMAGE_STAMP_DIR)/.unpacked: $(SOURCE_DIR)/$(MKELFIMAGE_SOURCE)
 	@ tar -C $(MKELFIMAGE_DIR) -zxf $(SOURCE_DIR)/$(MKELFIMAGE_SOURCE)
 	@ touch $@	
 
-$(MKELFIMAGE_STAMP_DIR)/.configured: $(MKELFIMAGE_STAMP_DIR)/.unpacked
+$(MKELFIMAGE_STAMP_DIR)/.patched: $(MKELFIMAGE_STAMP_DIR)/.unpacked
+	@ echo "Patching mkelfimage..."
+	@ $(BIN_DIR)/doquilt.sh $(MKELFIMAGE_SRC_DIR) $(MKELFIMAGE_PATCHES)
+	@ touch $@
+
+$(MKELFIMAGE_STAMP_DIR)/.configured: $(MKELFIMAGE_STAMP_DIR)/.patched
 	@ ( export CC=$(HOST_CC); export CFLAGS=$(HOST_CFLAGS); \
 	  export LDFLAGS=$(HOST_LDFLAGS); unset LIBS; \
 	cd $(MKELFIMAGE_SRC_DIR); ./configure \
