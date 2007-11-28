@@ -39,6 +39,7 @@ config PAYLOAD_MEMTEST
 	depends !PLATFORM_M57SLI
 	depends !PLATFORM_TYAN_S2891
 	bool "Memtest86+"
+	select PAYLOAD
 
 endchoice
 
