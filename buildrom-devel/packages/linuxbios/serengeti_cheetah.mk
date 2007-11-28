@@ -15,10 +15,15 @@ ifeq ($(HAVE_IASL),n)
 $(error To build LinuxBIOS, you need to install the 'iasl' tool)
 endif
 
+
 ifeq ($(CONFIG_PAYLOAD_LAB),y)
 	LINUXBIOS_PATCHES += $(PACKAGE_DIR)/linuxbios/patches/serengeti_cheetah-lab.patch
 else
 	LINUXBIOS_PATCHES += $(PACKAGE_DIR)/linuxbios/patches/serengeti_cheetah-payload.patch
+endif
+
+ifeq ($(CONFIG_SIMNOW),y)
+LINUXBIOS_PATCHES += $(PACKAGE_DIR)/linuxbios/patches/simnow.patch
 endif
 
 LINUXBIOS_BASE_DIR=svn

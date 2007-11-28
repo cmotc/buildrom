@@ -87,4 +87,13 @@ config PLATFORM_SERENGETI_CHEETAH
        select PLATFORM_SUPPORT_64BIT
 
 endchoice
+
+config SIMNOW
+	bool "Build for the AMD SimNow (TM) emulator"
+	depends PLATFORM_SERENGETI_CHEETAH || PLATFORM_SERENGETI_CHEETAH_64
+	default n
+	help
+	  Say 'y' here to patch the build to work on an
+	  emulated platform in the AMD SimNow (TM) simulator
+
 endmenu

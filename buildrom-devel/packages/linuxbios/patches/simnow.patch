@@ -1,0 +1,59 @@
+Index: svn/src/northbridge/amd/amdk8/raminit_f_dqs.c
+===================================================================
+--- svn.orig/src/northbridge/amd/amdk8/raminit_f_dqs.c
++++ svn/src/northbridge/amd/amdk8/raminit_f_dqs.c
+@@ -1987,6 +1987,16 @@ static inline void train_ram_on_node(uns
+ 	struct sys_info *sysinfox = ((CONFIG_LB_MEM_TOPK<<10) - DCACHE_RAM_GLOBAL_VAR_SIZE);
+ 	wait_till_sysinfo_in_ram(); // use pci to get it
+ 
++	/* In SimNow, when we get to this point, CAR is disabled, so
++	 * our stack pointer points to never-never land, andjust it.
++	 */
++
++	__asm__ volatile (
++		"subl   %0, %%ebp\n\t"
++		"subl   %0, %%esp\n\t"
++		::"a"( (DCACHE_RAM_BASE + DCACHE_RAM_SIZE)- (CONFIG_LB_MEM_TOPK<<10) )
++	);
++
+ 	if(sysinfox->mem_trained[nodeid] == 0x80) {
+ 	#if 0
+ 		sysinfo->tom_k = sysinfox->tom_k;
+Index: svn/src/mainboard/amd/serengeti_cheetah/Options.lb
+===================================================================
+--- svn.orig/src/mainboard/amd/serengeti_cheetah/Options.lb
++++ svn/src/mainboard/amd/serengeti_cheetah/Options.lb
+@@ -218,7 +218,7 @@ default CONFIG_USE_INIT=0
+ ##
+ ## for rev F training on AP purpose
+ ##
+-default CONFIG_AP_CODE_IN_CAR=1
++default CONFIG_AP_CODE_IN_CAR=0
+ default MEM_TRAIN_SEQ=1
+ default WAIT_BEFORE_CPUS_INIT=1
+ 
+Index: svn/src/mainboard/amd/serengeti_cheetah/cache_as_ram_auto.c
+===================================================================
+--- svn.orig/src/mainboard/amd/serengeti_cheetah/cache_as_ram_auto.c
++++ svn/src/mainboard/amd/serengeti_cheetah/cache_as_ram_auto.c
+@@ -338,16 +338,18 @@ void real_main(unsigned long bist, unsig
+         }
+ #endif
+ 
+-#if 1
+ 	needs_reset = optimize_link_coherent_ht();
++#if 0
++	/* On SimNow, this causes issues - remove it for now */
+ 	needs_reset |= optimize_link_incoherent_ht(sysinfo);
++#endif
+ 
+         // fidvid change will issue one LDTSTOP and the HT change will be effective too
+         if (needs_reset) {
+                 print_info("ht reset -\r\n");
+                 soft_reset_x(sysinfo->sbbusn, sysinfo->sbdn);
+         }
+-#endif
++
+ 	allow_all_aps_stop(bsp_apicid);
+ 
+         //It's the time to set ctrl in sysinfo now;
