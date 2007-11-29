@@ -1,7 +1,7 @@
-MEMTEST_URL=http://mirror.trouble-free.net/sources
-MEMTEST_SOURCE=memtest86-3.1a.tar.gz
+MEMTEST_URL=http://www.memtest86.com/
+MEMTEST_SOURCE=memtest86-3.4.tar.gz
 MEMTEST_DIR=$(BUILD_DIR)/memtest
-MEMTEST_SRC_DIR=$(MEMTEST_DIR)/memtest86-3.1a
+MEMTEST_SRC_DIR=$(MEMTEST_DIR)/memtest86-3.4
 MEMTEST_STAMP_DIR=$(MEMTEST_DIR)/stamps
 MEMTEST_LOG_DIR=$(MEMTEST_DIR)/logs
 
