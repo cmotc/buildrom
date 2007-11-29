@@ -16,6 +16,12 @@ TARGET_ROM = $(LINUXBIOS_VENDOR)-$(LINUXBIOS_BOARD).rom
 
 include $(PACKAGE_DIR)/linuxbios/linuxbios.inc
 
+# This matches the base name of the ROM on
+# http://www.linuxbios.org/data/optionroms/
+
+OPTIONROM_ID = pci1039,6330
+include $(PACKAGE_DIR)/linuxbios/optionroms.inc
+
 $(SOURCE_DIR)/$(LINUXBIOS_TARBALL):
 	@ echo "Fetching the LinuxBIOS code..."
 	@ mkdir -p $(SOURCE_DIR)/linuxbios
@@ -23,9 +29,9 @@ $(SOURCE_DIR)/$(LINUXBIOS_TARBALL):
 	$(LINUXBIOS_TAG) $(SOURCE_DIR)/$(LINUXBIOS_TARBALL) \
 	> $(LINUXBIOS_FETCH_LOG) 2>&1
 
-$(OUTPUT_DIR)/$(TARGET_ROM): $(LINUXBIOS_OUTPUT)
+$(OUTPUT_DIR)/$(TARGET_ROM): $(LINUXBIOS_OUTPUT) $(SOURCE_DIR)/$(OPTIONROM_ID).rom
 	@ mkdir -p $(OUTPUT_DIR)
-	@ cat $(LINUXBIOS_OUTPUT) > $@
+	@ cat $(SOURCE_DIR)/$(OPTIONROM_ID).rom $(LINUXBIOS_OUTPUT) > $@
 
 linuxbios: $(OUTPUT_DIR)/$(TARGET_ROM)
 linuxbios-clean: generic-linuxbios-clean

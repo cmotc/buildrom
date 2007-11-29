@@ -12,7 +12,19 @@ LINUXBIOS_TARBALL=linuxbios-svn-$(LINUXBIOS_TAG).tar.gz
 LINUXBIOS_PAYLOAD_TARGET=$(LINUXBIOS_BUILD_DIR)/payload.elf
 TARGET_ROM = $(LINUXBIOS_VENDOR)-$(LINUXBIOS_BOARD).rom
 
+# This is the list of components that comprise the ROM (excluding the payload)
+LINUXBIOS_COMPONENTS = $(LINUXBIOS_OUTPUT)
+
 include $(PACKAGE_DIR)/linuxbios/linuxbios.inc
+
+# If an optionrom was specified in the configuration, then use it
+
+ifneq($(OPTIONROM_ID),)
+include $(PACKAGE_DIR)/linuxbios/optionroms.inc
+
+# Add it to the front of the list so it is prepended to the LinuxBIOS output
+LINUXBIOS_COMPONENTS = $(SOURCE_DIR)/$(OPTIONROM_ID).rom $(LINUXBIOS_COMPONENTS)
+endif
 
 $(SOURCE_DIR)/$(LINUXBIOS_TARBALL): 
 	@ echo "Fetching the LinuxBIOS code..."
@@ -21,9 +33,9 @@ $(SOURCE_DIR)/$(LINUXBIOS_TARBALL):
 	$(LINUXBIOS_TAG) $(SOURCE_DIR)/$(LINUXBIOS_TARBALL) \
 	> $(LINUXBIOS_FETCH_LOG) 2>&1
 
-$(OUTPUT_DIR)/$(TARGET_ROM): $(LINUXBIOS_OUTPUT)
+$(OUTPUT_DIR)/$(TARGET_ROM): $(LINUXBIOS_COMPONENTS)
 	@ mkdir -p $(OUTPUT_DIR)
-	@ cp $< $@
+	@ cat $(LINUXBIOS_COMPONENTS) > $@
 
 linuxbios: $(OUTPUT_DIR)/$(TARGET_ROM)
 linuxbios-clean: generic-linuxbios-clean
