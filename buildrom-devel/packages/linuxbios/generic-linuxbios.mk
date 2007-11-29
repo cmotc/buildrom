@@ -22,6 +22,7 @@ $(SOURCE_DIR)/$(LINUXBIOS_TARBALL):
 	> $(LINUXBIOS_FETCH_LOG) 2>&1
 
 $(OUTPUT_DIR)/$(TARGET_ROM): $(LINUXBIOS_OUTPUT)
+	@ mkdir -p $(OUTPUT_DIR)
 	@ cp $< $@
 
 linuxbios: $(OUTPUT_DIR)/$(TARGET_ROM)

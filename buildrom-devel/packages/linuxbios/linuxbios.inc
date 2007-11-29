@@ -83,6 +83,7 @@ $(LINUXBIOS_OUTPUT): $(LINUXBIOS_STAMP_DIR) $(LINUXBIOS_LOG_DIR) $(LINUXBIOS_DIR
 
 generic-linuxbios-clean:
 	@ echo "Cleaning linuxbios..."
+	@ rm -f $(LINUXBIOS_PAYLOAD_TARGET)
 	@ if [ -d $(LINUXBIOS_BUILD_DIR) ];then \
 	$(MAKE) -C $(LINUXBIOS_BUILD_DIR) clean > /dev/null 2>&1; \
 	fi	
