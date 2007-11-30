@@ -19,6 +19,16 @@ config ADVANCED
 	help
 	  Allow yourself to do advanced developer things
 
+config EXPERIMENTAL
+	bool "Enable experimental features"
+	default n
+	help
+		Experimental features are not yet ready for prime time and/or 
+		completely broken. The features revealed by this setting are likely to be 
+		only useful if you are a developer and want to hack on buildrom.
+
+		If you are not sure, say no.
+
 menu "LinuxBIOS configuration"
 
 config USE_LZMA

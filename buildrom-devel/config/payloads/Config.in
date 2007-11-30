@@ -12,6 +12,11 @@ choice
 config PAYLOAD_CUSTOM
 	bool "Custom Payload"
 
+config PAYLOAD_GPXE
+	depends EXPERIMENTAL
+	bool "GPXE"
+	select PAYLOAD
+
 config PAYLOAD_ETHERBOOT
 	depends !PLATFORM_M57SLI
 	depends !PLATFORM_TYAN_S2891
@@ -127,4 +132,19 @@ config ETHERBOOT_DRIVER
 	  Etherboot project for more details
 
 endmenu
+
+menu "GPXE Configuration"
+depends PAYLOAD_GPXE
+depends EXPERIMENTAL
+
+config GPXE_DRIVER
+	string "GPXE NIC driver to support"
+	default "rtl8139"
+	help
+	  Specify the GPXE NIC driver to build a ROM for.  See the
+	  GPXE project for more details
+
+endmenu
+
+
 endmenu
