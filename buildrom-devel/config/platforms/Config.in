@@ -21,8 +21,12 @@ config VENDOR_GIGABYTE
 config VENDOR_PC_ENGINES
 	bool "PC Engines"
 
+config VENDOR_SUPERMICRO
+	bool "Supermicro"
+
 config VENDOR_TYAN
 	bool "Tyan"
+
 endchoice
 
 choice
@@ -83,6 +87,12 @@ config PLATFORM_TYAN_S2891
 config PLATFORM_SERENGETI_CHEETAH
        bool "AMD Serengeti-Cheetah"
        depends VENDOR_AMD
+       select PLATFORM
+       select PLATFORM_SUPPORT_64BIT
+
+config PLATFORM_SUPERMICRO_H8DMR
+       bool "Supermicro H8DMR"
+       depends VENDOR_SUPERMICRO
        select PLATFORM
        select PLATFORM_SUPPORT_64BIT
 
