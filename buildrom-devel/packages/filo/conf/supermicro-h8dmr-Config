@@ -1,7 +1,7 @@
 # Use grub instead of autoboot?
 USE_GRUB = 1
 # Grub menu.lst path
-MENULST_FILE = "hda1:/boot/grub/menu.lst"
+MENULST_FILE = "hde1:/boot/grub/menu.lst"
 # Driver for hard disk, CompactFlash, and CD-ROM on IDE bus
 IDE_DISK = 1
 # Add a short delay when polling status registers
