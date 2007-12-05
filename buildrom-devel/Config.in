@@ -13,6 +13,18 @@ config VERBOSE
 	  See the entire build output on stdout. Otherwise, it will
 	  be saved off in a series of logs
 
+config MAKE_JOBS
+	string "Send this option to make to parallelize builds"
+	default "-j1"
+	help
+	  This can speed the build if you have more than one core that you
+	  would like to allow make to use.  If you have a single processor, use
+	  the default (-j1) otherwise, try processors+1 (-j5 for 4 processors).
+
+	  This option currently only speeds up the kernel and uClibc builds.
+	  It was tried for: linuxbios (not passed through to fallback,etc.)
+	                    busybox (causes errors)
+
 config ADVANCED
 	bool "Enable advanced operations"
 	default n
