@@ -21,6 +21,9 @@ config VENDOR_GIGABYTE
 config VENDOR_PC_ENGINES
 	bool "PC Engines"
 
+config VENDOR_QEMU
+	bool "QEMU Emulator"
+
 config VENDOR_SUPERMICRO
 	bool "Supermicro"
 
@@ -84,6 +87,11 @@ config PLATFORM_TYAN_S2891
        select PLATFORM
        select PLATFORM_SUPPORT_64BIT
 
+config PLATFORM_QEMU-i386
+       bool "QEMU Emulator"
+       depends VENDOR_QEMU
+       select PLATFORM
+
 config PLATFORM_SERENGETI_CHEETAH
        bool "AMD Serengeti-Cheetah"
        depends VENDOR_AMD
@@ -97,6 +105,22 @@ config PLATFORM_SUPERMICRO_H8DMR
        select PLATFORM_SUPPORT_64BIT
 
 endchoice
+
+config BUILD_QEMU
+	bool "Build QEMU with patches for LinuxBIOS"
+	depends PLATFORM_QEMU-i386
+	default n
+	help
+	  Say 'y' here to build a patched version of QEMU to work with
+	  LinuxBIOS. This downloads the correct version and patches it
+	  it even builds it if you specify the QEMU_CC correctly.
+
+config QEMU_CC
+	string "Compiler to use when building QEMU"
+	depends BUILD_QEMU
+	default "gcc32"
+	help
+	  Set this string to point to your compiler (GCC_VER <=3.2)
 
 config SIMNOW
 	bool "Build for the AMD SimNow (TM) emulator"

@@ -7,8 +7,14 @@ endif
 ifeq ($(LINUXBIOS_BOARD),)
 $(error No LinuxBIOS board specified)
 endif
-ifeq ($(LINUXBIOS_CONFIG),)
-$(error No LinuxBIOS config specified)
+ifeq ($(CONFIG_LINUXBIOS_V3),y)
+  ifeq ($(LINUXBIOS_V3_CONFIG),)
+  $(error No LinuxBIOSv3 config specified)
+  endif
+else
+  ifeq ($(LINUXBIOS_CONFIG),)
+  $(error No LinuxBIOS config specified)
+  endif
 endif
 ifeq ($(LINUXBIOS_TDIR),)
 $(error No LinuxBIOS TDIR specified)
@@ -29,7 +35,12 @@ endif
 LINUXBIOS_TARGET_DIR=$(LINUXBIOS_SRC_DIR)/targets/
 LINUXBIOS_TARGET_NAME=$(LINUXBIOS_VENDOR)/$(LINUXBIOS_BOARD)
 LINUXBIOS_CONFIG_NAME=$(LINUXBIOS_TARGET_NAME)/$(LINUXBIOS_CONFIG)
+
+ifeq ($(CONFIG_LINUXBIOS_V3),y)
+LINUXBIOS_BUILD_DIR=$(LINUXBIOS_SRC_DIR)
+else
 LINUXBIOS_BUILD_DIR=$(LINUXBIOS_TARGET_DIR)/$(LINUXBIOS_TARGET_NAME)/$(LINUXBIOS_TDIR)
+endif
 
 LINUXBIOS_STAMP_DIR=$(LINUXBIOS_DIR)/stamps
 LINUXBIOS_LOG_DIR=$(LINUXBIOS_DIR)/logs
@@ -68,10 +79,17 @@ $(LINUXBIOS_STAMP_DIR)/.patched: $(LINUXBIOS_STAMP_DIR)/.unpacked
 	@ touch $@
 
 $(LINUXBIOS_STAMP_DIR)/.configured: $(LINUXBIOS_STAMP_DIR)/.patched
+ifeq ($(CONFIG_LINUXBIOS_V3),y)
+	@ echo "Configuring v3..."
+	@ cp $(LINUXBIOS_V3_CONFIG) $(LINUXBIOS_SRC_DIR)/.config
+	@ make -C $(LINUXBIOS_SRC_DIR) oldconfig > $(LINUXBIOS_CONFIG_LOG) 2>&1
+	@ touch $@
+else
 	@ echo "Building target..."
 	@( cd $(LINUXBIOS_TARGET_DIR); \
 	./buildtarget $(LINUXBIOS_CONFIG_NAME) > $(LINUXBIOS_CONFIG_LOG) 2>&1)
 	@ touch $@
+endif
 
 $(LINUXBIOS_STAMP_DIR) $(LINUXBIOS_LOG_DIR):
 	@ mkdir -p $@
