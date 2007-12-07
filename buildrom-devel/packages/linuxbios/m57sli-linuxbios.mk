@@ -9,7 +9,11 @@ endif
 LINUXBIOS_PATCHES= 
 
 ifeq ($(CONFIG_PAYLOAD_FILO),y)
-	LINUXBIOS_PATCHES += $(PACKAGE_DIR)/linuxbios/patches/m57sli-filo-Config.lb.patch
+	LINUXBIOS_PATCHES += $(PACKAGE_DIR)/linuxbios/patches/m57sli-filo-and-etherboot-Config.lb.patch
+endif
+
+ifeq ($(CONFIG_PAYLOAD_ETHERBOOT),y)
+	LINUXBIOS_PATCHES += $(PACKAGE_DIR)/linuxbios/patches/m57sli-filo-and-etherboot-Config.lb.patch
 endif
 
 ifeq ($(CONFIG_PAYLOAD_KERNEL),y)
