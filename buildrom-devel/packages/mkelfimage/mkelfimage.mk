@@ -5,6 +5,7 @@ MKELFIMAGE_SRC_DIR=$(MKELFIMAGE_DIR)/mkelfImage-2.7
 MKELFIMAGE_STAMP_DIR=$(MKELFIMAGE_DIR)/stamps
 MKELFIMAGE_LOG_DIR=$(MKELFIMAGE_DIR)/logs
 MKELFIMAGE_PATCHES=$(PACKAGE_DIR)/mkelfimage/mkelfImage-2.7-x86_64.patch
+MKELFIMAGE_PATCHES+=$(PACKAGE_DIR)/mkelfimage/mkelfimage-autoconf.patch
 
 ifeq ($(CONFIG_VERBOSE),y)
 MKELFIMAGE_BUILD_LOG=/dev/stdout
@@ -29,7 +30,8 @@ $(MKELFIMAGE_STAMP_DIR)/.patched: $(MKELFIMAGE_STAMP_DIR)/.unpacked
 	@ touch $@
 
 $(MKELFIMAGE_STAMP_DIR)/.configured: $(MKELFIMAGE_STAMP_DIR)/.patched
-	@ ( export CC=$(HOST_CC); export CFLAGS=$(HOST_CFLAGS); \
+	@ ( export CC=$(HOST_CC); export HOST_CFLAGS="$(HOST_CFLAGS)"; \
+	    export I386_CFLAGS="$(HOST_CFLAGS)"; \
 	  export LDFLAGS=$(HOST_LDFLAGS); unset LIBS; \
 	cd $(MKELFIMAGE_SRC_DIR); ./configure \
 	  --with-i386 --without-ia64 > $(MKELFIMAGE_CONFIG_LOG) 2>&1 )
