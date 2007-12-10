@@ -24,8 +24,8 @@ $(LZMA_STAMP_DIR)/.unpacked: $(SOURCE_DIR)/$(LZMA_SOURCE)
 
 $(LZMA_SRC_DIR)/C/7zip/Compress/LZMA_Alone/lzma: $(LZMA_STAMP_DIR)/.unpacked
 	@ echo "Building lzma..."
-	@ ( export CC=$(HOST_CC); export CFLAGS=$(HOST_CFLAGS); \
-	export LDFLAGS=$(HOST_LDFLAGS); unset LIBS; \
+	@ ( export CC=$(HOST_CC); export CFLAGS="$(HOST_CFLAGS)"; \
+	export LDFLAGS="$(HOST_LDFLAGS)"; unset LIBS; \
 	cd $(LZMA_SRC_DIR)/C/7zip/Compress/LZMA_Alone; \
 	$(MAKE) -C $(LZMA_SRC_DIR)/C/7zip/Compress/LZMA_Alone -f makefile.gcc > $(LZMA_BUILD_LOG) 2>&1 )
 
