@@ -19,7 +19,7 @@ include $(PACKAGE_DIR)/linuxbios/linuxbios.inc
 
 # If an optionrom was specified in the configuration, then use it
 
-ifneq($(OPTIONROM_ID),)
+ifneq ($(OPTIONROM_ID),)
 include $(PACKAGE_DIR)/linuxbios/optionroms.inc
 
 # Add it to the front of the list so it is prepended to the LinuxBIOS output
