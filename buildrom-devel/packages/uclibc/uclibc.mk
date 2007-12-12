@@ -39,7 +39,7 @@ $(UCLIBC_SRC_DIR)/.config: $(UCLIBC_STAMP_DIR)/.unpacked
 $(UCLIBC_SRC_DIR)/lib/libc.a: $(UCLIBC_SRC_DIR)/.config
 	@ echo "Building uclibc..." 
 	@ ( unset CFLAGS; unset LDFLAGS; \
-	$(MAKE) $(CONFIG_MAKE_JOBS) -C $(UCLIBC_SRC_DIR) TARGET_ARCH="$(UCLIBC_ARCH)" \
+	$(MAKE) $(PARALLEL_MAKE) -C $(UCLIBC_SRC_DIR) TARGET_ARCH="$(UCLIBC_ARCH)" \
 	CC="$(CC) $(CROSS_CFLAGS)" LD="$(LD) $(CROSS_LDFLAGS)" \
 	HOSTCC="$(HOST_CC)" KERNEL_SOURCE="$(KERNEL_SRC_DIR)" \
 	RUNTIME_PREFIX="/" \

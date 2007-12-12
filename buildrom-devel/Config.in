@@ -6,25 +6,6 @@ config HAVE_DOT_CONFIG
 	bool
 	default y
 
-config VERBOSE
-	bool "See the build output on stdout"
-	default n
-	help
-	  See the entire build output on stdout. Otherwise, it will
-	  be saved off in a series of logs
-
-config MAKE_JOBS
-	string "Send this option to make to parallelize builds"
-	default "-j1"
-	help
-	  This can speed the build if you have more than one core that you
-	  would like to allow make to use.  If you have a single processor, use
-	  the default (-j1) otherwise, try processors+1 (-j5 for 4 processors).
-
-	  This option currently only speeds up the kernel and uClibc builds.
-	  It was tried for: linuxbios (not passed through to fallback,etc.)
-	                    busybox (causes errors)
-
 config ADVANCED
 	bool "Enable advanced operations"
 	default n
@@ -36,10 +17,33 @@ config EXPERIMENTAL
 	default n
 	help
 		Experimental features are not yet ready for prime time and/or 
-		completely broken. The features revealed by this setting are likely to be 
-		only useful if you are a developer and want to hack on buildrom.
+		completely broken. The features revealed by this setting are
+		likely to be only useful if you are a developer and want to
+		hack on buildrom.
 
 		If you are not sure, say no.
+
+menu "Build Options"
+
+config VERBOSE
+	bool "See the build output on stdout"
+	default n
+	help
+	  See the entire build output on stdout. Otherwise, it will
+	  be saved off in a series of logs
+
+config MAKE_JOBS
+	int "Number of make jobs to run simultaneously (experimental)"
+	default 1
+	help
+	  This can speed the build if you have more than one core that you
+	  would like to allow make to use.  If you have a single processor, use
+	  the default (1) otherwise, you can specify the number of cores you
+	  have plus 1 (for example, specify 5 if you have 4 cores).
+
+	  This option is currently used for the kernel and uClibc packages.
+endmenu
+
 
 menu "LinuxBIOS configuration"
 

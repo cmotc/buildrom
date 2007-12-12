@@ -15,7 +15,6 @@ config PAYLOAD_CUSTOM
 config PAYLOAD_GPXE
 	depends EXPERIMENTAL
 	bool "GPXE"
-	select PAYLOAD
 
 config PAYLOAD_ETHERBOOT
 	depends !PLATFORM_M57SLI
