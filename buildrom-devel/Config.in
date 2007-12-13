@@ -54,16 +54,6 @@ config LINUXBIOS_V3
 	help
 	  Use the v3 tree.  LinuxBIOSv3 doesn't support all platforms yet.
 
-config LINUXBIOS_V3_LGDT_PATCH
-	bool "Avoid an error in stage0_i586 with some compilers"
-	depends LINUXBIOS_V3
-	default n
-	help
-	  Say 'y' here to use the patch from the mailing list to replace 
-	  "data32  lgdt %cs:gdtptr" with 
-	  "movl $gdtptr"
-          "%ebx lgdt %cs:(%bx)"
-
 config USE_LZMA
 	bool "Enable LZMA compression"
 	depends !PAYLOAD_OFW

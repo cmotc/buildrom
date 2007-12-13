@@ -17,9 +17,6 @@ LINUXBIOS_PAYLOAD_TARGET=$(LINUXBIOS_BUILD_DIR)/payload.elf
 ifeq ($(CONFIG_LINUXBIOS_V3),y)
 	LINUXBIOS_URL=svn://linuxbios.org/repository/LinuxBIOSv3
 	LINUXBIOS_TARBALL=linuxbiosv3-svn-$(LINUXBIOS_TAG).tar.gz
-	ifeq ($(CONFIG_LINUXBIOS_V3_LGDT_PATCH),y)
-	LINUXBIOS_PATCHES += $(PACKAGE_DIR)/linuxbios/patches/lgdt.patch
-	endif
 	LINUXBIOS_SVN_DIR=$(SOURCE_DIR)/linuxbiosv3
 else
 	ifeq ($(CONFIG_PAYLOAD_LAB),y)
