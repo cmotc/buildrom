@@ -32,11 +32,11 @@ $(QEMU_STAMP_DIR)/.patched: $(QEMU_STAMP_DIR)/.unpacked
 	@ touch $@
 
 $(QEMU_STAMP_DIR)/.configured: $(QEMU_STAMP_DIR)/.patched
-	@ cd $(QEMU_SRC_DIR); ./configure --cc=gcc32 --target-list=i386-softmmu
+	@ cd $(QEMU_SRC_DIR); ./configure --cc=$(CONFIG_QEMU_CC) --target-list=i386-softmmu > $(QEMU_CONFIG_LOG) 2>&1
 	@ touch $@
 
 $(QEMU_SRC_DIR)/i386-softmmu/qemu: $(QEMU_STAMP_DIR)/.configured
-	@ make -C $(QEMU_SRC_DIR) CC=$(CONFIG_QEMU_CC) CCFLAGS="" CFLAGS="" LDFLAGS=""
+	@ make -C $(QEMU_SRC_DIR) CC=$(CONFIG_QEMU_CC) CCFLAGS="" CFLAGS="" LDFLAGS="" > $(QEMU_BUILD_LOG) 2>&1
 	@ echo "the qemu executable is in $(QEMU_SRC_DIR)/i386-softmmu/"
 
 $(QEMU_STAMP_DIR) $(QEMU_LOG_DIR):

@@ -112,15 +112,16 @@ config BUILD_QEMU
 	default n
 	help
 	  Say 'y' here to build a patched version of QEMU to work with
-	  LinuxBIOS. This downloads the correct version and patches it
+	  LinuxBIOS. This downloads the correct version and patches it;
 	  it even builds it if you specify the QEMU_CC correctly.
 
 config QEMU_CC
 	string "Compiler to use when building QEMU"
 	depends BUILD_QEMU
-	default "gcc32"
+	default "gcc34"
 	help
-	  Set this string to point to your compiler (GCC_VER <=3.2)
+          QEMU has known problems when built using gcc 4.x.
+	  Set this string to point to your compiler (GCC_VER 3.x).
 
 config SIMNOW
 	bool "Build for the AMD SimNow (TM) emulator"
