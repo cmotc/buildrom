@@ -16,6 +16,8 @@ KBL_LDFLAGS=-static
 KBL_TARGET=$(INITRD_DIR)/kbl
 endif
 
+KBL_PATCHES += $(PACKAGE_DIR)/kexec-boot-loader/cross_compile.patch
+
 ifeq ($(CONFIG_VERBOSE),y)
 KBL_BUILD_LOG=/dev/stdout
 KBL_INSTALL_LOG=/dev/stdout
