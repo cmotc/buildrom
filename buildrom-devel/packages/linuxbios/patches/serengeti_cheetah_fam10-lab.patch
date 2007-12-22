@@ -1,0 +1,44 @@
+Index: svn/targets/amd/serengeti_cheetah_fam10/Config.lb
+===================================================================
+--- svn/targets/amd/serengeti_cheetah_fam10/Config.lb	(revision 3018)
++++ svn/targets/amd/serengeti_cheetah_fam10/Config.lb	(working copy)
+@@ -29,29 +29,14 @@
+ # At a maximum only compile in this level of debugging
+ 	option  MAXIMUM_CONSOLE_LOGLEVEL=11
+
+-# 512KB ROM
+-option ROM_SIZE=512*1024
++# 1024KB ROM
++option ROM_SIZE=1024*1024
++option FALLBACK_SIZE=ROM_SIZE-FAILOVER_SIZE
+
+-# Cheetah Family 10
+-#romimage "normal"
+-#	1MB ROM
+-#	option ROM_SIZE = 0x100000
+-#	option USE_FAILOVER_IMAGE=0
+-#	option USE_FALLBACK_IMAGE=0
+-#	option ROM_IMAGE_SIZE=0x20000
+-#	option ROM_IMAGE_SIZE=0x30000
+-#	option XIP_ROM_SIZE=0x40000
+-#	option LINUXBIOS_EXTRA_VERSION="$(shell cat ../../VERSION)_Normal"
+-#	payload ../payload.elf
+-#end
+-
+ romimage "fallback"
+ 	option USE_FAILOVER_IMAGE=0
+ 	option USE_FALLBACK_IMAGE=1
+-#	option ROM_IMAGE_SIZE=0x13800
+-#	option ROM_IMAGE_SIZE=0x19800
+-	option ROM_IMAGE_SIZE=0x3f000
+-#	option ROM_IMAGE_SIZE=0x15800
++	option ROM_IMAGE_SIZE=0x30000
+ 	option XIP_ROM_SIZE=0x40000
+ 	option LINUXBIOS_EXTRA_VERSION="$(shell cat ../../VERSION)_Fallback"
+ 	payload ../payload.elf
+@@ -65,6 +50,5 @@
+ 	option LINUXBIOS_EXTRA_VERSION="$(shell cat ../../VERSION)_Failover"
+ end
+
+-#buildrom ./amd-cheetah-fam10.rom ROM_SIZE "normal" "fallback" "failover"
+ buildrom ./amd-cheetah-fam10.rom ROM_SIZE "fallback" "failover"

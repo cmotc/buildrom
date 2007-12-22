@@ -16,6 +16,13 @@ $(error To build LinuxBIOS, you need to install the 'iasl' tool)
 endif
 
 
+ifeq ($(CONFIG_PLATFORM_CHEETAH_FAM10),y)
+ifeq ($(CONFIG_PAYLOAD_LAB),y)
+	LINUXBIOS_PATCHES += $(PACKAGE_DIR)/linuxbios/patches/serengeti_cheetah_fam10-lab.patch
+endif
+endif
+
+ifeq ($(CONFIG_PLATFORM_SERENGETI_CHEETAH),y)
 ifeq ($(CONFIG_PAYLOAD_LAB),y)
 	LINUXBIOS_PATCHES += $(PACKAGE_DIR)/linuxbios/patches/serengeti_cheetah-lab.patch
 else
@@ -24,6 +31,7 @@ endif
 
 ifeq ($(CONFIG_SIMNOW),y)
 LINUXBIOS_PATCHES += $(PACKAGE_DIR)/linuxbios/patches/simnow.patch
+endif
 endif
 
 LINUXBIOS_BASE_DIR=svn
