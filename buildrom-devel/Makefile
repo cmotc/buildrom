@@ -68,12 +68,10 @@ ifeq ($(CONFIG_LINUXBIOS_V2),y)
 rom: $(HOSTTOOLS-y) payload $(LINUXBIOS-y)
 else
 
-# Add the payload, and then add everything in the deploy/roms directory
-
 rom: $(HOSTTOOLS-y) payload $(LINUXBIOS-y)
-	cp $(LBV3_OUTPUT) $(TARGET_ROM_FILE)
-	$(STAGING_DIR)/bin/lar -a $(TARGET_ROM_FILE) $(PAYLOAD_TARGET):normal/payload
-	for file in `ls $(ROM_DIR)`; do \
+	@ cp $(LBV3_OUTPUT) $(TARGET_ROM_FILE)
+	@ $(STAGING_DIR)/bin/lar -a $(TARGET_ROM_FILE) $(PAYLOAD_TARGET):normal/payload
+	@ for file in `ls $(ROM_DIR)`; do \
 		$(STAGING_DIR)/bin/lar -a $(TARGET_ROM_FILE) $(ROM_DIR)/$$file:$$file; \
 	done
 endif

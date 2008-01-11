@@ -15,7 +15,7 @@ $(error No LinuxBIOS TDIR specified)
 endif
 endif
 
-LBV2_OUTPUT=$(LBV2_BUILD_DIR)/$(LBV2_ROM_NAME)
+LBV2_OUTPUT=$(LBV2_BUILD_DIR)/$(LINUXBIOS_ROM_NAME)
 LBV2_DIR=$(BUILD_DIR)/linuxbios
 
 # If the user wanted to override the build directory - obey that now
