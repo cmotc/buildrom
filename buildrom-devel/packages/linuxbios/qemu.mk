@@ -1,44 +1,37 @@
 # This is the QEMU LinuxBIOS target
 
 ifeq ($(CONFIG_PLATFORM),y)
-ifeq ($(LINUXBIOS_TAG),)
+ifeq ($(LBV2_TAG),)
 $(error You need to specify a version to pull in your platform config)
 endif
 endif
 
-LINUXBIOS_PATCHES =
+LBV2_PATCHES =
 
-
-
-LINUXBIOS_BASE_DIR=svn
+LBV2_BASE_DIR=svn
 TARGET_ROM = $(LINUXBIOS_VENDOR)-$(LINUXBIOS_BOARD).rom
-LINUXBIOS_PAYLOAD_TARGET=$(LINUXBIOS_BUILD_DIR)/payload.elf
+LBV2_PAYLOAD_TARGET=$(LBV2_BUILD_DIR)/payload.elf
 
-ifeq ($(CONFIG_LINUXBIOS_V3),y)
-	LINUXBIOS_URL=svn://linuxbios.org/repository/LinuxBIOSv3
-	LINUXBIOS_TARBALL=linuxbiosv3-svn-$(LINUXBIOS_TAG).tar.gz
-	LINUXBIOS_SVN_DIR=$(SOURCE_DIR)/linuxbiosv3
+ifeq ($(CONFIG_PAYLOAD_LAB),y)
+LBV2_PATCHES += $(PACKAGE_DIR)/linuxbios/patches/qemu-lab.patch
 else
-	ifeq ($(CONFIG_PAYLOAD_LAB),y)
-	LINUXBIOS_PATCHES += $(PACKAGE_DIR)/linuxbios/patches/qemu-lab.patch
-	else
-	LINUXBIOS_PATCHES += $(PACKAGE_DIR)/linuxbios/patches/qemu-payload.patch
-	endif
-	LINUXBIOS_URL=svn://linuxbios.org/repos/trunk/LinuxBIOSv2
-	LINUXBIOS_TARBALL=linuxbios-svn-$(LINUXBIOS_TAG).tar.gz
-	LINUXBIOS_SVN_DIR=$(SOURCE_DIR)/linuxbios
+LBV2_PATCHES += $(PACKAGE_DIR)/linuxbios/patches/qemu-payload.patch
 endif
+
+LBV2_URL=svn://linuxbios.org/repos/trunk/LinuxBIOSv2
+LBV2_TARBALL=linuxbios-svn-$(LBV2_TAG).tar.gz
+LBV2_SVN_DIR=$(SOURCE_DIR)/linuxbios
 
 include $(PACKAGE_DIR)/linuxbios/linuxbios.inc
 
-$(SOURCE_DIR)/$(LINUXBIOS_TARBALL):
+$(SOURCE_DIR)/$(LBV2_TARBALL):
 	@ echo "Fetching the LinuxBIOS code..."
 	@ mkdir -p $(SOURCE_DIR)/linuxbios
-	@ $(BIN_DIR)/fetchsvn.sh $(LINUXBIOS_URL) $(LINUXBIOS_SVN_DIR) \
-	$(LINUXBIOS_TAG) $(SOURCE_DIR)/$(LINUXBIOS_TARBALL) \
-	> $(LINUXBIOS_FETCH_LOG) 2>&1
+	@ $(BIN_DIR)/fetchsvn.sh $(LBV2_URL) $(LBV2_SVN_DIR) \
+	$(LBV2_TAG) $(SOURCE_DIR)/$(LBV2_TARBALL) \
+	> $(LBV2_FETCH_LOG) 2>&1
 
-$(OUTPUT_DIR)/$(TARGET_ROM): $(LINUXBIOS_OUTPUT)
+$(OUTPUT_DIR)/$(TARGET_ROM): $(LBV2_OUTPUT)
 	@ mkdir -p $(OUTPUT_DIR)
 	@ cp $< $@
 

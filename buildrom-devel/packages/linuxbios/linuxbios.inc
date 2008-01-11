@@ -7,111 +7,94 @@ endif
 ifeq ($(LINUXBIOS_BOARD),)
 $(error No LinuxBIOS board specified)
 endif
-ifeq ($(CONFIG_LINUXBIOS_V3),y)
-  ifeq ($(LINUXBIOS_V3_CONFIG),)
-  $(error No LinuxBIOSv3 config specified)
-  endif
-else
-  ifeq ($(LINUXBIOS_CONFIG),)
-  $(error No LinuxBIOS config specified)
-  endif
+ifeq ($(LBV2_CONFIG),)
+$(error No LinuxBIOS config specified)
 endif
-ifeq ($(LINUXBIOS_TDIR),)
+ifeq ($(LBV2_TDIR),)
 $(error No LinuxBIOS TDIR specified)
 endif
 endif
 
-LINUXBIOS_OUTPUT=$(LINUXBIOS_BUILD_DIR)/$(LINUXBIOS_ROM_NAME)
-LINUXBIOS_DIR=$(BUILD_DIR)/linuxbios
+LBV2_OUTPUT=$(LBV2_BUILD_DIR)/$(LBV2_ROM_NAME)
+LBV2_DIR=$(BUILD_DIR)/linuxbios
 
 # If the user wanted to override the build directory - obey that now
 
 ifeq ($(CONFIG_LB_USE_BUILD),y)
-LINUXBIOS_SRC_DIR=$(subst ",,$(CONFIG_LB_BUILDDIR))
+LBV2_SRC_DIR=$(subst ",,$(CONFIG_LB_BUILDDIR))
 else
-LINUXBIOS_SRC_DIR=$(LINUXBIOS_DIR)/$(LINUXBIOS_BASE_DIR)
+LBV2_SRC_DIR=$(LBV2_DIR)/$(LBV2_BASE_DIR)
 endif
 
-LINUXBIOS_TARGET_DIR=$(LINUXBIOS_SRC_DIR)/targets/
-LINUXBIOS_TARGET_NAME=$(LINUXBIOS_VENDOR)/$(LINUXBIOS_BOARD)
-LINUXBIOS_CONFIG_NAME=$(LINUXBIOS_TARGET_NAME)/$(LINUXBIOS_CONFIG)
+LBV2_TARGET_DIR=$(LBV2_SRC_DIR)/targets/
+LBV2_TARGET_NAME=$(LINUXBIOS_VENDOR)/$(LINUXBIOS_BOARD)
+LBV2_CONFIG_NAME=$(LBV2_TARGET_NAME)/$(LBV2_CONFIG)
 
-ifeq ($(CONFIG_LINUXBIOS_V3),y)
-LINUXBIOS_BUILD_DIR=$(LINUXBIOS_SRC_DIR)
-else
-LINUXBIOS_BUILD_DIR=$(LINUXBIOS_TARGET_DIR)/$(LINUXBIOS_TARGET_NAME)/$(LINUXBIOS_TDIR)
-endif
+LBV2_BUILD_DIR=$(LBV2_TARGET_DIR)/$(LBV2_TARGET_NAME)/$(LBV2_TDIR)
 
-LINUXBIOS_STAMP_DIR=$(LINUXBIOS_DIR)/stamps
-LINUXBIOS_LOG_DIR=$(LINUXBIOS_DIR)/logs
+LBV2_STAMP_DIR=$(LBV2_DIR)/stamps
+LBV2_LOG_DIR=$(LBV2_DIR)/logs
 
 ifeq ($(CONFIG_VERBOSE),y)
-LINUXBIOS_FETCH_LOG=/dev/stdout
-LINUXBIOS_CONFIG_LOG=/dev/stdout
-LINUXBIOS_BUILD_LOG=/dev/stdout
-LINUXBIOS_INSTALL_LOG=/dev/stdout
+LBV2_FETCH_LOG=/dev/stdout
+LBV2_CONFIG_LOG=/dev/stdout
+LBV2_BUILD_LOG=/dev/stdout
+LBV2_INSTALL_LOG=/dev/stdout
 else
-LINUXBIOS_FETCH_LOG=$(LINUXBIOS_LOG_DIR)/fetch.log
-LINUXBIOS_BUILD_LOG=$(LINUXBIOS_LOG_DIR)/build.log
-LINUXBIOS_CONFIG_LOG=$(LINUXBIOS_LOG_DIR)/config.log
-LINUXBIOS_INSTALL_LOG=$(LINUXBIOS_LOG_DIR)/install.log
+LBV2_FETCH_LOG=$(LBV2_LOG_DIR)/fetch.log
+LBV2_BUILD_LOG=$(LBV2_LOG_DIR)/build.log
+LBV2_CONFIG_LOG=$(LBV2_LOG_DIR)/config.log
+LBV2_INSTALL_LOG=$(LBV2_LOG_DIR)/install.log
 endif
 
 # This allows us to skip the unpack/patch/configure stage
 
 ifeq ($(CONFIG_LB_USE_BUILD),y)
-LINUXBIOS_DIR_TARGET=
+LBV2_DIR_TARGET=
 else
-LINUXBIOS_DIR_TARGET=$(LINUXBIOS_STAMP_DIR)/.configured
+LBV2_DIR_TARGET=$(LBV2_STAMP_DIR)/.configured
 endif
 
-$(LINUXBIOS_PAYLOAD_TARGET): $(PAYLOAD_TARGET)
+$(LBV2_PAYLOAD_TARGET): $(PAYLOAD_TARGET)
 	@ cp $< $@
 
-$(LINUXBIOS_STAMP_DIR)/.unpacked: $(SOURCE_DIR)/$(LINUXBIOS_TARBALL)
+$(LBV2_STAMP_DIR)/.unpacked: $(SOURCE_DIR)/$(LBV2_TARBALL)
 	@ echo "Unpacking LinuxBIOS..."
-	@ tar -C $(LINUXBIOS_DIR) -zxf $(SOURCE_DIR)/$(LINUXBIOS_TARBALL)
+	@ tar -C $(LBV2_DIR) -zxf $(SOURCE_DIR)/$(LBV2_TARBALL)
 	@ touch $@	
 
-$(LINUXBIOS_STAMP_DIR)/.patched: $(LINUXBIOS_STAMP_DIR)/.unpacked 
+$(LBV2_STAMP_DIR)/.patched: $(LBV2_STAMP_DIR)/.unpacked 
 	@ echo "Patching LinuxBIOS..."
-	@ $(BIN_DIR)/doquilt.sh $(LINUXBIOS_SRC_DIR) $(LINUXBIOS_PATCHES)
+	@ $(BIN_DIR)/doquilt.sh $(LBV2_SRC_DIR) $(LBV2_PATCHES)
 	@ touch $@
 
-$(LINUXBIOS_STAMP_DIR)/.configured: $(LINUXBIOS_STAMP_DIR)/.patched
-ifeq ($(CONFIG_LINUXBIOS_V3),y)
-	@ echo "Configuring v3..."
-	@ cp $(LINUXBIOS_V3_CONFIG) $(LINUXBIOS_SRC_DIR)/.config
-	@ make -C $(LINUXBIOS_SRC_DIR) oldconfig > $(LINUXBIOS_CONFIG_LOG) 2>&1
-	@ touch $@
-else
+$(LBV2_STAMP_DIR)/.configured: $(LBV2_STAMP_DIR)/.patched
 	@ echo "Building target..."
-	@( cd $(LINUXBIOS_TARGET_DIR); \
-	./buildtarget $(LINUXBIOS_CONFIG_NAME) > $(LINUXBIOS_CONFIG_LOG) 2>&1)
+	@( cd $(LBV2_TARGET_DIR); \
+	./buildtarget $(LBV2_CONFIG_NAME) > $(LBV2_CONFIG_LOG) 2>&1)
 	@ touch $@
-endif
 
-$(LINUXBIOS_STAMP_DIR) $(LINUXBIOS_LOG_DIR):
+$(LBV2_STAMP_DIR) $(LBV2_LOG_DIR):
 	@ mkdir -p $@
 
-$(LINUXBIOS_OUTPUT): $(LINUXBIOS_STAMP_DIR) $(LINUXBIOS_LOG_DIR) $(LINUXBIOS_DIR_TARGET) $(LINUXBIOS_PAYLOAD_TARGET)
+$(LBV2_OUTPUT): $(LBV2_STAMP_DIR) $(LBV2_LOG_DIR) $(LBV2_DIR_TARGET) $(LBV2_PAYLOAD_TARGET)
 	@ echo "Building linuxbios..."
 	@ (export CPU_OPT="$(STACKPROTECT)"; \
-	make -C $(LINUXBIOS_BUILD_DIR) > $(LINUXBIOS_BUILD_LOG) 2>&1)
+	make -C $(LBV2_BUILD_DIR) > $(LBV2_BUILD_LOG) 2>&1)
 
 generic-linuxbios-clean:
 	@ echo "Cleaning linuxbios..."
-	@ rm -f $(LINUXBIOS_PAYLOAD_TARGET)
-	@ if [ -d $(LINUXBIOS_BUILD_DIR) ];then \
-	$(MAKE) -C $(LINUXBIOS_BUILD_DIR) clean > /dev/null 2>&1; \
+	@ rm -f $(LBV2_PAYLOAD_TARGET)
+	@ if [ -d $(LBV2_BUILD_DIR) ];then \
+	$(MAKE) -C $(LBV2_BUILD_DIR) clean > /dev/null 2>&1; \
 	fi	
-	@ rm -f $(LINUXBIOS_OUTPUT)
+	@ rm -f $(LBV2_OUTPUT)
 
 generic-linuxbios-distclean:
 	@ if [ "$(CONFIG_LB_USE_BUILD)" = "y" ]; then \
 	echo "Cleaning linuxbios build..."; \
-	$(MAKE) -C $(LINUXBIOS_BUILD_DIR) clean > /dev/null 2>&1; \
-	rm -f $(LINUXBIOS_OUTPUT); \
+	$(MAKE) -C $(LBV2_BUILD_DIR) clean > /dev/null 2>&1; \
+	rm -f $(LBV2_OUTPUT); \
 	fi	
 
-	@ rm -rf $(LINUXBIOS_DIR)/*
+	@ rm -rf $(LBV2_DIR)/*

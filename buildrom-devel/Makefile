@@ -12,6 +12,7 @@ SKELETON_DIR=$(BASE_DIR)/skeleton
 OUTPUT_DIR=$(BASE_DIR)/deploy
 PACKAGE_DIR=$(BASE_DIR)/packages
 BIN_DIR=$(BASE_DIR)/bin
+ROM_DIR=$(OUTPUT_DIR)/roms
 
 ifeq (.config, $(wildcard .config))
 dot-config := 1
@@ -39,16 +40,43 @@ include $(CONFIG_DIR)/payloads/payloads.conf
 # Include the global settings and other checks
 include $(SCRIPT_DIR)/Build.settings
 
+# TARGET_ROM is what we are ultimately building - this should be
+# specified by the platform files
+
+TARGET_ROM ?= linuxbios.rom
+TARGET_ROM_FILE=$(OUTPUT_DIR)/$(TARGET_ROM)
+
+# Choose the version of LinuxBIOS to build - this might be better
+# elsewhere, but what the heck - its easy.
+
+LINUXBIOS-$(CONFIG_LINUXBIOS_V2) = linuxbios
+LINUXBIOS-$(CONFIG_LINUXBIOS_V3) = linuxbiosv3 roms
+
 # Construct the list of packages we will be building
 
-PKGLIST = linuxbios $(PAYLOAD-y) $(HOSTTOOLS-y) 
+PKGLIST = $(LINUXBIOS-y) $(PAYLOAD-y) $(HOSTTOOLS-y)
 
 # Construct the various targets
 
 PKG_clean=$(patsubst %, %-clean, $(PKGLIST))
 PKG_distclean=$(patsubst %, %-distclean, $(PKGLIST))
 
-all: $(HOSTTOOLS-y) payload linuxbios
+# This is the top level target - for v2, the final deliverable is built
+# by LinuxBIOS, for v3 it is built by us, so we have ifdef magic here
+
+ifeq ($(CONFIG_LINUXBIOS_V2),y)
+rom: $(HOSTTOOLS-y) payload $(LINUXBIOS-y)
+else
+
+# Add the payload, and then add everything in the deploy/roms directory
+
+rom: $(HOSTTOOLS-y) payload $(LINUXBIOS-y)
+	cp $(LBV3_OUTPUT) $(TARGET_ROM_FILE)
+	$(STAGING_DIR)/bin/lar -a $(TARGET_ROM_FILE) $(PAYLOAD_TARGET):normal/payload
+	for file in `ls $(ROM_DIR)`; do \
+		$(STAGING_DIR)/bin/lar -a $(TARGET_ROM_FILE) $(ROM_DIR)/$$file:$$file; \
+	done
+endif
 
 payload: $(PAYLOAD_TARGET)
 
@@ -70,9 +98,15 @@ endif
 
 MKTARGETS:= $(shell ls $(PACKAGE_DIR)/*/*.mk)
 
-include $(filter-out $(PACKAGE_DIR)/kernel/% $(PACKAGE_DIR)/linuxbios/%,$(MKTARGETS)) 
+include $(filter-out $(PACKAGE_DIR)/kernel/% $(PACKAGE_DIR)/linuxbios/% $(PACKAGE_DIR)/linuxbiosv3/%,$(MKTARGETS))
 
-include $(KERNEL_MK) $(LINUXBIOS_MK)
+include $(KERNEL_MK)
+
+ifeq ($(CONFIG_LINUXBIOS_V2),y)
+include $(LBV2_MK)
+else
+include $(PACKAGE_DIR)/linuxbiosv3/linuxbiosv3.mk
+endif
 
 endif
 
