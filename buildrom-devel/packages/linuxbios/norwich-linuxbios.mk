@@ -1,6 +1,5 @@
 # This is the Generic LinuxBIOS target
 
-echo $(LBV2_TAG)
 ifeq ($(CONFIG_PLATFORM),y)
 ifeq ($(LBV2_TAG),)
 $(error You need to specify a version to pull in your platform config)
