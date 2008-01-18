@@ -45,24 +45,24 @@ config MAKE_JOBS
 endmenu
 
 
-menu "LinuxBIOS configuration"
+menu "coreboot configuration"
 
 choice
-	prompt "LinuxBIOS Version"
-	default LINUXBIOS_V2
+	prompt "coreboot version"
+	default COREBOOT_V2
 
-config LINUXBIOS_V2
-	bool "LinuxBIOS v2"
+config COREBOOT_V2
+	bool "coreboot v2"
 	help
-		Select this option to build a .rom based on the LinuxBIOS
+		Select this option to build a .rom based on the coreboot
 		v2 code.  The v2 code is far more stable, and supports many
 		different platforms.
 
-config LINUXBIOS_V3
-	bool "LinuxBIOS v3"
+config COREBOOT_V3
+	bool "coreboot v3"
 	depends EXPERIMENTAL
 	help
-		Select this option to build a LinuxBIOS v3 based ROM.  This
+		Select this option to build a coreboot v3 based ROM.  This
 		is experimental, and only supports a few platforms.
 endchoice
 
@@ -76,30 +76,30 @@ config USE_LZMA
 	  Precompress the payload with LZMA. This doesn't work
 	  for FILO, OFW, or ETHERBOOT.
 
-config LB_USE_BUILD
-	bool "Specify a LinuxBIOS build dir"
+config CB_USE_BUILD
+	bool "Specify a coreboot build dir"
 	depends ADVANCED
 	default n
 	help
 	  Say 'y' here to specify an existing directory to build 
-	  LinuxBIOS from - this is useful if you have local development
+	  coreboot from - this is useful if you have local development
 	  tree you wish to work from
 
-config LB_BUILDDIR
-	string "LinuxBIOS build directory"
-	depends LB_USE_BUILD
+config CB_BUILDDIR
+	string "coreboot build directory"
+	depends CB_USE_BUILD
 
-config LB_CUSTOM_REV
-	bool "Override the platform LinuxBIOS revision"
-	depends ADVANCED && !LB_USE_BUILD
+config CB_CUSTOM_REV
+	bool "Override the platform coreboot revision"
+	depends ADVANCED && !CB_USE_BUILD
 	default n
 	help
-	  Say 'y' here to overide the default LinuxBIOS SVN revsion
+	  Say 'y' here to overide the default coreboot SVN revsion
   	  from the platform configuration
 
-config LB_REVISION
-	string "LinuxBIOS revision"
-	depends LB_CUSTOM_REV
+config CB_REVISION
+	string "coreboot revision"
+	depends CB_CUSTOM_REV
 
 endmenu
 

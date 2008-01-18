@@ -6,10 +6,10 @@ system from which most of the ideas for this were derived.
 Introduction
 
 This is a simple makefile system that designed to build a ROM image for 
-LinuxBIOS based systems.  This system allows one to choose one of several
-different payloads for a variety of platforms.  The intention of buildROM
-is to build everything together with one step, rather then the 6 or 8 
-individual steps that it would have taken previously.
+coreboot (formally LinuxBIOS) based systems.  This system allows one to
+choose one of several different payloads for a variety of platforms. 
+The intention of buildROM is to build everything together with one step,
+rather then the 6 or 8 individual steps that it would have taken previously.
 
 Payloads
 
@@ -30,11 +30,11 @@ and select your desired options, or answer the questions:
 
 CONFIG_VERBOSE - show build output on stdout instead of a log file
 CONFIG_ADVANCED - select some advanced options:
-  CONFIG_USE_LZMA - Compress payloads with LZMA (requires LB support)
-  CONFIG_LB_USE_BUILD - Say 'y' here to specify an existing build 
-                        directory for LinuxBIOS.  This is useful if you
+  CONFIG_USE_LZMA - Compress payloads with LZMA (requires coreboot support)
+  CONFIG_CB_USE_BUILD - Say 'y' here to specify an existing build 
+                        directory for coreboot.  This is useful if you
 			want build out of your development tree.  
-  CONFIG_LB_BUILDDIR - Specify your remote LinuxBIOS build directory here
+  CONFIG_CB_BUILDDIR - Specify your remote coreboot build directory here
 
 Some of the payload options have their own configuration:
 

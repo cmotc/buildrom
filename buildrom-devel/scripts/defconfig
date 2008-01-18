@@ -8,11 +8,11 @@ CONFIG_HAVE_DOT_CONFIG=y
 # CONFIG_ADVANCED is not set
 
 #
-# LinuxBIOS configuration
+# coreboot configuration
 #
 CONFIG_USE_LZMA=y
-# CONFIG_LB_USE_BUILD is not set
-CONFIG_LB_BUILDDIR=""
+# CONFIG_CB_USE_BUILD is not set
+CONFIG_CB_BUILDDIR=""
 CONFIG_PLATFORM=y
 CONFIG_PAYLOAD=y
 

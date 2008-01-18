@@ -17,7 +17,7 @@ config VENDOR_ADVANCED_DIGITAL_LOGIC
 
 config VENDOR_GIGABYTE
 	bool "GIGABYTE"
-	depends LINUXBIOS_V2
+	depends COREBOOT_V2
 
 config VENDOR_PC_ENGINES
 	bool "PC Engines"
@@ -27,11 +27,11 @@ config VENDOR_QEMU
 
 config VENDOR_SUPERMICRO
 	bool "Supermicro"
-	depends LINUXBIOS_V2
+	depends COREBOOT_V2
 
 config VENDOR_TYAN
 	bool "Tyan"
-	depends LINUXBIOS_V2
+	depends COREBOOT_V2
 
 endchoice
 
@@ -64,34 +64,34 @@ config PLATFORM_MSM800SEV
 config PLATFORM_DB800
 	bool "AMD DB800"
 	depends VENDOR_AMD
-	depends LINUXBIOS_V2
+	depends COREBOOT_V2
 	select PLATFORM
 
 config PLATFORM_GA_M57SLI_S4
        bool "GIGABYTE GA-M57SLI-S4"
        depends VENDOR_GIGABYTE
-       depends LINUXBIOS_V2
+       depends COREBOOT_V2
        select PLATFORM
        select PLATFORM_SUPPORT_64BIT
 
 config PLATFORM_GA_2761GXDK
 	bool "GIGABYTE GA-2761GXDK"
 	depends VENDOR_GIGABYTE
-	depends LINUXBIOS_V2
+	depends COREBOOT_V2
 	select PLATFORM
 	select PLATFORM_SUPPORT_64BIT
 
 config PLATFORM_TYAN_S2882
        bool "Tyan S2882"
        depends VENDOR_TYAN
-       depends LINUXBIOS_V2
+       depends COREBOOT_V2
        select PLATFORM
        select PLATFORM_SUPPORT_64BIT
 
 config PLATFORM_TYAN_S2891
        bool "Tyan S2891"
        depends VENDOR_TYAN
-       depends LINUXBIOS_V2
+       depends COREBOOT_V2
        select PLATFORM
        select PLATFORM_SUPPORT_64BIT
 
@@ -103,21 +103,21 @@ config PLATFORM_QEMU-i386
 config PLATFORM_SERENGETI_CHEETAH
        bool "AMD Serengeti-Cheetah"
        depends VENDOR_AMD
-       depends LINUXBIOS_V2
+       depends COREBOOT_V2
        select PLATFORM
        select PLATFORM_SUPPORT_64BIT
 
 config PLATFORM_SUPERMICRO_H8DMR
        bool "Supermicro H8DMR"
        depends VENDOR_SUPERMICRO
-       depends LINUXBIOS_V2
+       depends COREBOOT_V2
        select PLATFORM
        select PLATFORM_SUPPORT_64BIT
 
 config PLATFORM_CHEETAH_FAM10
 	bool "AMD Serengeti-Cheetah with fam10 processor"
 	depends VENDOR_AMD
-	depends LINUXBIOS_V2
+	depends COREBOOT_V2
 	select PLATFORM
 	select PLATFORM_SUPPORT_64BIT
 endchoice

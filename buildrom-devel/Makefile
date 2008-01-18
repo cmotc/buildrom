@@ -46,15 +46,15 @@ include $(SCRIPT_DIR)/Build.settings
 TARGET_ROM ?= linuxbios.rom
 TARGET_ROM_FILE=$(OUTPUT_DIR)/$(TARGET_ROM)
 
-# Choose the version of LinuxBIOS to build - this might be better
+# Choose the version of coreboot to build - this might be better
 # elsewhere, but what the heck - its easy.
 
-LINUXBIOS-$(CONFIG_LINUXBIOS_V2) = linuxbios
-LINUXBIOS-$(CONFIG_LINUXBIOS_V3) = linuxbiosv3 roms
+COREBOOT-$(CONFIG_COREBOOT_V2) = coreboot
+COREBOOT-$(CONFIG_COREBOOT_V3) = coreboot-v3 roms
 
 # Construct the list of packages we will be building
 
-PKGLIST = $(LINUXBIOS-y) $(PAYLOAD-y) $(HOSTTOOLS-y)
+PKGLIST = $(COREBOOT-y) $(PAYLOAD-y) $(HOSTTOOLS-y)
 
 # Construct the various targets
 
@@ -62,14 +62,14 @@ PKG_clean=$(patsubst %, %-clean, $(PKGLIST))
 PKG_distclean=$(patsubst %, %-distclean, $(PKGLIST))
 
 # This is the top level target - for v2, the final deliverable is built
-# by LinuxBIOS, for v3 it is built by us, so we have ifdef magic here
+# by coreboot, for v3 it is built by us, so we have ifdef magic here
 
-ifeq ($(CONFIG_LINUXBIOS_V2),y)
-rom: $(HOSTTOOLS-y) payload $(LINUXBIOS-y)
+ifeq ($(CONFIG_COREBOOT_V2),y)
+rom: $(HOSTTOOLS-y) payload $(COREBOOT-y)
 else
 
-rom: $(HOSTTOOLS-y) payload $(LINUXBIOS-y)
-	@ cp $(LBV3_OUTPUT) $(TARGET_ROM_FILE)
+rom: $(HOSTTOOLS-y) payload $(COREBOOT-y)
+	@ cp $(CBV3_OUTPUT) $(TARGET_ROM_FILE)
 	@ $(STAGING_DIR)/bin/lar -a $(TARGET_ROM_FILE) $(PAYLOAD_TARGET):normal/payload
 	@ for file in `ls $(ROM_DIR)`; do \
 		$(STAGING_DIR)/bin/lar -a $(TARGET_ROM_FILE) $(ROM_DIR)/$$file:$$file; \
@@ -96,14 +96,14 @@ endif
 
 MKTARGETS:= $(shell ls $(PACKAGE_DIR)/*/*.mk)
 
-include $(filter-out $(PACKAGE_DIR)/kernel/% $(PACKAGE_DIR)/linuxbios/% $(PACKAGE_DIR)/linuxbiosv3/%,$(MKTARGETS))
+include $(filter-out $(PACKAGE_DIR)/kernel/% $(PACKAGE_DIR)/coreboot-v2/% $(PACKAGE_DIR)/coreboot-v3/%,$(MKTARGETS))
 
 include $(KERNEL_MK)
 
-ifeq ($(CONFIG_LINUXBIOS_V2),y)
-include $(LBV2_MK)
+ifeq ($(CONFIG_COREBOOT_V2),y)
+include $(CBV2_MK)
 else
-include $(PACKAGE_DIR)/linuxbiosv3/linuxbiosv3.mk
+include $(PACKAGE_DIR)/coreboot-v3/coreboot-v3.mk
 endif
 
 endif

@@ -1,7 +1,7 @@
-# Rules to download option roms from the LinuxBIOS option rom
+# Rules to download option roms from the coreboot option ROM(s)
 # repository
 
-OPTIONROMURL=http://www.linuxbios.org/data/optionroms/
+OPTIONROMURL=http://coreboot.org/data/optionroms/
 
 $(OUTPUT_DIR)/$(OPTIONROM_ID).license:
 	@ mkdir -p $(OUTPUT_DIR)
