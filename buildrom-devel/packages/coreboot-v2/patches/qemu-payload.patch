@@ -1,7 +1,7 @@
 Index: svn/targets/emulation/qemu-i386/Config.lb
 ===================================================================
---- svn/targets/emulation/qemu-i386/Config.lb	(revision 2950)
-+++ svn/targets/emulation/qemu-i386/Config.lb	(working copy)
+--- svn.orig/targets/emulation/qemu-i386/Config.lb	2008-01-18 11:50:03.000000000 -0700
++++ svn/targets/emulation/qemu-i386/Config.lb	2008-01-18 13:40:00.000000000 -0700
 @@ -4,6 +4,8 @@
  mainboard emulation/qemu-i386
  
@@ -14,7 +14,7 @@ Index: svn/targets/emulation/qemu-i386/Config.lb
 @@ -13,8 +15,8 @@
  romimage "image" 
  	option ROM_IMAGE_SIZE=0x10000
- 	option LINUXBIOS_EXTRA_VERSION="-GRUB2"
+ 	option COREBOOT_EXTRA_VERSION="-GRUB2"
 -	payload /home/stepan/core.img
 +	payload ../payload.elf
  end

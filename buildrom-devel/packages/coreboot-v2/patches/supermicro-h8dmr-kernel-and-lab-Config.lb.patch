@@ -96,7 +96,7 @@ Index: Config.lb
 +	option LINUXBIOS_EXTRA_VERSION="$(shell cat ../../VERSION)_Failover"
  end
  
--#buildrom ./linuxbios.rom ROM_SIZE "normal" "fallback"
--buildrom ./linuxbios.rom ROM_SIZE "normal" "fallback" "failover"
+-#buildrom ./coreboot.rom ROM_SIZE "normal" "fallback"
+-buildrom ./coreboot.rom ROM_SIZE "normal" "fallback" "failover"
 +
-+buildrom ./linuxbios.rom ROM_SIZE "fallback" "failover"
++buildrom ./coreboot.rom ROM_SIZE "fallback" "failover"

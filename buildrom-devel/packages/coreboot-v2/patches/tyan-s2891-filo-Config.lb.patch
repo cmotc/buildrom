@@ -1,7 +1,7 @@
-Index: targets/tyan/s2891/Config.lb
+Index: svn/targets/tyan/s2891/Config.lb
 ===================================================================
---- LinuxBIOSv2/targets/tyan/s2891/Config.lb	(revision 2742)
-+++ LinuxBIOSv2/targets/tyan/s2891/Config.lb	(working copy)
+--- svn.orig/targets/tyan/s2891/Config.lb	2008-01-18 11:50:04.000000000 -0700
++++ svn/targets/tyan/s2891/Config.lb	2008-01-18 13:48:08.000000000 -0700
 @@ -7,55 +7,21 @@
  
  # Tyan s2891
@@ -23,7 +23,7 @@ Index: targets/tyan/s2891/Config.lb
  	option ROM_IMAGE_SIZE=0x20000
 -        option XIP_ROM_SIZE=0x20000
 +	option XIP_ROM_SIZE=0x20000
- 	option LINUXBIOS_EXTRA_VERSION="$(shell cat ../../VERSION)_Normal"
+ 	option COREBOOT_EXTRA_VERSION="$(shell cat ../../VERSION)_Normal"
 -#       payload ../../../payloads/tg3--ide_disk.zelf
 -#        payload ../../../payloads/filo.elf
 -#        payload ../../../payloads/filo_mem.elf
@@ -47,7 +47,7 @@ Index: targets/tyan/s2891/Config.lb
  	option ROM_IMAGE_SIZE=0x20000
 -        option XIP_ROM_SIZE=0x20000
 +	option XIP_ROM_SIZE=0x20000
- 	option LINUXBIOS_EXTRA_VERSION="$(shell cat ../../VERSION)_Fallback"
+ 	option COREBOOT_EXTRA_VERSION="$(shell cat ../../VERSION)_Fallback"
 -#       payload ../../../payloads/tg3--ide_disk.zelf
 -#        payload ../../../payloads/filo.elf
 -#        payload ../../../payloads/filo_mem.elf
@@ -63,4 +63,4 @@ Index: targets/tyan/s2891/Config.lb
 +	payload ../payload.elf
  end
  
- buildrom ./linuxbios.rom ROM_SIZE "normal" "fallback"
+ buildrom ./coreboot.rom ROM_SIZE "normal" "fallback"

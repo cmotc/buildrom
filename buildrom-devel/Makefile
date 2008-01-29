@@ -43,7 +43,7 @@ include $(SCRIPT_DIR)/Build.settings
 # TARGET_ROM is what we are ultimately building - this should be
 # specified by the platform files
 
-TARGET_ROM ?= linuxbios.rom
+TARGET_ROM ?= coreboot.rom
 TARGET_ROM_FILE=$(OUTPUT_DIR)/$(TARGET_ROM)
 
 # Choose the version of coreboot to build - this might be better

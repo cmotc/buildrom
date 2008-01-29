@@ -93,6 +93,6 @@ Index: svn/targets/amd/serengeti_cheetah/Config.lb
 -end
 -
 -
--buildrom ./linuxbios.rom ROM_SIZE "normal" "fallback" "failover"
--#buildrom ./linuxbios.rom ROM_SIZE "normal" "fallback" 
+-buildrom ./coreboot.rom ROM_SIZE "normal" "fallback" "failover"
+-#buildrom ./coreboot.rom ROM_SIZE "normal" "fallback" 
 +buildrom ./serengeti_cheetah.rom ROM_SIZE "fallback"
