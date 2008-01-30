@@ -26,7 +26,7 @@
 -	option ROM_IMAGE_SIZE=0x20000
 -#	option ROM_IMAGE_SIZE=0x15800
 -	option XIP_ROM_SIZE=0x40000
--	option LINUXBIOS_EXTRA_VERSION="$(shell cat ../../VERSION)_Normal"
+-	option COREBOOT_EXTRA_VERSION="$(shell cat ../../VERSION)_Normal"
 -#       payload ../../../payloads/tg3--ide_disk.zelf
 -#        payload ../../../payloads/filo.elf
 -#        payload ../../../payloads/filo_mem.elf
@@ -60,7 +60,7 @@
 +	option CONFIG_PRECOMPRESSED_PAYLOAD=1
 +	option ROM_IMAGE_SIZE=0x17000
  	option XIP_ROM_SIZE=0x40000
- 	option LINUXBIOS_EXTRA_VERSION="$(shell cat ../../VERSION)_Fallback"
+ 	option COREBOOT_EXTRA_VERSION="$(shell cat ../../VERSION)_Fallback"
 -#       payload ../../../payloads/tg3--ide_disk.zelf
 -#        payload ../../../payloads/filo.elf
 -#        payload ../../../payloads/filo_mem.elf
@@ -92,7 +92,7 @@
          option USE_FALLBACK_IMAGE=0
          option ROM_IMAGE_SIZE=FAILOVER_SIZE
          option XIP_ROM_SIZE=FAILOVER_SIZE
-         option LINUXBIOS_EXTRA_VERSION="$(shell cat ../../VERSION)_Failover"
+         option COREBOOT_EXTRA_VERSION="$(shell cat ../../VERSION)_Failover"
  end
  
 -#buildrom ./coreboot.rom ROM_SIZE "normal" "fallback"
