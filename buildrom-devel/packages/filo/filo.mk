@@ -8,7 +8,7 @@ FILO_LOG_DIR=$(FILO_DIR)/logs
 
 FILO_PATCHES=$(PACKAGE_DIR)/filo/patches/make.patch
 
-ifeq ($(CONFIG_PLATFORM_M57SLI),y)
+ifeq ($(CONFIG_PLATFORM_GA_M57SLI_S4),y)
 	FILO_PATCHES += $(PACKAGE_DIR)/filo/patches/sata-spinup-delay.patch
 endif
 
