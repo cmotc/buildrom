@@ -15,7 +15,7 @@ $(error No coreboot TDIR specified)
 endif
 endif
 
-CBV2_OUTPUT=$(CBV2_BUILD_DIR)/$(COREBOOT_ROM_NAME)
+CBV2_OUTPUT=$(CBV2_BUILD_DIR)/coreboot.rom
 CBV2_DIR=$(BUILD_DIR)/coreboot
 
 # If the user wanted to override the build directory - obey that now

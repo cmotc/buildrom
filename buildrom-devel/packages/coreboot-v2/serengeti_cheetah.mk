@@ -18,15 +18,15 @@ endif
 
 ifeq ($(CONFIG_PLATFORM_CHEETAH_FAM10),y)
 ifeq ($(CONFIG_PAYLOAD_LAB),y)
-	CBV2_PATCHES += $(PACKAGE_DIR)/coreboot-v2/patches/serengeti_cheetah_fam10-lab.patch
+	CBV2_CONFIG = Config-lab.lb
+	CBV2_PAYLOAD_FILE_EXT = elf.lzma
 endif
 endif
 
 ifeq ($(CONFIG_PLATFORM_SERENGETI_CHEETAH),y)
 ifeq ($(CONFIG_PAYLOAD_LAB),y)
-	CBV2_PATCHES += $(PACKAGE_DIR)/coreboot-v2/patches/serengeti_cheetah-lab.patch
-else
-	CBV2_PATCHES += $(PACKAGE_DIR)/coreboot-v2/patches/serengeti_cheetah-payload.patch
+	CBV2_CONFIG = Config-lab.lb
+	CBV2_PAYLOAD_FILE_EXT = elf.lzma
 endif
 
 ifeq ($(CONFIG_SIMNOW),y)
@@ -37,7 +37,7 @@ endif
 CBV2_BASE_DIR=svn
 CBV2_URL=svn://coreboot.org/repos/trunk/coreboot-v2
 CBV2_TARBALL=coreboot-svn-$(CBV2_TAG).tar.gz
-CBV2_PAYLOAD_TARGET=$(CBV2_BUILD_DIR)/payload.elf
+CBV2_PAYLOAD_TARGET=$(CBV2_BUILD_DIR)/payload.$(CBV2_PAYLOAD_FILE_EXT)
 TARGET_ROM = $(COREBOOT_VENDOR)-$(COREBOOT_BOARD).rom
 
 include $(PACKAGE_DIR)/coreboot-v2/coreboot.inc

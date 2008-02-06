@@ -10,12 +10,11 @@ CBV2_PATCHES =
 
 CBV2_BASE_DIR=svn
 TARGET_ROM = $(COREBOOT_VENDOR)-$(COREBOOT_BOARD).rom
-CBV2_PAYLOAD_TARGET=$(CBV2_BUILD_DIR)/payload.elf
+CBV2_PAYLOAD_TARGET=$(CBV2_BUILD_DIR)/payload.$(CBV2_PAYLOAD_FILE_EXT)
 
 ifeq ($(CONFIG_PAYLOAD_LAB),y)
-CBV2_PATCHES += $(PACKAGE_DIR)/coreboot-v2/patches/qemu-lab.patch
-else
-CBV2_PATCHES += $(PACKAGE_DIR)/coreboot-v2/patches/qemu-payload.patch
+	CBV2_CONFIG = Config-lab.lb
+	CBV2_PAYLOAD_FILE_EXT = elf.lzma
 endif
 
 CBV2_URL=svn://coreboot.org/repos/trunk/coreboot-v2

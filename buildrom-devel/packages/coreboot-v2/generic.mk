@@ -9,7 +9,7 @@ endif
 CBV2_BASE_DIR=svn
 CBV2_URL=svn://coreboot.org/repos/trunk/coreboot-v2
 CBV2_TARBALL=coreboot-svn-$(CBV2_TAG).tar.gz
-CBV2_PAYLOAD_TARGET=$(CBV2_BUILD_DIR)/payload.elf
+CBV2_PAYLOAD_TARGET=$(CBV2_BUILD_DIR)/payload.$(CBV2_PAYLOAD_FILE_EXT)
 TARGET_ROM = $(COREBOOT_VENDOR)-$(COREBOOT_BOARD).rom
 
 # This is the list of components that comprise the ROM (excluding the payload)
