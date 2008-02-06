@@ -32,6 +32,16 @@ else
 			echo "Couldn't update the repository."
 			exit 1
 		})
+		if [ `echo $?` -ne 0 ]; then
+			# The parentheses around the cd $DIR/svn; svn update ... commands above
+			# cause those commands to be executed as a list, in a subshell. As a
+			# consequence, if something goes wrong the exit command exits the
+			# subshell, not the script. And that means that the tar command below was
+			# still being executed even if the svn checkout failed, which could lead
+			# to nasty, nasty situations where we had a tarball that claimed to be a
+			# certain SVN revision, but was really some other revision...
+		  exit 1
+		fi
 	fi
 fi
 
