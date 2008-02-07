@@ -21,7 +21,7 @@ dot-config := 0
 config-targets := 1
 endif
 
-ifneq ($(filter config %config,$(MAKECMDGOALS)),)
+ifneq ($(filter textconfig oldconfig defconfig menuconfig,$(MAKECMDGOALS)),)
 config-targets := 1
 dot-config := 0
 endif
@@ -60,6 +60,7 @@ PKGLIST = $(COREBOOT-y) $(PAYLOAD-y) $(HOSTTOOLS-y)
 
 PKG_clean=$(patsubst %, %-clean, $(PKGLIST))
 PKG_distclean=$(patsubst %, %-distclean, $(PKGLIST))
+PKG_extract=$(patsubst %, %-extract, $(PKGLIST))
 
 # This is the top level target - for v2, the final deliverable is built
 # by coreboot, for v3 it is built by us, so we have ifdef magic here
@@ -77,6 +78,8 @@ rom: $(HOSTTOOLS-y) payload $(COREBOOT-y)
 endif
 
 payload: $(PAYLOAD_TARGET)
+
+extract: $(PKG_extract)
 
 clean: $(PKG_clean)
 	@ rm -rf $(INITRD_DIR) $(OUTPUT_DIR)

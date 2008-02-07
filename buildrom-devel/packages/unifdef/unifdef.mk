@@ -17,7 +17,7 @@ $(SOURCE_DIR)/$(UNIFDEF_SOURCE):
 	@ mkdir -p $(SOURCE_DIR)
 	@ wget -P $(SOURCE_DIR) $(UNIFDEF_URL)/$(UNIFDEF_SOURCE)
 
-$(UNIFDEF_STAMP_DIR)/.unpacked: $(SOURCE_DIR)/$(UNIFDEF_SOURCE)
+$(UNIFDEF_STAMP_DIR)/.unpacked: $(SOURCE_DIR)/$(UNIFDEF_SOURCE) | $(UNIFDEF_STAMP_DIR)
 	@ tar -C $(UNIFDEF_DIR) -zxf $(SOURCE_DIR)/$(UNIFDEF_SOURCE)
 	@ rm -f $(UNIFDEF_SRC_DIR)/unifdef 
 	@ rm -f $(UNIFDEF_SRC_DIR)/unifdef.o
@@ -49,3 +49,5 @@ unifdef-bom:
 	echo ""
 
 .PHONY: unifdef
+
+unifdef-extract: $(UNIFDEF_STAMP_DIR)/.unpacked

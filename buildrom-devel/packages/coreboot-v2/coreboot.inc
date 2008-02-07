@@ -58,8 +58,8 @@ endif
 $(CBV2_PAYLOAD_TARGET): $(PAYLOAD_TARGET)
 	@ cp $< $@
 
-$(CBV2_STAMP_DIR)/.unpacked: $(SOURCE_DIR)/$(CBV2_TARBALL)
-	@ echo "Unpacking coreboot..."
+$(CBV2_STAMP_DIR)/.unpacked: $(SOURCE_DIR)/$(CBV2_TARBALL) | $(CBV2_STAMP_DIR) $(CBV2_LOG_DIR)
+	@ echo "Unpacking coreboot ($(CBV2_TARBALL))..."
 	@ tar -C $(CBV2_DIR) -zxf $(SOURCE_DIR)/$(CBV2_TARBALL)
 	@ touch $@	
 
@@ -98,3 +98,6 @@ generic-coreboot-distclean:
 	fi	
 
 	@ rm -rf $(CBV2_DIR)/*
+
+coreboot-extract: $(CBV2_STAMP_DIR)/.patched
+

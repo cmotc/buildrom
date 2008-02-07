@@ -17,11 +17,18 @@ endif
 
 BUSYBOX_CONFIG ?= defconfig
 
+ifeq ($(findstring defconfig,$(BUSYBOX_CONFIG)),defconfig)
+ifeq ($(shell if [ -f $(PACKAGE_DIR)/busybox/conf/customconfig--$(PAYLOAD)--$(COREBOOT_VENDOR)-$(COREBOOT_BOARD) ]; then echo 1; fi),1)
+	BUSYBOX_CONFIG = customconfig--$(PAYLOAD)--$(COREBOOT_VENDOR)-$(COREBOOT_BOARD)
+endif
+endif
+
 $(SOURCE_DIR)/$(BUSYBOX_SOURCE):
+	@ echo "Downloading busybox..."
 	@ mkdir -p $(SOURCE_DIR)
 	@ wget -P $(SOURCE_DIR) $(BUSYBOX_URL)/$(BUSYBOX_SOURCE)
 
-$(BUSYBOX_STAMP_DIR)/.unpacked: $(SOURCE_DIR)/$(BUSYBOX_SOURCE)
+$(BUSYBOX_STAMP_DIR)/.unpacked: $(SOURCE_DIR)/$(BUSYBOX_SOURCE) | $(BUSYBOX_STAMP_DIR) $(BUSYBOX_DIR)
 	@ echo "Unpacking busybox..."
 	@ tar -C $(BUSYBOX_DIR) -jxf $(SOURCE_DIR)/$(BUSYBOX_SOURCE)
 	@ touch $@	
@@ -32,24 +39,27 @@ $(BUSYBOX_STAMP_DIR)/.patched: $(BUSYBOX_STAMP_DIR)/.unpacked
 	@ touch $@
 
 $(BUSYBOX_SRC_DIR)/.config: $(BUSYBOX_STAMP_DIR)/.patched
-	@ cp $(PACKAGE_DIR)/busybox/conf/$(BUSYBOX_CONFIG) $@
+	@ cp -f $(PACKAGE_DIR)/busybox/conf/$(BUSYBOX_CONFIG) $@
 
-$(BUSYBOX_SRC_DIR)/busybox: $(BUSYBOX_SRC_DIR)/.config
+$(BUSYBOX_SRC_DIR)/busybox: $(BUSYBOX_SRC_DIR)/.config | $(BUSYBOX_LOG_DIR)
 	@ echo "Building busybox..."
+ifneq ($(findstring defconfig,$(BUSYBOX_CONFIG)),defconfig)
+	@ echo "Using custom config $(PACKAGE_DIR)/busybox/conf/$(BUSYBOX_CONFIG)"
+endif
 	@ ( unset CFLAGS; unset LDFLAGS; \
 	export EXTRA_CFLAGS="$(CFLAGS)";\
 	export LDFLAGS="$(LDFLAGS_orig)";\
 	$(MAKE) -C $(BUSYBOX_SRC_DIR) VERBOSE=y \
 	LIBRARIES="$(LIBS)" all > $(BUSYBOX_BUILD_LOG) 2>&1)
 
-$(INITRD_DIR)/bin/busybox: $(BUSYBOX_SRC_DIR)/busybox
+$(INITRD_DIR)/bin/busybox: $(BUSYBOX_SRC_DIR)/busybox | $(BUSYBOX_LOG_DIR)
 	@ $(MAKE) -C $(BUSYBOX_SRC_DIR) \
 	PREFIX=$(INITRD_DIR) install > $(BUSYBOX_INSTALL_LOG) 2>&1
 
-$(BUSYBOX_STAMP_DIR) $(BUSYBOX_LOG_DIR):
+$(BUSYBOX_STAMP_DIR) $(BUSYBOX_LOG_DIR) $(BUSYBOX_DIR):
 	@ mkdir -p $@
 
-busybox: $(BUSYBOX_STAMP_DIR) $(BUSYBOX_LOG_DIR) $(INITRD_DIR)/bin/busybox
+busybox: $(INITRD_DIR)/bin/busybox
 
 busybox-clean:
 	@ echo "Cleaning busybox..."
@@ -62,3 +72,27 @@ busybox-bom:
 	@ echo "Package: busybox"
 	@ echo "Source: $(BUSYBOX_URL)/$(BUSYBOX_SOURCE)"
 	@ echo ""
+
+busybox-extract: $(BUSYBOX_STAMP_DIR)/.patched
+
+busybox-config: $(BUSYBOX_STAMP_DIR)/.patched
+ifeq ($(shell if [ -f $(PACKAGE_DIR)/busybox/conf/customconfig--$(PAYLOAD)--$(COREBOOT_VENDOR)-$(COREBOOT_BOARD) ]; then echo 1; fi),1)
+	@ cp -f $(PACKAGE_DIR)/busybox/conf/customconfig--$(PAYLOAD)--$(COREBOOT_VENDOR)-$(COREBOOT_BOARD) $(BUSYBOX_SRC_DIR)/.config
+endif
+ifeq (busybox,$(filter busybox,$(PAYLOAD-y)))
+	@ echo "Configure busybox..."
+	@ $(MAKE) -C $(BUSYBOX_SRC_DIR) menuconfig
+	@ echo
+ifeq ($(shell if [ -f $(PACKAGE_DIR)/busybox/conf/customconfig--$(PAYLOAD)--$(COREBOOT_VENDOR)-$(COREBOOT_BOARD) ]; then echo 1; fi),1)
+	@ echo "Found an existing custom configuration file:"
+	@ echo "  $(PACKAGE_DIR)/busybox/conf/customconfig--$(PAYLOAD)--$(COREBOOT_VENDOR)-$(COREBOOT_BOARD)"
+	@ echo "I've copied it back to the source directory for modification."
+	@ echo "Remove the above file and re-run this command if you want to create a new custom configuration from scratch for this payload/board."
+	@ echo
+endif
+	@ cp -f $(BUSYBOX_SRC_DIR)/.config $(PACKAGE_DIR)/busybox/conf/customconfig--$(PAYLOAD)--$(COREBOOT_VENDOR)-$(COREBOOT_BOARD)
+	@ echo "Your custom busybox config file has been saved as $(PACKAGE_DIR)/busybox/conf/customconfig--$(PAYLOAD)--$(COREBOOT_VENDOR)-$(COREBOOT_BOARD)."
+	@ echo
+else
+	@ echo "Your payload does not require busybox."
+endif

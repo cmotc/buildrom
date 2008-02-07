@@ -17,7 +17,7 @@ $(SOURCE_DIR)/$(LZMA_SOURCE):
 	@ mkdir -p $(SOURCE_DIR)
 	@ wget -P $(SOURCE_DIR) $(LZMA_URL)/$(LZMA_SOURCE)
 
-$(LZMA_STAMP_DIR)/.unpacked: $(SOURCE_DIR)/$(LZMA_SOURCE)
+$(LZMA_STAMP_DIR)/.unpacked: $(SOURCE_DIR)/$(LZMA_SOURCE) | $(LZMA_STAMP_DIR)
 	@ mkdir -p $(LZMA_SRC_DIR)
 	@ tar -C $(LZMA_SRC_DIR) -jxf $(SOURCE_DIR)/$(LZMA_SOURCE)
 	@ touch $@
@@ -44,3 +44,6 @@ lzma-clean:
 
 lzma-distclean:
 	@ rm -rf $(LZMA_DIR)/*
+
+lzma-extract: $(LZMA_STAMP_DIR)/.unpacked
+

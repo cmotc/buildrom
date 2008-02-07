@@ -15,6 +15,12 @@ KERNEL_BZIMAGE=$(KERNEL_SRC_DIR)/arch/i386/boot/bzImage
 KERNEL_BUILD_ARCH=i386
 endif
 
+ifeq ($(findstring defconfig,$(KERNEL_CONFIG)),defconfig)
+ifeq ($(shell if [ -f $(PACKAGE_DIR)/kernel/conf/customconfig--$(PAYLOAD)--$(KERNEL_BUILD_ARCH)--$(COREBOOT_VENDOR)-$(COREBOOT_BOARD) ]; then echo 1; fi),1)
+	KERNEL_CONFIG = $(PACKAGE_DIR)/kernel/conf/customconfig--$(PAYLOAD)--$(KERNEL_BUILD_ARCH)--$(COREBOOT_VENDOR)-$(COREBOOT_BOARD)
+endif
+endif
+
 ifeq ($(CONFIG_VERBOSE),y)
 KERNEL_FETCH_LOG=/dev/stdout
 KERNEL_BUILD_LOG=/dev/stdout
@@ -25,7 +31,7 @@ KERNEL_BUILD_LOG=$(KERNEL_LOG_DIR)/build.log
 KERNEL_INSTALL_LOG=$(KERNEL_LOG_DIR)/install.log
 endif
 
-$(KERNEL_STAMP_DIR)/.unpacked: $(SOURCE_DIR)/$(KERNEL_SOURCE)
+$(KERNEL_STAMP_DIR)/.unpacked: $(SOURCE_DIR)/$(KERNEL_SOURCE) | $(KERNEL_STAMP_DIR)
 	@ mkdir -p $(KERNEL_DIR)
 	@ echo "Unpacking kernel..."
 	@ tar -C $(KERNEL_DIR) -jxf $(SOURCE_DIR)/$(KERNEL_SOURCE)
@@ -50,8 +56,11 @@ endif
 $(KERNEL_SRC_DIR)/.config: $(KERNEL_STAMP_DIR)/.patched
 	@ cat $(KERNEL_CONFIG) | sed -e s:^CONFIG_LOCALVERSION=.*:CONFIG_LOCALVERSION=\"$(ROM_VERSION)\": > $(KERNEL_SRC_DIR)/.config
 
-$(KERNEL_BZIMAGE): $(KERNEL_SRC_DIR)/.config
+$(KERNEL_BZIMAGE): $(KERNEL_SRC_DIR)/.config | $(KERNEL_LOG_DIR)
 	@ echo "Building kernel..."
+ifneq ($(findstring defconfig,$(KERNEL_CONFIG)),defconfig)
+	@ echo "Using custom kernel config $(KERNEL_CONFIG)"
+endif
 	@ $(MAKE) $(PARALLEL_MAKE) -C $(KERNEL_SRC_DIR) ARCH=$(KERNEL_BUILD_ARCH) \
 	KERNEL_CC="$(CC)" KERNEL_LD="$(LD)" > $(KERNEL_BUILD_LOG) 2>&1
 
@@ -63,7 +72,7 @@ $(OUTPUT_DIR)/vmlinux: $(KERNEL_BZIMAGE)
 	@ install -d $(OUTPUT_DIR)
 	@ install -m 0644 $(KERNEL_SRC_DIR)/vmlinux $@
 	
-$(KERNEL_STAMP_DIR)/.headers: $(KERNEL_SRC_DIR)/.config $(STAGING_DIR)/host/bin/unifdef
+$(KERNEL_STAMP_DIR)/.headers: $(KERNEL_SRC_DIR)/.config $(STAGING_DIR)/host/bin/unifdef | $(KERNEL_LOG_DIR)
 	@ echo "Installing kernel headers..."
 	@( export PATH=$(PATH):$(STAGING_DIR)/host/bin; \
 	$(MAKE) -C $(KERNEL_SRC_DIR) ARCH=$(KERNEL_BUILD_ARCH) \
@@ -73,7 +82,7 @@ $(KERNEL_STAMP_DIR)/.headers: $(KERNEL_SRC_DIR)/.config $(STAGING_DIR)/host/bin/
 $(KERNEL_STAMP_DIR) $(KERNEL_LOG_DIR):
 	@ mkdir -p $@
 
-generic-kernel: $(KERNEL_STAMP_DIR) $(KERNEL_LOG_DIR) $(OUTPUT_DIR)/bzImage $(OUTPUT_DIR)/vmlinux $(KERNEL_STAMP_DIR)/.headers
+generic-kernel: $(OUTPUT_DIR)/bzImage $(OUTPUT_DIR)/vmlinux $(KERNEL_STAMP_DIR)/.headers
 
 generic-kernel-clean:
 	@ echo "Cleaning kernel..."
@@ -83,3 +92,27 @@ generic-kernel-clean:
 
 generic-kernel-distclean:
 	@ rm -rf $(KERNEL_DIR)
+
+kernel-extract: $(KERNEL_STAMP_DIR)/.patched
+
+kernel-config: $(KERNEL_STAMP_DIR)/.patched
+ifeq ($(shell if [ -f $(PACKAGE_DIR)/kernel/conf/customconfig--$(PAYLOAD)--$(KERNEL_BUILD_ARCH)--$(COREBOOT_VENDOR)-$(COREBOOT_BOARD) ]; then echo 1; fi),1)
+	@ cp -f $(PACKAGE_DIR)/kernel/conf/customconfig--$(PAYLOAD)--$(KERNEL_BUILD_ARCH)--$(COREBOOT_VENDOR)-$(COREBOOT_BOARD) $(KERNEL_SRC_DIR)/.config
+endif
+ifeq (kernel,$(filter kernel,$(PAYLOAD-y)))
+	@ echo "Configure kernel..."
+	@ $(MAKE) -C $(KERNEL_SRC_DIR) ARCH=$(KERNEL_BUILD_ARCH) menuconfig
+	@ echo
+ifeq ($(shell if [ -f $(PACKAGE_DIR)/kernel/conf/customconfig--$(PAYLOAD)--$(KERNEL_BUILD_ARCH)--$(COREBOOT_VENDOR)-$(COREBOOT_BOARD) ]; then echo 1; fi),1)
+	@ echo "Found an existing custom configuration file:"
+	@ echo "  $(PACKAGE_DIR)/kernel/conf/customconfig--$(PAYLOAD)--$(KERNEL_BUILD_ARCH)--$(COREBOOT_VENDOR)-$(COREBOOT_BOARD)"
+	@ echo "I've copied it back to the source directory for modification."
+	@ echo "Remove the above file and re-run this command if you want to create a new custom configuration from scratch for this payload/board."
+	@ echo
+endif
+	@ cp -f $(KERNEL_SRC_DIR)/.config $(PACKAGE_DIR)/kernel/conf/customconfig--$(PAYLOAD)--$(KERNEL_BUILD_ARCH)--$(COREBOOT_VENDOR)-$(COREBOOT_BOARD)
+	@ echo "Your custom kernel config file has been saved as $(PACKAGE_DIR)/kernel/conf/customconfig--$(PAYLOAD)--$(KERNEL_BUILD_ARCH)--$(COREBOOT_VENDOR)-$(COREBOOT_BOARD)."
+	@ echo
+else
+	@ echo "Your payload does not require a kernel."
+endif
