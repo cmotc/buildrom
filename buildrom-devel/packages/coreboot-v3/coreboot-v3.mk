@@ -68,7 +68,7 @@ $(STAGING_DIR)/bin/lar: $(CBV3_SRC_DIR)/build/util/lar/lar
 	@ cp $< $@
 
 $(CBV3_STAMP_DIR) $(CBV3_LOG_DIR):
-	mkdir -p $@
+	@ mkdir -p $@
 
 coreboot-v3: $(CBV3_LOG_DIR) $(CBV3_STAMP_DIR) $(CBV3_OUTPUT) $(STAGING_DIR)/bin/lar
 
