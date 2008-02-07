@@ -95,7 +95,7 @@ config PLATFORM_TYAN_S2891
        select PLATFORM
        select PLATFORM_SUPPORT_64BIT
 
-config PLATFORM_QEMU-i386
+config PLATFORM_QEMU-X86
        bool "QEMU Emulator"
        depends VENDOR_QEMU
        select PLATFORM
@@ -122,7 +122,7 @@ endchoice
 
 config BUILD_QEMU
 	bool "Build QEMU with patches for LinuxBIOS"
-	depends PLATFORM_QEMU-i386
+	depends PLATFORM_QEMU-X86
 	default n
 	help
 	  Say 'y' here to build a patched version of QEMU to work with

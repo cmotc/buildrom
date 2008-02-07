@@ -3,7 +3,7 @@ $(error You need to specify a version to pull in your platform config)
 endif
 
 CBV3_URL=svn://coreboot.org/repository/coreboot-v3
-CBV3_TARBALL=coreboot-svn-$(CBV3_TAG).tar.gz
+CBV3_TARBALL=coreboot-v3-svn-$(CBV3_TAG).tar.gz
 CBV3_DIR=$(BUILD_DIR)/coreboot-v3
 CBV3_SRC_DIR=$(CBV3_DIR)/svn
 
@@ -32,7 +32,7 @@ $(SOURCE_DIR)/$(CBV3_TARBALL):
 	$(SOURCE_DIR)/coreboot-v3 $(CBV3_TAG) \
 	$@ > $(CBV3_FETCH_LOG) 2>&1
 
-$(CBV3_STAMP_DIR)/.unpacked: $(SOURCE_DIR)/$(CBV3_TARBALL)
+$(CBV3_STAMP_DIR)/.unpacked: $(SOURCE_DIR)/$(CBV3_TARBALL) | $(CBV3_STAMP_DIR)
 	@echo "Unpacking coreboot v3..."
 	@ mkdir -p $(CBV3_DIR)
 	@ tar -C $(CBV3_DIR) -zxf $(SOURCE_DIR)/$(CBV3_TARBALL)
@@ -45,8 +45,15 @@ $(CBV3_STAMP_DIR)/.patched: $(CBV3_STAMP_DIR)/.unpacked
 
 $(CBV3_STAMP_DIR)/.configured: $(CBV3_STAMP_DIR)/.patched
 	@ echo "Configuring coreboot v3..."
-	@ cp $(PACKAGE_DIR)/coreboot-v3/conf/$(CBV3_CONFIG) $(CBV3_SRC_DIR)/.config
+ifeq ($(shell if [ -f $(PACKAGE_DIR)/coreboot-v3/conf/customconfig--$(PAYLOAD)--$(COREBOOT_VENDOR)-$(COREBOOT_BOARD) ]; then echo 1; fi),1)
+	@ cp -f $(PACKAGE_DIR)/coreboot-v3/conf/customconfig--$(PAYLOAD)--$(COREBOOT_VENDOR)-$(COREBOOT_BOARD) $(CBV3_SRC_DIR)/.config
+	@ echo "Using custom config $(PACKAGE_DIR)/coreboot-v3/conf/customconfig--$(PAYLOAD)--$(COREBOOT_VENDOR)-$(COREBOOT_BOARD)"
 	@ make -C $(CBV3_SRC_DIR) oldconfig > $(CBV3_CONFIG_LOG) 2>&1
+else
+	@ make -C $(CBV3_SRC_DIR) defconfig \
+		MAINBOARDDIR="$(COREBOOT_VENDOR)/$(COREBOOT_BOARD)" \
+		> $(CBV3_CONFIG_LOG) 2>&1
+endif
 	@ touch $@
 
 $(CBV3_OUTPUT): $(CBV3_STAMP_DIR)/.configured
@@ -60,9 +67,8 @@ $(STAGING_DIR)/bin/lar: $(CBV3_SRC_DIR)/build/util/lar/lar
 	@ mkdir -p $(STAGING_DIR)/bin
 	@ cp $< $@
 
-
 $(CBV3_STAMP_DIR) $(CBV3_LOG_DIR):
-	@ mkdir -p $@
+	mkdir -p $@
 
 coreboot-v3: $(CBV3_LOG_DIR) $(CBV3_STAMP_DIR) $(CBV3_OUTPUT) $(STAGING_DIR)/bin/lar
 
@@ -74,3 +80,21 @@ coreboot-v3-distclean:
 	@ rm -rf $(CBV3_DIR)/*
 	@ rm -rf $(STAGING_DIR)/bin/lar
 
+coreboot-v3-config: $(CBV3_STAMP_DIR)/.unpacked
+ifeq ($(shell if [ -f $(PACKAGE_DIR)/coreboot-v3/conf/customconfig--$(PAYLOAD)--$(COREBOOT_VENDOR)-$(COREBOOT_BOARD) ]; then echo 1; fi),1)
+	@ cp -f $(PACKAGE_DIR)/coreboot-v3/conf/customconfig--$(PAYLOAD)--$(COREBOOT_VENDOR)-$(COREBOOT_BOARD) $(CBV3_SRC_DIR)/.config
+endif
+	@ echo "Configure coreboot-v3..."
+	@ $(MAKE) -C $(CBV3_SRC_DIR) menuconfig
+	@ echo
+ifeq ($(shell if [ -f $(PACKAGE_DIR)/coreboot-v3/conf/customconfig--$(PAYLOAD)--$(COREBOOT_VENDOR)-$(COREBOOT_BOARD) ]; then echo 1; fi),1)
+	@ echo "Found an existing custom configuration file:"
+	@ echo "  $(PACKAGE_DIR)/coreboot-v3/conf/customconfig--$(PAYLOAD)--$(COREBOOT_VENDOR)-$(COREBOOT_BOARD)"
+	@ echo "I've copied it back to the source directory for modification."
+	@ echo "Remove the above file and re-run this command if you want to create a new custom configuration from scratch for this payload/board."
+	@ echo
+endif
+	@ cp -f $(CBV3_SRC_DIR)/.config $(PACKAGE_DIR)/coreboot-v3/conf/customconfig--$(PAYLOAD)--$(COREBOOT_VENDOR)-$(COREBOOT_BOARD)
+	@ echo "Your custom coreboot-v3 config file has been saved as $(PACKAGE_DIR)/coreboot-v3/conf/customconfig--$(PAYLOAD)--$(COREBOOT_VENDOR)-$(COREBOOT_BOARD)."
+	@ echo
+	@ touch $(CBV3_STAMP_DIR)/.configured
