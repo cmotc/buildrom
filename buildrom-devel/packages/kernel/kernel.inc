@@ -63,6 +63,8 @@ ifneq ($(findstring defconfig,$(KERNEL_CONFIG)),defconfig)
 endif
 	@ $(MAKE) $(PARALLEL_MAKE) -C $(KERNEL_SRC_DIR) ARCH=$(KERNEL_BUILD_ARCH) \
 	KERNEL_CC="$(CC)" KERNEL_LD="$(LD)" > $(KERNEL_BUILD_LOG) 2>&1
+	@ mkdir -p $(OUTPUT_DIR)/config/kernel
+	@ cp $(KERNEL_SRC_DIR)/.config $(OUTPUT_DIR)/config/kernel/
 
 $(OUTPUT_DIR)/bzImage: $(KERNEL_BZIMAGE)
 	@ install -d $(OUTPUT_DIR)

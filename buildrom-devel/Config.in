@@ -32,6 +32,16 @@ config VERBOSE
 	  See the entire build output on stdout. Otherwise, it will
 	  be saved off in a series of logs
 
+config STORE_SVN_INFO
+	bool "Store svn tree information in deployment directory."
+	default y
+	help
+	  Store the output of 'svn diff', 'svn status' and 'svn info' in the
+	  deploy/config/svn/ directory. This means the machine used to build 
+	  the coreboot image will need to have internet access during the build.
+		
+	  If you are not sure, say yes.
+
 config MAKE_JOBS
 	int "Number of make jobs to run simultaneously (experimental)"
 	default 1

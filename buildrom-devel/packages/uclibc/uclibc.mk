@@ -56,6 +56,8 @@ endif
 	SHARED_LIB_LOADER_PATH="/lib" \
 	SHARED_LIB_LOADER_PREFIX="/lib" \
 	all > $(UCLIBC_BUILD_LOG) 2>&1)
+	@ mkdir -p $(OUTPUT_DIR)/config/uclibc
+	@ cp $(UCLIBC_SRC_DIR)/.config $(OUTPUT_DIR)/config/uclibc/
 
 $(STAGING_DIR)/lib/libc.a: $(UCLIBC_SRC_DIR)/lib/libc.a
 	@ $(MAKE) -C $(UCLIBC_SRC_DIR) \

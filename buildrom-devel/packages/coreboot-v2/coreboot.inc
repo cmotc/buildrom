@@ -81,6 +81,30 @@ $(CBV2_OUTPUT): $(CBV2_STAMP_DIR) $(CBV2_LOG_DIR) $(CBV2_DIR_TARGET) $(CBV2_PAYL
 	@ echo "Building coreboot..."
 	@ (export CPU_OPT="$(STACKPROTECT)"; \
 	make -C $(CBV2_BUILD_DIR) > $(CBV2_BUILD_LOG) 2>&1)
+	@ mkdir -p $(OUTPUT_DIR)/config/coreboot-v2/
+	@ cp $(CBV2_BUILD_DIR)/../$(CBV2_CONFIG) $(OUTPUT_DIR)/config/coreboot-v2/
+	@ cp $(BASE_DIR)/.config $(OUTPUT_DIR)/config/
+	@ mkdir -p $(OUTPUT_DIR)/config/system/
+	@ uname -a >$(OUTPUT_DIR)/config/system/uname-a
+	@ if [ -f /etc/lsb-release ]; then \
+	cp /etc/lsb-release $(OUTPUT_DIR)/config/system/; \
+	fi	
+	@ if [ -f /etc/debian-version ]; then \
+	cp /etc/debian-version $(OUTPUT_DIR)/config/system/; \
+	fi
+	@ if [ -f /etc/redhat-version ]; then \
+	cp /etc/redhat-version $(OUTPUT_DIR)/config/system/; \
+	fi
+	@ mkdir -p $(OUTPUT_DIR)/config/toolchain/
+	@ $(MAKE) --version >$(OUTPUT_DIR)/config/toolchain/$(MAKE)-version
+	@ $(CC) --version >$(OUTPUT_DIR)/config/toolchain/$(CC)-version
+	@ $(LD) --version >$(OUTPUT_DIR)/config/toolchain/$(LD)-version
+ifeq ($(CONFIG_STORE_SVN_INFO),y)
+	@ mkdir -p $(OUTPUT_DIR)/config/svn/
+	@ svn diff > $(OUTPUT_DIR)/config/svn/svn.diff
+	@ svn info > $(OUTPUT_DIR)/config/svn/svn.info
+	@ svn status > $(OUTPUT_DIR)/config/svn/svn.status
+endif
 
 generic-coreboot-clean:
 	@ echo "Cleaning coreboot..."

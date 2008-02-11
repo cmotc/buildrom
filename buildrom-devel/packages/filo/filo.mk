@@ -56,6 +56,8 @@ ifeq ($(findstring customconfig,$(FILO_CONFIG)),customconfig)
 	@ echo "Using custom config $(PACKAGE_DIR)/filo/conf/$(FILO_CONFIG)"
 endif
 	@ make -C $(FILO_SRC_DIR) filo.elf > $(FILO_BUILD_LOG) 2>&1
+	@ mkdir -p $(OUTPUT_DIR)/config/filo
+	@ cp $(FILO_SRC_DIR)/Config $(OUTPUT_DIR)/config/filo/
 
 $(FILO_STAMP_DIR) $(FILO_LOG_DIR):
 	@ mkdir -p $@

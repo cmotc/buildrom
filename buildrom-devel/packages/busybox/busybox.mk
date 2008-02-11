@@ -51,6 +51,9 @@ endif
 	export LDFLAGS="$(LDFLAGS_orig)";\
 	$(MAKE) -C $(BUSYBOX_SRC_DIR) VERBOSE=y \
 	LIBRARIES="$(LIBS)" all > $(BUSYBOX_BUILD_LOG) 2>&1)
+	@ mkdir -p $(OUTPUT_DIR)/config/busybox
+	@ cp $(BUSYBOX_SRC_DIR)/.config $(OUTPUT_DIR)/config/busybox/
+
 
 $(INITRD_DIR)/bin/busybox: $(BUSYBOX_SRC_DIR)/busybox | $(BUSYBOX_LOG_DIR)
 	@ $(MAKE) -C $(BUSYBOX_SRC_DIR) \
