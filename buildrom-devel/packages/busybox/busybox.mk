@@ -78,7 +78,7 @@ busybox-bom:
 
 busybox-extract: $(BUSYBOX_STAMP_DIR)/.patched
 
-busybox-config: $(BUSYBOX_STAMP_DIR)/.patched
+busybox-config: | $(BUSYBOX_SRC_DIR)/.config
 ifeq ($(shell if [ -f $(PACKAGE_DIR)/busybox/conf/customconfig--$(PAYLOAD)--$(COREBOOT_VENDOR)-$(COREBOOT_BOARD) ]; then echo 1; fi),1)
 	@ cp -f $(PACKAGE_DIR)/busybox/conf/customconfig--$(PAYLOAD)--$(COREBOOT_VENDOR)-$(COREBOOT_BOARD) $(BUSYBOX_SRC_DIR)/.config
 endif

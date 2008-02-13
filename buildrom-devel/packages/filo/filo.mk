@@ -75,7 +75,7 @@ filo-distclean:
 
 filo-extract: $(FILO_STAMP_DIR)/.patched
 
-filo-config: $(FILO_STAMP_DIR)/.unpacked
+filo-config: | $(FILO_STAMP_DIR)/.configured
 ifeq ($(shell if [ -f $(PACKAGE_DIR)/filo/conf/customconfig--$(PAYLOAD)--$(COREBOOT_VENDOR)-$(COREBOOT_BOARD) ]; then echo 1; fi),1)
 	@ echo
 	@ echo "Found an existing custom configuration file:"

@@ -92,7 +92,7 @@ uclibc-bom:
 
 uclibc-extract: $(UCLIBC_STAMP_DIR)/.unpacked
 
-uclibc-config: $(UCLIBC_STAMP_DIR)/.unpacked
+uclibc-config: | $(UCLIBC_SRC_DIR)/.config
 ifeq ($(shell if [ -f $(PACKAGE_DIR)/uclibc/conf/customconfig--$(PAYLOAD)--$(UCLIBC_ARCH)--$(COREBOOT_VENDOR)-$(COREBOOT_BOARD) ]; then echo 1; fi),1)
 	@ cp -f $(PACKAGE_DIR)/uclibc/conf/customconfig--$(PAYLOAD)--$(UCLIBC_ARCH)--$(COREBOOT_VENDOR)-$(COREBOOT_BOARD) $(UCLIBC_SRC_DIR)/.config
 endif

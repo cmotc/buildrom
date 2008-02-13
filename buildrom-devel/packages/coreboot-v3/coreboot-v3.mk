@@ -80,7 +80,7 @@ coreboot-v3-distclean:
 	@ rm -rf $(CBV3_DIR)/*
 	@ rm -rf $(STAGING_DIR)/bin/lar
 
-coreboot-v3-config: $(CBV3_STAMP_DIR)/.unpacked
+coreboot-v3-config: | $(CBV3_STAMP_DIR)/.configured
 ifeq ($(shell if [ -f $(PACKAGE_DIR)/coreboot-v3/conf/customconfig--$(PAYLOAD)--$(COREBOOT_VENDOR)-$(COREBOOT_BOARD) ]; then echo 1; fi),1)
 	@ cp -f $(PACKAGE_DIR)/coreboot-v3/conf/customconfig--$(PAYLOAD)--$(COREBOOT_VENDOR)-$(COREBOOT_BOARD) $(CBV3_SRC_DIR)/.config
 endif
