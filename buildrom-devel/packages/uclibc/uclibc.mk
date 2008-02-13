@@ -4,7 +4,7 @@ UCLIBC_VER ?= 0.9.29
 UCLIBC_ARCH ?= x86_64
 UCLIBC_CONFIG ?= defconfig-x86_64
 else
-UCLIBC_VER ?= 0.9.28
+UCLIBC_VER ?= 0.9.29
 UCLIBC_ARCH ?= i386
 UCLIBC_CONFIG ?= defconfig
 endif
