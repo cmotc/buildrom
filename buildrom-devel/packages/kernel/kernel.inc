@@ -97,7 +97,7 @@ generic-kernel-distclean:
 
 kernel-extract: $(KERNEL_STAMP_DIR)/.patched
 
-kernel-config: $(KERNEL_STAMP_DIR)/.patched
+kernel-config: | $(KERNEL_SRC_DIR)/.config
 ifeq ($(shell if [ -f $(PACKAGE_DIR)/kernel/conf/customconfig--$(PAYLOAD)--$(KERNEL_BUILD_ARCH)--$(COREBOOT_VENDOR)-$(COREBOOT_BOARD) ]; then echo 1; fi),1)
 	@ cp -f $(PACKAGE_DIR)/kernel/conf/customconfig--$(PAYLOAD)--$(KERNEL_BUILD_ARCH)--$(COREBOOT_VENDOR)-$(COREBOOT_BOARD) $(KERNEL_SRC_DIR)/.config
 endif
