@@ -69,9 +69,17 @@ ifeq ($(CONFIG_COREBOOT_V2),y)
 rom: $(HOSTTOOLS-y) payload $(COREBOOT-y)
 else
 
+# If compressing the payload in v3, parse the elf and tell lar to compress it.
+# Parsing the elf without compression bloats the ROM with bss zeroes.
+ifeq ($(CONFIG_USE_LZMA),y)
+LAR_PAYLOAD_FLAGS=-a -e -C lzma
+else
+LAR_PAYLOAD_FLAGS=-a
+endif
+
 rom: $(HOSTTOOLS-y) payload $(COREBOOT-y)
 	@ cp $(CBV3_OUTPUT) $(TARGET_ROM_FILE)
-	@ $(STAGING_DIR)/bin/lar -a $(TARGET_ROM_FILE) $(PAYLOAD_TARGET):normal/payload
+	@ $(STAGING_DIR)/bin/lar $(LAR_PAYLOAD_FLAGS) $(TARGET_ROM_FILE) $(PAYLOAD_TARGET):normal/payload
 	@ for file in `ls $(ROM_DIR)`; do \
 		$(STAGING_DIR)/bin/lar -a $(TARGET_ROM_FILE) $(ROM_DIR)/$$file:$$file; \
 	done

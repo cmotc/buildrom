@@ -78,13 +78,16 @@ endchoice
 
 config USE_LZMA
 	bool "Enable LZMA compression"
-	depends !PAYLOAD_OFW
-	depends !PAYLOAD_FILO
-	depends !PAYLOAD_ETHERBOOT
+	depends !(PAYLOAD_OFW && COREBOOT_V2)
+	depends !(PAYLOAD_FILO && COREBOOT_V2)
+	depends !(PAYLOAD_ETHERBOOT && COREBOOT_V2)
 	default y
 	help
-	  Precompress the payload with LZMA. This doesn't work
-	  for FILO, OFW, or ETHERBOOT.
+	  Precompress the payload with LZMA when using coreboot v2. This doesn't
+	  work for FILO, OFW, or ETHERBOOT.
+
+	  When using COREBOOT_V3, parse the elf and have lar compress the files.
+	  This works with all ELF payloads.
 
 config CB_USE_BUILD
 	bool "Specify a coreboot build dir"
