@@ -95,11 +95,19 @@ config KBL_KEXEC_ONLY
 
 config KBL
 	bool "Reduced size kexec-tools"
-	default y
+	default n
 	select KBL_KEXEC_ONLY
 	help
 	  Say 'Y' here to include the the Kexec Bootloader as a cheep
 	  substitute for kexec-tools
+
+config LAB_PAUSE
+	int "Seconds to pause before booting, to allow access to the busybox environment"
+	default 5
+	help
+		Set the number of seconds you'd like to pause before booting the kexec'ed
+		kernel here. During this pause, you can press enter to gain access to the
+		busybox environment.
 
 config BUSYBOX
 	bool "Busybox"

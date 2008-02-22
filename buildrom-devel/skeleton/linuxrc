@@ -17,11 +17,24 @@ mount -t usbfs usbfs /proc/bus/usb
 # Show the version 
 cat /buildrom-version > /dev/tty$VT
 
-message "Trying to boot from hdd."
-cd /bin
-./boot-hdd
+message "Press enter to start the busybox shell (pausing %%LAB_PAUSE%% seconds)."
+read -t %%LAB_PAUSE%% UNUSED
 RET=$?
-cd /
+if [ "$RET" == '0' ]; then
+	message "NOTICE: Starting the shell..."
+  message ""
+  message "To boot your system as normal, type:"
+  message " cd /bin; ./boot-hdd"
+  message ""
+	openvt $VT /bin/ash
+	exec /bin/ash
+else
+	message "Trying to boot from hdd."
+	cd /bin
+	./boot-hdd
+	RET=$?
+	cd /
+fi
 
 message "NOTICE: Starting the shell..."
 openvt $VT /bin/ash
