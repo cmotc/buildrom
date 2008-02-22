@@ -1,5 +1,5 @@
-FILO_URL=svn://80.190.231.112/filo/trunk/filo-0.5
-FILO_TAG=34
+FILO_URL=svn://coreboot.org/filo/trunk/filo-0.5
+FILO_TAG=42
 
 FILO_DIR=$(BUILD_DIR)/filo
 FILO_SRC_DIR=$(FILO_DIR)/svn
@@ -59,16 +59,20 @@ endif
 	@ mkdir -p $(OUTPUT_DIR)/config/filo
 	@ cp $(FILO_SRC_DIR)/Config $(OUTPUT_DIR)/config/filo/
 
+$(FILO_STAMP_DIR)/.copied: $(FILO_SRC_DIR)/filo.elf
+	@ mkdir -p $(shell dirname $(PAYLOAD_ELF))
+	@ cp $(FILO_SRC_DIR)/filo.elf $(PAYLOAD_ELF)
+	@ touch $@
+
 $(FILO_STAMP_DIR) $(FILO_LOG_DIR):
 	@ mkdir -p $@
 
-filo: $(FILO_STAMP_DIR) $(FILO_LOG_DIR) $(FILO_SRC_DIR)/filo.elf
-	@ mkdir -p $(OUTPUT_DIR)
-	@ cp $(FILO_SRC_DIR)/filo.elf $(PAYLOAD_ELF)
+filo: $(FILO_STAMP_DIR) $(FILO_LOG_DIR) $(FILO_STAMP_DIR)/.copied
 
 filo-clean:
 	@ echo "Cleaning filo..."
 	@ $(MAKE) -C $(FILO_SRC_DIR) clean > /dev/null 2>&1
+	@ rm -f $(FILO_STAMP_DIR)/.copied
 
 filo-distclean:
 	@ rm -rf $(FILO_DIR)/*
