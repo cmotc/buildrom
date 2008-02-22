@@ -124,6 +124,10 @@ config PLATFORM_SUPPORT_64BIT
 	bool
 	default n
 
+config PLATFORM_GEODE
+	bool
+	default n
+
 config PAYLOAD_64BIT
 	bool
 	default n
@@ -136,6 +140,14 @@ config TARGET_32BIT
 config TARGET_64BIT
 	bool
 	default n
+
+# This config option will only be set by platforms that need it
+# (geode + coreboot v2)
+
+config USE_NRV2B
+	bool
+	depends PLATFORM_GEODE && COREBOOT_V2
+	default y
 
 source config/platforms/Config.in
 source config/payloads/Config.in

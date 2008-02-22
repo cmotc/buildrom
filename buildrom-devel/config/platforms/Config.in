@@ -45,27 +45,32 @@ config PLATFORM_NORWICH
        bool "AMD Geode LX 'Norwich'"
        depends VENDOR_AMD
        select PLATFORM
+       select PLATFORM_GEODE
 
 config PLATFORM_DBE61
        bool "Artec Group DBE61"
        depends VENDOR_ARTEC_GROUP
        select PLATFORM
+       select PLATFORM_GEODE
 
 config PLATFORM_ALIX1C
        bool "PC Engines ALIX1.C"
        depends VENDOR_PC_ENGINES
        select PLATFORM
+       select PLATFORM_GEODE
 
 config PLATFORM_MSM800SEV
        bool "Advanced Digital Logic MSM800SEV"
        depends VENDOR_ADVANCED_DIGITAL_LOGIC
        select PLATFORM
+       select PLATFORM_GEODE
 
 config PLATFORM_DB800
 	bool "AMD DB800"
 	depends VENDOR_AMD
 	depends COREBOOT_V2
 	select PLATFORM
+	select PLATFORM_GEODE
 
 config PLATFORM_GA_M57SLI_S4
        bool "GIGABYTE GA-M57SLI-S4"
