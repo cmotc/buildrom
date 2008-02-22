@@ -12,7 +12,17 @@ else
 VSA_BUILD_TARGET = $(GEODE_UNCOMPRESSED_VSA)
 endif
 
+VSA_CLEAN_TARGET=
+VSA_DISTCLEAN_TARGET=
+
+ifeq ($(CONFIG_VSA_LEGACY),y)
 include $(PACKAGE_DIR)/geodevsa/amdvsa.inc
+else
+include $(PACKAGE_DIR)/geodevsa/openvsa.inc
+
+VSA_CLEAN_TARGET=openvsa-clean
+VSA_DISTCLEAN_TARGET=openvsa-distclean
+endif
 
 $(GEODE_COMPRESSED_VSA): $(GEODE_UNCOMPRESSED_VSA)
 	@ $(STAGING_DIR)/bin/nrv2b e $(GEODE_UNCOMPRESSED_VSA) $@ \
@@ -25,9 +35,9 @@ $(GEODE_PADDED_VSA): $(GEODE_COMPRESSED_VSA)
 
 geodevsa: $(VSA_BUILD_TARGET)
 
-geodevsa-clean:
+geodevsa-clean: $(VSA_CLEAN_TARGET)
 	@ rm -f $(GEODE_UNCOMPRESSED_VSA) $(GEODE_COMPRESSED_VSA)
 	@ rm -f $(GEODE_PADDED_VSA)
 
-geodevsa-distclean:
+geodevsa-distclean: $(VSA_DISTCLEAN_TARGET)
 	@ rm -rf $(OUTPUT_DIR)/vsa

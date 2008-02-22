@@ -125,6 +125,23 @@ config PLATFORM_CHEETAH_FAM10
 	select PLATFORM_SUPPORT_64BIT
 endchoice
 
+choice
+	prompt "Geode VSA SMM handler"
+	depends PLATFORM_GEODE
+	default VSA_LEGACY
+	help
+	  Select the SMM handler source to use with Geode platforms
+
+config VSA_LEGACY
+	bool "Legacy VSA binary from AMD"
+
+config VSA_OPENVSA
+	bool "OpenVSA"
+	depends EXPERIMENTAL
+
+endchoice
+
+
 config BUILD_QEMU
 	bool "Build QEMU with patches for LinuxBIOS"
 	depends PLATFORM_QEMU-X86
