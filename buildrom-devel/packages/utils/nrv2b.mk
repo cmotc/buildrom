@@ -30,8 +30,8 @@ $(NRV2B_SRC_DIR)/nrv2b: $(NRV2B_STAMP_DIR)/.unpacked
         > $(NRV2B_BUILD_LOG) 2>&1)
 
 $(STAGING_DIR)/bin/nrv2b: $(NRV2B_SRC_DIR)/nrv2b
-	mkdir -p $(STAGING_DIR)/bin
-	cp $< $@
+	@ mkdir -p $(STAGING_DIR)/bin
+	@ cp $< $@
 
 $(NRV2B_STAMP_DIR) $(NRV2B_LOG_DIR):
 	@ mkdir -p $@
@@ -43,5 +43,5 @@ nrv2b-clean:
 	@ $(MAKE) -C $(NRV2B_SRC_DIR) clean > /dev/null 2>&1
 
 nrv2b-distclean:
-	@ rm -r $(NRV2B_DIR)
+	@ rm -rf $(NRV2B_DIR)
 
