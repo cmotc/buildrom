@@ -76,6 +76,21 @@ config COREBOOT_V3
 		is experimental, and only supports a few platforms.
 endchoice
 
+config COREBOOT_V3_OVERRIDE_ROM_SIZE
+	bool "Override default ROM size"
+	depends COREBOOT_V3
+	help
+		Select this option to specify your own ROM size.  Use this
+		option if your chip is a different size than the one that
+		typically comes with the board.
+
+config COREBOOT_V3_ROM_SIZE
+	int "coreboot v3 romsize in KB"
+	default "1024"
+	depends COREBOOT_V3_OVERRIDE_ROM_SIZE
+	help
+		Specify the ROM size here in KB.
+
 config USE_LZMA
 	bool "Enable LZMA compression"
 	depends !(PAYLOAD_OFW && COREBOOT_V2)
