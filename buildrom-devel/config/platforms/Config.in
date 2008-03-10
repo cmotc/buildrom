@@ -86,6 +86,13 @@ config PLATFORM_GA_2761GXDK
 	select PLATFORM
 	select PLATFORM_SUPPORT_64BIT
 
+config PLATFORM_TYAN_S2881
+       bool "Tyan S2881"
+       depends VENDOR_TYAN
+       depends COREBOOT_V2
+       select PLATFORM
+       select PLATFORM_SUPPORT_64BIT
+
 config PLATFORM_TYAN_S2882
        bool "Tyan S2882"
        depends VENDOR_TYAN
