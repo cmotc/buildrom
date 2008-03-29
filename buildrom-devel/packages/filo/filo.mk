@@ -1,5 +1,5 @@
 FILO_URL=svn://coreboot.org/filo/trunk/filo-0.5
-FILO_TAG=42
+FILO_TAG=44
 
 FILO_DIR=$(BUILD_DIR)/filo
 FILO_SRC_DIR=$(FILO_DIR)/svn
@@ -7,11 +7,6 @@ FILO_STAMP_DIR=$(FILO_DIR)/stamps
 FILO_LOG_DIR=$(FILO_DIR)/logs
 
 FILO_PATCHES=$(PACKAGE_DIR)/filo/patches/make.patch
-
-ifeq ($(CONFIG_PLATFORM_GA_M57SLI_S4),y)
-	FILO_PATCHES += $(PACKAGE_DIR)/filo/patches/sata-spinup-delay.patch
-endif
-
 
 ifeq ($(CONFIG_VERBOSE),y)
 FILO_FETCH_LOG=/dev/stdout

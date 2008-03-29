@@ -7,6 +7,8 @@ IDE_DISK = 1
 # Add a short delay when polling status registers
 # (required on some broken SATA controllers)
 IDE_DISK_POLL_DELAY = 1
+# Wait 5 seconds to allow the sata disks to spin up
+SLOW_SATA = 1
 # Driver for USB Storage
 USB_DISK = 1
 # VGA text console
