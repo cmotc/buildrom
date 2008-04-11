@@ -54,7 +54,7 @@ COREBOOT-$(CONFIG_COREBOOT_V3) = coreboot-v3 roms
 
 # Construct the list of packages we will be building
 
-PKGLIST = $(COREBOOT-y) $(PAYLOAD-y) $(HOSTTOOLS-y)
+PKGLIST = $(COREBOOT-y) $(DEPENDS-y) $(PAYLOAD-y) $(HOSTTOOLS-y)
 
 # Construct the various targets
 
@@ -97,7 +97,7 @@ endif
 	@ $(STAGING_DIR)/bin/lar -z $(TARGET_ROM_FILE)
 endif
 
-payload: $(PAYLOAD_TARGET)
+payload: $(DEPENDS-y) $(PAYLOAD_TARGET)
 
 extract: $(PKG_extract)
 
