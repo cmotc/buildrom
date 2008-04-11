@@ -9,6 +9,9 @@ choice
 	help
 	  Buildrom can build a number of different payloads for the ROM
 
+config PAYLOAD_COREINFO
+	bool "Coreinfo"
+
 config PAYLOAD_CUSTOM
 	bool "Custom Payload"
 

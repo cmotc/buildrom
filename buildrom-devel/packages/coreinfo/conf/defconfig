@@ -1,0 +1,18 @@
+#
+# Automatically generated make config: don't edit
+# coreinfo version: 0.1.0
+# Wed Apr  9 15:45:52 2008
+#
+
+#
+# General settings
+#
+CONFIG_SHOW_DATE_TIME=y
+
+#
+# Modules
+#
+CONFIG_MODULE_COREBOOT=y
+CONFIG_MODULE_CPUINFO=y
+CONFIG_MODULE_PCI=y
+CONFIG_MODULE_NVRAM=y
