@@ -81,3 +81,13 @@ HOSTCC=$(HOST_CC)
 PARALLEL_MAKE=-j$(CONFIG_MAKE_JOBS)
 
 export CC AS CFLAGS LDFLAGS ASFLAGS LIBS PARALLEL_MAKE
+
+# Several functions to get a custom config file name
+
+custom-get-arch = $(if $(CONFIG_TARGET_64BIT),x86_64,i386)
+
+custom-config-name = $(shell \
+	echo "$(PACKAGE_DIR)/$(1)/conf/customconfig--$(PAYLOAD)--$(call custom-get-arch)--$(COREBOOT_VENDOR)--$(COREBOOT_BOARD)")
+
+custom-config-exists = $(shell if [ -f $(call custom-config-name,$(1)) ]; \
+			then echo 1; fi)
