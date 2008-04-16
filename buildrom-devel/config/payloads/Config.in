@@ -47,6 +47,8 @@ config PAYLOAD_MEMTEST
 	depends !PLATFORM_TYAN_S2891
 	bool "Memtest86"
 
+config PAYLOAD_TINT
+	bool "TINT (falling blocks game)"
 endchoice
 
 choice
