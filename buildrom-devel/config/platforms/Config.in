@@ -17,7 +17,7 @@ config VENDOR_ADVANCED_DIGITAL_LOGIC
 
 config VENDOR_GIGABYTE
 	bool "GIGABYTE"
-	depends COREBOOT_V2
+	depends on COREBOOT_V2
 
 config VENDOR_PC_ENGINES
 	bool "PC Engines"
@@ -27,11 +27,11 @@ config VENDOR_QEMU
 
 config VENDOR_SUPERMICRO
 	bool "Supermicro"
-	depends COREBOOT_V2
+	depends on COREBOOT_V2
 
 config VENDOR_TYAN
 	bool "Tyan"
-	depends COREBOOT_V2
+	depends on COREBOOT_V2
 
 endchoice
 
@@ -43,98 +43,98 @@ choice
 
 config PLATFORM_NORWICH
        bool "AMD Geode LX 'Norwich'"
-       depends VENDOR_AMD
+       depends on VENDOR_AMD
        select PLATFORM
        select PLATFORM_GEODE
 
 config PLATFORM_DBE61
        bool "Artec Group DBE61"
-       depends VENDOR_ARTEC_GROUP
+       depends on VENDOR_ARTEC_GROUP
        select PLATFORM
        select PLATFORM_GEODE
 
 config PLATFORM_ALIX1C
        bool "PC Engines ALIX1.C"
-       depends VENDOR_PC_ENGINES
+       depends on VENDOR_PC_ENGINES
        select PLATFORM
        select PLATFORM_GEODE
 
 config PLATFORM_MSM800SEV
        bool "Advanced Digital Logic MSM800SEV"
-       depends VENDOR_ADVANCED_DIGITAL_LOGIC
+       depends on VENDOR_ADVANCED_DIGITAL_LOGIC
        select PLATFORM
        select PLATFORM_GEODE
 
 config PLATFORM_DB800
 	bool "AMD DB800"
-	depends VENDOR_AMD
-	depends COREBOOT_V2
+	depends on VENDOR_AMD
+	depends on COREBOOT_V2
 	select PLATFORM
 	select PLATFORM_GEODE
 
 config PLATFORM_GA_M57SLI_S4
        bool "GIGABYTE GA-M57SLI-S4"
-       depends VENDOR_GIGABYTE
-       depends COREBOOT_V2
+       depends on VENDOR_GIGABYTE
+       depends on COREBOOT_V2
        select PLATFORM
        select PLATFORM_SUPPORT_64BIT
 
 config PLATFORM_GA_2761GXDK
 	bool "GIGABYTE GA-2761GXDK"
-	depends VENDOR_GIGABYTE
-	depends COREBOOT_V2
+	depends on VENDOR_GIGABYTE
+	depends on COREBOOT_V2
 	select PLATFORM
 	select PLATFORM_SUPPORT_64BIT
 
 config PLATFORM_TYAN_S2881
        bool "Tyan S2881"
-       depends VENDOR_TYAN
-       depends COREBOOT_V2
+       depends on VENDOR_TYAN
+       depends on COREBOOT_V2
        select PLATFORM
        select PLATFORM_SUPPORT_64BIT
 
 config PLATFORM_TYAN_S2882
        bool "Tyan S2882"
-       depends VENDOR_TYAN
-       depends COREBOOT_V2
+       depends on VENDOR_TYAN
+       depends on COREBOOT_V2
        select PLATFORM
        select PLATFORM_SUPPORT_64BIT
 
 config PLATFORM_TYAN_S2891
        bool "Tyan S2891"
-       depends VENDOR_TYAN
-       depends COREBOOT_V2
+       depends on VENDOR_TYAN
+       depends on COREBOOT_V2
        select PLATFORM
        select PLATFORM_SUPPORT_64BIT
 
 config PLATFORM_QEMU-X86
        bool "QEMU Emulator"
-       depends VENDOR_QEMU
+       depends on VENDOR_QEMU
        select PLATFORM
 
 config PLATFORM_SERENGETI_CHEETAH
        bool "AMD Serengeti-Cheetah"
-       depends VENDOR_AMD
+       depends on VENDOR_AMD
        select PLATFORM
        select PLATFORM_SUPPORT_64BIT
 
 config PLATFORM_SUPERMICRO_H8DMR
        bool "Supermicro H8DMR"
-       depends VENDOR_SUPERMICRO
-       depends COREBOOT_V2
+       depends on VENDOR_SUPERMICRO
+       depends on COREBOOT_V2
        select PLATFORM
        select PLATFORM_SUPPORT_64BIT
 
 config PLATFORM_CHEETAH_FAM10
 	bool "AMD Serengeti-Cheetah with fam10 processor"
-	depends VENDOR_AMD
+	depends on VENDOR_AMD
 	select PLATFORM
 	select PLATFORM_SUPPORT_64BIT
 endchoice
 
 choice
 	prompt "Geode VSA SMM handler"
-	depends PLATFORM_GEODE
+	depends on PLATFORM_GEODE
 	default VSA_LEGACY
 	help
 	  Select the SMM handler source to use with Geode platforms
@@ -144,14 +144,14 @@ config VSA_LEGACY
 
 config VSA_OPENVSA
 	bool "OpenVSA"
-	depends EXPERIMENTAL
+	depends on EXPERIMENTAL
 
 endchoice
 
 
 config BUILD_QEMU
 	bool "Build QEMU with patches for LinuxBIOS"
-	depends PLATFORM_QEMU-X86
+	depends on PLATFORM_QEMU-X86
 	default n
 	help
 	  Say 'y' here to build a patched version of QEMU to work with
@@ -160,7 +160,7 @@ config BUILD_QEMU
 
 config QEMU_CC
 	string "Compiler to use when building QEMU"
-	depends BUILD_QEMU
+	depends on BUILD_QEMU
 	default "gcc34"
 	help
           QEMU has known problems when built using gcc 4.x.
@@ -168,7 +168,7 @@ config QEMU_CC
 
 config SIMNOW
 	bool "Build for the AMD SimNow (TM) emulator"
-	depends PLATFORM_SERENGETI_CHEETAH || PLATFORM_SERENGETI_CHEETAH_64
+	depends on PLATFORM_SERENGETI_CHEETAH || PLATFORM_SERENGETI_CHEETAH_64
 	default n
 	help
 	  Say 'y' here to patch the build to work on an

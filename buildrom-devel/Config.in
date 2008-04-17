@@ -70,7 +70,7 @@ config COREBOOT_V2
 
 config COREBOOT_V3
 	bool "coreboot v3"
-	depends EXPERIMENTAL
+	depends on EXPERIMENTAL
 	help
 		Select this option to build a coreboot v3 based ROM.  This
 		is experimental, and only supports a few platforms.
@@ -78,7 +78,7 @@ endchoice
 
 config COREBOOT_V3_OVERRIDE_ROM_SIZE
 	bool "Override default ROM size"
-	depends COREBOOT_V3
+	depends on COREBOOT_V3
 	help
 		Select this option to specify your own ROM size.  Use this
 		option if your chip is a different size than the one that
@@ -87,15 +87,15 @@ config COREBOOT_V3_OVERRIDE_ROM_SIZE
 config COREBOOT_V3_ROM_SIZE
 	int "coreboot v3 romsize in KB"
 	default "1024"
-	depends COREBOOT_V3_OVERRIDE_ROM_SIZE
+	depends on COREBOOT_V3_OVERRIDE_ROM_SIZE
 	help
 		Specify the ROM size here in KB.
 
 config USE_LZMA
 	bool "Enable LZMA compression"
-	depends !(PAYLOAD_OFW && COREBOOT_V2)
-	depends !(PAYLOAD_FILO && COREBOOT_V2)
-	depends !(PAYLOAD_ETHERBOOT && COREBOOT_V2)
+	depends on !(PAYLOAD_OFW && COREBOOT_V2)
+	depends on !(PAYLOAD_FILO && COREBOOT_V2)
+	depends on !(PAYLOAD_ETHERBOOT && COREBOOT_V2)
 	default y
 	help
 	  Precompress the payload with LZMA when using coreboot v2. This doesn't
@@ -106,7 +106,7 @@ config USE_LZMA
 
 config CB_USE_BUILD
 	bool "Specify a coreboot build dir"
-	depends ADVANCED
+	depends on ADVANCED
 	default n
 	help
 	  Say 'y' here to specify an existing directory to build 
@@ -115,11 +115,11 @@ config CB_USE_BUILD
 
 config CB_BUILDDIR
 	string "coreboot build directory"
-	depends CB_USE_BUILD
+	depends on CB_USE_BUILD
 
 config CB_CUSTOM_REV
 	bool "Override the platform coreboot revision"
-	depends ADVANCED && !CB_USE_BUILD
+	depends on ADVANCED && !CB_USE_BUILD
 	default n
 	help
 	  Say 'y' here to overide the default coreboot SVN revsion
@@ -127,7 +127,7 @@ config CB_CUSTOM_REV
 
 config CB_REVISION
 	string "coreboot revision"
-	depends CB_CUSTOM_REV
+	depends on CB_CUSTOM_REV
 
 endmenu
 
@@ -149,7 +149,7 @@ config PAYLOAD_64BIT
 
 config TARGET_32BIT
 	bool
-	depends !TARGET_64BIT
+	depends on !TARGET_64BIT
 	default y
 
 config TARGET_64BIT
@@ -161,7 +161,7 @@ config TARGET_64BIT
 
 config USE_NRV2B
 	bool
-	depends PLATFORM_GEODE && COREBOOT_V2
+	depends on PLATFORM_GEODE && COREBOOT_V2
 	default y
 
 source config/platforms/Config.in

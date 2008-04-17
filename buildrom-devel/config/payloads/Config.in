@@ -16,35 +16,35 @@ config PAYLOAD_CUSTOM
 	bool "Custom Payload"
 
 config PAYLOAD_GPXE
-	depends EXPERIMENTAL
+	depends on EXPERIMENTAL
 	bool "GPXE"
 
 config PAYLOAD_ETHERBOOT
-	depends !PLATFORM_M57SLI
-	depends !PLATFORM_TYAN_S2891
+	depends on !PLATFORM_M57SLI
+	depends on !PLATFORM_TYAN_S2891
 	bool "Etherboot"
 
 config PAYLOAD_FILO
 	bool "FILO"
 
 config PAYLOAD_KERNEL
-	depends !PLATFORM_GA_2761GXDK
+	depends on !PLATFORM_GA_2761GXDK
 	bool "Linux kernel payload"
 	select PAYLOAD_64BIT
 
 config PAYLOAD_LAB
-	depends !PLATFORM_GA_2761GXDK
+	depends on !PLATFORM_GA_2761GXDK
 	bool "Linux As Bootloader"
 	select PAYLOAD_64BIT
 
 #config PAYLOAD_OFW
-#	depends !PLATFORM_M57SLI
-#	depends !PLATFORM_TYAN_S2891
+#	depends on !PLATFORM_M57SLI
+#	depends on !PLATFORM_TYAN_S2891
 #	bool "OpenFirmware"
 
 config PAYLOAD_MEMTEST
-	depends !PLATFORM_M57SLI
-	depends !PLATFORM_TYAN_S2891
+	depends on !PLATFORM_M57SLI
+	depends on !PLATFORM_TYAN_S2891
 	bool "Memtest86"
 
 config PAYLOAD_TINT
@@ -53,7 +53,7 @@ endchoice
 
 choice
 	prompt "Desired target architecture"
-	depends PLATFORM_SUPPORT_64BIT && PAYLOAD_64BIT
+	depends on PLATFORM_SUPPORT_64BIT && PAYLOAD_64BIT
 	default CHOOSE_32BIT
 	help
 	  Chose the target architecture for the payload.
@@ -69,7 +69,7 @@ config CHOOSE_32BIT
 endchoice
 
 menu "Custom Payload"
-depends PAYLOAD_CUSTOM
+depends on PAYLOAD_CUSTOM
 config CUSTOM_PAYLOAD
 	string "Custom payload filename"
 	default ""
@@ -81,7 +81,7 @@ config CUSTOM_PAYLOAD
 endmenu
  
 menu "Kernel Configuration"
-depends PAYLOAD_KERNEL
+depends on PAYLOAD_KERNEL
 
 config CMDLINE
 	string "Kernel command line"
@@ -92,7 +92,7 @@ config CMDLINE
 endmenu
 
 menu "LAB Configuration"
-depends PAYLOAD_LAB
+depends on PAYLOAD_LAB
 
 config KBL_KEXEC_ONLY
 	bool
@@ -123,7 +123,7 @@ config BUSYBOX
 endmenu
 
 menu "Memtest86 Configuration"
-depends PAYLOAD_MEMTEST
+depends on PAYLOAD_MEMTEST
 
 config MEMTEST_SERIAL
        bool "Configure memtest for serial output"
@@ -134,7 +134,7 @@ config MEMTEST_SERIAL
 endmenu
 
 menu "Etherboot Configuration"
-depends PAYLOAD_ETHERBOOT
+depends on PAYLOAD_ETHERBOOT
 
 config ETHERBOOT_DRIVER
 	string "Etherboot NIC driver to support"
@@ -146,8 +146,8 @@ config ETHERBOOT_DRIVER
 endmenu
 
 menu "GPXE Configuration"
-depends PAYLOAD_GPXE
-depends EXPERIMENTAL
+depends on PAYLOAD_GPXE
+depends on EXPERIMENTAL
 
 config GPXE_DRIVER
 	string "GPXE NIC driver to support"
