@@ -12,7 +12,7 @@ include $(OPTIONROM-y)
 endif
 
 $(ROM_DIR):
-	mkdir -p $(ROM_DIR)
+	@ mkdir -p $(ROM_DIR)
 
 roms: $(ROM_DIR) $(OPTIONROM_TARGETS)
 
