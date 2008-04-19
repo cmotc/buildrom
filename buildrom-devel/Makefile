@@ -84,6 +84,7 @@ endif
 
 rom: $(HOSTTOOLS-y) payload $(COREBOOT-y)
 	@ cp $(CBV3_OUTPUT) $(TARGET_ROM_FILE)
+	@ $(STAGING_DIR)/bin/lar $(LAR_PAYLOAD_FLAGS) $(TARGET_ROM_FILE) $(CBV3_PAYLOAD_TARGET):normal/payload
 ifeq ($(CONFIG_VSA_LEGACY),y)
 	@ $(STAGING_DIR)/bin/lar $(LAR_PAYLOAD_FLAGS) $(TARGET_ROM_FILE) $(SOURCE_DIR)/amd_vsa_lx_1.01.bin:blob/vsa
 endif
