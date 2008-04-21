@@ -12,6 +12,10 @@ config VENDOR_AMD
 config VENDOR_ARTEC_GROUP
 	bool "Artec Group"
 
+config VENDOR_ASUS
+	bool "ASUS"
+	depends COREBOOT_V2
+
 config VENDOR_ADVANCED_DIGITAL_LOGIC
 	bool "Advanced Digital Logic"
 
@@ -76,6 +80,13 @@ config PLATFORM_GA_M57SLI_S4
        bool "GIGABYTE GA-M57SLI-S4"
        depends on VENDOR_GIGABYTE
        depends on COREBOOT_V2
+       select PLATFORM
+       select PLATFORM_SUPPORT_64BIT
+
+config PLATFORM_ASUS_A8V_E_SE
+       bool "ASUS A8V-E SE"
+       depends VENDOR_ASUS
+       depends COREBOOT_V2
        select PLATFORM
        select PLATFORM_SUPPORT_64BIT
 
