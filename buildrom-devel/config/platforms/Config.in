@@ -63,6 +63,13 @@ config PLATFORM_ALIX1C
        select PLATFORM
        select PLATFORM_GEODE
 
+config PLATFORM_ALIX2C3
+       bool "PC Engines ALIX.2C3"
+       depends VENDOR_PC_ENGINES
+       depends on COREBOOT_V3
+       select PLATFORM
+       select PLATFORM_GEODE
+
 config PLATFORM_MSM800SEV
        bool "Advanced Digital Logic MSM800SEV"
        depends on VENDOR_ADVANCED_DIGITAL_LOGIC
