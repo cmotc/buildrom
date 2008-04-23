@@ -27,6 +27,10 @@ config PAYLOAD_ETHERBOOT
 config PAYLOAD_FILO
 	bool "FILO"
 
+config PAYLOAD_GRUB2
+	depends EXPERIMENTAL
+	bool "GRUB2"
+
 config PAYLOAD_KERNEL
 	depends on !PLATFORM_GA_2761GXDK
 	bool "Linux kernel payload"
