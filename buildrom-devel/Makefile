@@ -1,4 +1,4 @@
-BASE_DIR=$(shell pwd)
+BASE_DIR:=$(shell pwd)
 
 SCRIPT_DIR=$(BASE_DIR)/scripts
 KCONFIG_DIR=$(SCRIPT_DIR)/kconfig
