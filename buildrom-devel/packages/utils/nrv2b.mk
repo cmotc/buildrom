@@ -16,7 +16,7 @@ NRV2B_FETCH_LOG=$(NRV2B_LOG_DIR)/fetch.log
 endif
 
 $(SOURCE_DIR)/$(NRV2B_TARBALL):
-	mkdir -p $(SOURCE_DIR)/nrv2b
+	@ mkdir -p $(SOURCE_DIR)/nrv2b
 	@ $(BIN_DIR)/fetchsvn.sh $(NRV2B_URL) $(SOURCE_DIR)/nrv2b \
 	$(NRV2B_TAG) $@ > $(NRV2B_FETCH_LOG) 2>&1
 
@@ -40,7 +40,9 @@ nrv2b: $(NRV2B_STAMP_DIR) $(NRV2B_LOG_DIR) $(STAGING_DIR)/bin/nrv2b
 
 nrv2b-clean:
 	@ echo "Cleaning nrv2b..."
+ifneq ($(wildcard "$(NRV2B_SRC_DIR)/Makefile"),)
 	@ $(MAKE) -C $(NRV2B_SRC_DIR) clean > /dev/null 2>&1
+endif
 
 nrv2b-distclean:
 	@ rm -rf $(NRV2B_DIR)

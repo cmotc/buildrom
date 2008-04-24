@@ -69,9 +69,9 @@ grub2-clean:
 	@ rm -f $(GRUB2_DIR)/grub2.elf
 	@ rm -f $(GRUB2_STAMP_DIR)/.copied
 	@ rm -f $(GRUB2_STAMP_DIR)/.installed
-	@ if [ -f $(GRUB2_SRC_DIR)/Makefile ]; then \
-		make -C $(GRUB2_SRC_DIR) clean > /dev/null 2>&1; \
-	fi
+ifneq ($(wildcard "$(GRUB_SRC_DIR)/Makefile"),)
+	@ $(MAKE) -C $(GRUB2_SRC_DIR) clean > /dev/null 2>&1; \
+endif
 
 grub2-distclean:
 	@ rm -rf $(GRUB2_DIR)/*

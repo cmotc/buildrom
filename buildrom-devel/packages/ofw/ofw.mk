@@ -52,7 +52,9 @@ ofw: $(OFW_STAMP_DIR) $(OFW_LOG_DIR) $(OFW_BUILD_DIR)/ofwlb.elf
 
 ofw-clean:
 	@ echo "Cleaning Openfirmware..."
+ifneq ($(wildcard "$(OFW_BUILD_DIR)/Makefile"),)
 	@ $(MAKE) -C $(OFW_BUILD_DIR) clean > /dev/null 2>&1
+endif
 
 ofw-distclean:
 	@ rm -rf $(OFW_DIR)/*

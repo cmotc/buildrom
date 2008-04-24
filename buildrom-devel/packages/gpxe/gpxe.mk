@@ -66,7 +66,9 @@ gpxe: $(GPXE_STAMP_DIR) $(GPXE_LOG_DIR) $(GPXE_OUTPUT)
 
 gpxe-clean:
 	@ echo "Cleaning GPXE..."
+ifneq ($(wildcard "$(GPXE_SRC_DIR)/Makefile"),)
 	@ $(MAKE) -C $(GPXE_SRC_DIR) clean > /dev/null 2>&1
+endif
 
 gpxe-distclean:
 	@ rm -rf $(GPXE_DIR)/*

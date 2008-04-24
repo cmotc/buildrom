@@ -40,7 +40,9 @@ lzma: $(LZMA_STAMP_DIR) $(LZMA_LOG_DIR) $(STAGING_DIR)/bin/lzma
 
 lzma-clean:
 	@ echo "Cleaning lzma..."
+ifneq ($(wildcard "$(LZMA_SRC_DIR)/Makefile"),)
 	@ $(MAKE) -C $(LZMA_SRC_DIR)/C/7zip/Compress/LZMA_Alone -f makefile.gcc clean > /dev/null 2>&1
+endif
 
 lzma-distclean:
 	@ rm -rf $(LZMA_DIR)/*

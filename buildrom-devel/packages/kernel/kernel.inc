@@ -88,9 +88,9 @@ generic-kernel: $(OUTPUT_DIR)/bzImage $(OUTPUT_DIR)/vmlinux $(KERNEL_STAMP_DIR)/
 
 generic-kernel-clean:
 	@ echo "Cleaning kernel..."
-	@ if [ -d $(KERNEL_SRC_DIR) ]; then \
-	$(MAKE) -C $(KERNEL_SRC_DIR) clean > /dev/null 2>&1; \
-	fi
+ifneq ($(wildcard "$(KERNEL_SRC_DIR)/Makefile"),)
+	$(MAKE) -C $(KERNEL_SRC_DIR) clean > /dev/null 2>&1;
+endif
 
 generic-kernel-distclean:
 	@ rm -rf $(KERNEL_DIR)

@@ -66,7 +66,9 @@ busybox: $(INITRD_DIR)/bin/busybox
 
 busybox-clean:
 	@ echo "Cleaning busybox..."
+ifneq ($(wildcard "$(BUSYBOX_SRC_DIR)/Makefile"),)
 	@ $(MAKE) -C $(BUSYBOX_SRC_DIR) clean > /dev/null 2>&1
+endif
 
 busybox-distclean:
 	@ rm -rf $(BUSYBOX_DIR)/*
