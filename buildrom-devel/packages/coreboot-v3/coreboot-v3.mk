@@ -1,3 +1,8 @@
+ifeq ($(CONFIG_CB_CUSTOM_REV),y)
+$(warning Using custom rev $(CONFIG_CB_REVISION))
+CBV3_TAG=$(CONFIG_CB_REVISION)
+endif
+
 ifeq ($(CBV3_TAG),)
 $(error You need to specify a version to pull in your platform config)
 endif
@@ -44,7 +49,7 @@ $(SOURCE_DIR)/$(CBV3_TARBALL):
 	$@ > $(CBV3_FETCH_LOG) 2>&1
 
 $(CBV3_STAMP_DIR)/.unpacked: $(SOURCE_DIR)/$(CBV3_TARBALL) | $(CBV3_STAMP_DIR)
-	@echo "Unpacking coreboot v3..."
+	@ echo "Unpacking coreboot v3..."
 	@ mkdir -p $(CBV3_DIR)
 	@ tar -C $(CBV3_DIR) -zxf $(SOURCE_DIR)/$(CBV3_TARBALL)
 	@ touch $@
