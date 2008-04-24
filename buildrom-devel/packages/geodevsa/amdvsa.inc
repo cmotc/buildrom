@@ -1,6 +1,6 @@
 # Target file for the AMD VSA binary - included from geodevsa.mk
 
-AMDVSA_URL=http://www.amd.com/files/connectivitysolutions/geode/geode_lx/
+AMDVSA_URL=http://www.amd.com/files/connectivitysolutions/geode/geode_lx
 AMDVSA_BIN=amd_vsa_lx_1.01.bin
 
 # 2008-02-19 - the AMD URL above is broken, when trying to wget
