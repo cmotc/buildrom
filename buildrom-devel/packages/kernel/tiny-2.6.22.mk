@@ -1,4 +1,4 @@
-# Build file for the AMD Serengeti_Cheetah LAB kernel
+# Build file for the a tiny 2.6.22 LAB kernel
 
 KERNEL_URL=http://kernel.org/pub/linux/kernel/v2.6/
 KERNEL_SOURCE=linux-$(KERNEL_VERSION).tar.bz2

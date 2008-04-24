@@ -125,6 +125,20 @@ config PLATFORM_TYAN_S2891
        select PLATFORM
        select PLATFORM_SUPPORT_64BIT
 
+config PLATFORM_TYAN_S2892
+       bool "Tyan S2892"
+       depends on VENDOR_TYAN
+       depends on COREBOOT_V2
+       select PLATFORM
+       select PLATFORM_SUPPORT_64BIT
+
+config PLATFORM_TYAN_S2895
+       bool "Tyan S2895"
+       depends on VENDOR_TYAN
+       depends on COREBOOT_V2
+       select PLATFORM
+       select PLATFORM_SUPPORT_64BIT
+
 config PLATFORM_QEMU-X86
        bool "QEMU Emulator"
        depends on VENDOR_QEMU
