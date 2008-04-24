@@ -6,7 +6,7 @@ $(error You need to specify a version to pull in your platform config)
 endif
 endif
 
-CBV2_PATCHES =
+CBV2_PATCHES += $(PACKAGE_DIR)/coreboot-v2/patches/buildrom_qemu_size.patch
 
 CBV2_BASE_DIR=svn
 TARGET_ROM = $(COREBOOT_VENDOR)-$(COREBOOT_BOARD).rom

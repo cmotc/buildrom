@@ -1,0 +1,51 @@
+Index: cpu/x86/pc/biosload/config.fth
+===================================================================
+--- a/cpu/x86/pc/biosload/config.fth	(Revision 720)
++++ b/cpu/x86/pc/biosload/config.fth	(Arbeitskopie)
+@@ -2,14 +2,14 @@
+ purpose: Establish configuration definitions
+ 
+ create pc		\ Demo version for generic PC
+-\ create pc-linux	\ Demo version for generic PC and Linux
+-\ create pc-serial	\ Demo version for generic PC
++create pc-linux	\ Demo version for generic PC and Linux
++create pc-serial	\ Demo version for generic PC
+ 
+ \ --- The environment that "boots" OFW ---
+ \ - Image Format - Example Media - previous stage bootloader
+ 
+ \ - (Syslinux) COM32 format - USB Key w/ FAT FS - Syslinux
+-create syslinux-loaded
++\ create syslinux-loaded
+ 
+ \ - Linux kernel format - USB Key w/ FAT FS - LinuxBIOS w/ stripped Linux payload
+ \ create bzimage-loaded
+@@ -19,10 +19,10 @@
+ \ create etherboot-variant  \ Enable additional tweaks for Etherboot
+ 
+ \ - ELF format (no pheader) - ROM - LinuxBIOS direct
+-\ create linuxbios-loaded
++create linuxbios-loaded
+ 
+ \ Load and run in qemu
+-\ create qemu-loaded 
++create qemu-loaded 
+ 
+ [ifdef] pc-serial
+ create serial-console
+@@ -47,13 +47,13 @@
+ \ the point where Linux starts using the MMU.  It isn't strictly
+ \ necessary to use virtual mode if you just want to boot Linux
+ \ and then have OFW disappear.
+-create virtual-mode
++\ create virtual-mode
+ create pc
+ create linux-support
+ [then]
+ 
+ [ifdef] pc
+-\ create pseudo-nvram
++create pseudo-nvram
+ create resident-packages
+ create addresses-assigned  \ Don't reassign PCI addresses
+ \ create virtual-mode

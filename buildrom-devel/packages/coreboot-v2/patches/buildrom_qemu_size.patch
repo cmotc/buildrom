@@ -1,0 +1,14 @@
+Index: targets/emulation/qemu-x86/Config.lb
+===================================================================
+--- a/argets/emulation/qemu-x86/Config.lb	(Revision 3244)
++++ a/targets/emulation/qemu-x86/Config.lb	(Arbeitskopie)
+@@ -3,7 +3,8 @@
+ target qemu-x86
+ mainboard emulation/qemu-x86
+ 
+-option ROM_SIZE=256*1024
++# option ROM_SIZE=256*1024
++option ROM_SIZE=512*1024
+ 
+ option CC="gcc -m32"
+ 

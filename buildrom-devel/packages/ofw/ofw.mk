@@ -1,13 +1,14 @@
-# Build the openfirmware payload
+# Build the OpenFirmware payload
 
 OFW_DIR=$(BUILD_DIR)/ofw
 OFW_SRC_DIR=$(OFW_DIR)/svn
-OFW_BUILD_DIR=$(OFW_SRC_DIR)/cpu/x86/pc/olpc/build
+OFW_BUILD_DIR=$(OFW_SRC_DIR)/cpu/x86/pc/biosload/build
 OFW_STAMP_DIR=$(OFW_DIR)/stamps
 OFW_LOG_DIR=$(OFW_DIR)/logs
 
 OFW_TARBALL=openfirmware-svn-$(OFW_SVN_TAG).tar.gz
-OFW_PATCHES=$(PACKAGE_DIR)/ofw/64bit-fix.patch
+#OFW_PATCHES=$(PACKAGE_DIR)/ofw/64bit-fix.patch
+OFW_PATCHES=$(PACKAGE_DIR)/ofw/ofw_coreboot_qemu.patch
 
 ifeq ($(CONFIG_VERBOSE),y)
 OFW_FETCH_LOG=/dev/stdout
@@ -34,32 +35,25 @@ $(OFW_STAMP_DIR)/.unpacked: $(SOURCE_DIR)/$(OFW_TARBALL)
 	@ touch $@	
 
 $(OFW_STAMP_DIR)/.patched: $(OFW_STAMP_DIR)/.unpacked
-	@ echo "Patching OFW..."
+	@ echo "Patching OpenFirmware..."
 	@ $(BIN_DIR)/doquilt.sh $(OFW_SRC_DIR) $(OFW_PATCHES)
 	@ touch $@
 
-$(OFW_BUILD_DIR)/ofw.elf: $(OFW_STAMP_DIR)/.patched
+$(OFW_BUILD_DIR)/ofwlb.elf: $(OFW_STAMP_DIR)/.patched
 	@ echo "Building OpenFirmware..."
-	@ (echo -n "svn: " ; cd $(OFW_SRC_DIR); svn info | grep Revision )
 	@ $(MAKE) -C $(OFW_BUILD_DIR) > $(OFW_BUILD_LOG) 2>&1
 
 $(OFW_STAMP_DIR) $(OFW_LOG_DIR):
 	@ mkdir -p $@
 
-ofw: $(OFW_STAMP_DIR) $(OFW_LOG_DIR) $(OFW_BUILD_DIR)/ofw.elf 
+ofw: $(OFW_STAMP_DIR) $(OFW_LOG_DIR) $(OFW_BUILD_DIR)/ofwlb.elf 
 	@ mkdir -p $(OUTPUT_DIR)
-	@ install -m 0644 $(OFW_BUILD_DIR)/ofw.elf $(OUTPUT_DIR)/ofw-payload.elf
+	@ install -m 0644 $(OFW_BUILD_DIR)/ofwlb.elf $(OUTPUT_DIR)/ofw-payload.elf
 
 ofw-clean:
-	@ echo "Cleaning openfirmware..."
+	@ echo "Cleaning Openfirmware..."
 	@ $(MAKE) -C $(OFW_BUILD_DIR) clean > /dev/null 2>&1
 
 ofw-distclean:
 	@ rm -rf $(OFW_DIR)/*
 
-ofw-bom:
-	@ echo "Package: linuxbios"
-	@ echo "Source:  $(OFW_SVN_URL)"
-	@ echo "Revison: $(OFW_SVN_TAG)"
-	@ echo "Tarball: `basename $(OFW_TARBALL)"
-	@ echo ""
