@@ -28,7 +28,7 @@ config PAYLOAD_FILO
 	bool "FILO"
 
 config PAYLOAD_GRUB2
-	depends EXPERIMENTAL
+	depends on EXPERIMENTAL
 	bool "GRUB2"
 
 config PAYLOAD_KERNEL

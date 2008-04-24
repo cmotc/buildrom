@@ -14,7 +14,7 @@ config VENDOR_ARTEC_GROUP
 
 config VENDOR_ASUS
 	bool "ASUS"
-	depends COREBOOT_V2
+	depends on COREBOOT_V2
 
 config VENDOR_ADVANCED_DIGITAL_LOGIC
 	bool "Advanced Digital Logic"
@@ -65,7 +65,7 @@ config PLATFORM_ALIX1C
 
 config PLATFORM_ALIX2C3
        bool "PC Engines ALIX.2C3"
-       depends VENDOR_PC_ENGINES
+       depends on VENDOR_PC_ENGINES
        depends on COREBOOT_V3
        select PLATFORM
        select PLATFORM_GEODE
@@ -92,8 +92,8 @@ config PLATFORM_GA_M57SLI_S4
 
 config PLATFORM_ASUS_A8V_E_SE
        bool "ASUS A8V-E SE"
-       depends VENDOR_ASUS
-       depends COREBOOT_V2
+       depends on VENDOR_ASUS
+       depends on COREBOOT_V2
        select PLATFORM
        select PLATFORM_SUPPORT_64BIT
 
