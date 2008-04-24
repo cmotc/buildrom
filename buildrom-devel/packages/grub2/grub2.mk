@@ -70,7 +70,7 @@ grub2-clean:
 	@ rm -f $(GRUB2_STAMP_DIR)/.copied
 	@ rm -f $(GRUB2_STAMP_DIR)/.installed
 ifneq ($(wildcard "$(GRUB_SRC_DIR)/Makefile"),)
-	@ $(MAKE) -C $(GRUB2_SRC_DIR) clean > /dev/null 2>&1; \
+	@ $(MAKE) -C $(GRUB2_SRC_DIR) clean > /dev/null 2>&1
 endif
 
 grub2-distclean:

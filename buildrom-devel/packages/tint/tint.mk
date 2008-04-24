@@ -47,7 +47,7 @@ tint: $(TINT_STAMP_DIR)/.copied
 tint-clean:
 	@ echo "Cleaning TINT..."
 ifneq ($(wildcard "$(TINT_SRC_DIR)/Makefile"),)
-	@ $(MAKE) -C $(TINT_SRC_DIR) clean; \
+	@ $(MAKE) -C $(TINT_SRC_DIR) clean
 endif
 	@ rm -f $(TINT_STAMP_DIR)/.copied
 
