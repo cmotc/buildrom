@@ -57,6 +57,7 @@ etherboot: $(ETHERBOOT_STAMP_DIR) $(ETHERBOOT_LOG_DIR) $(ETHERBOOT_OUTPUT)
 
 etherboot-clean:
 	@ echo "Cleaning etherboot..."
+	@ rm -f $(ETHERBOOT_STAMP_DIR)/.configured
 ifneq ($(wildcard $(ETHERBOOT_SRC_DIR)/Makefile),)
 	@ $(MAKE) -C $(ETHERBOOT_SRC_DIR) clean > /dev/null 2>&1
 endif

@@ -47,6 +47,7 @@ memtest: $(MEMTEST_STAMP_DIR) $(MEMTEST_LOG_DIR) $(MEMTEST_SRC_DIR)/memtest
 
 memtest-clean:
 	@ echo "Cleaning memtest..."
+	@ rm -f $(MEMTEST_STAMP_DIR)/.configured
 ifneq ($(wildcard $(MEMTEST_SRC_DIR)/Makefile),)
 	@ $(MAKE) -C $(MEMTEST_SRC_DIR) clean > /dev/null 2>&1
 endif

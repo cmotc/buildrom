@@ -90,6 +90,7 @@ coreboot-v3: $(CBV3_LOG_DIR) $(CBV3_STAMP_DIR) $(CBV3_OUTPUT) $(STAGING_DIR)/bin
 
 coreboot-v3-clean:
 	@ echo "Cleaning coreboot v3..."
+	@ rm -f $(CBV3_STAMP_DIR)/.configured
 ifneq ($(wildcard $(CBV3_SRC_DIR)/Makefile),)
 	@ $(MAKE) -C $(CBV3_SRC_DIR) clean > /dev/null 2>&1
 endif

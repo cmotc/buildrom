@@ -66,10 +66,11 @@ filo: $(FILO_STAMP_DIR) $(FILO_LOG_DIR) $(FILO_STAMP_DIR)/.copied
 
 filo-clean:
 	@ echo "Cleaning filo..."
+	@ rm -f $(FILO_STAMP_DIR)/.configured
+	@ rm -f $(FILO_STAMP_DIR)/.copied
 ifneq ($(wildcard $(FILO_SRC_DIR)/Makefile),)
 	@ $(MAKE) -C $(FILO_SRC_DIR) clean > /dev/null 2>&1
 endif
-	@ rm -f $(FILO_STAMP_DIR)/.copied
 
 filo-distclean:
 	@ rm -rf $(FILO_DIR)/*

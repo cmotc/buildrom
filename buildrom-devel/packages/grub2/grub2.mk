@@ -67,6 +67,7 @@ grub2: $(GRUB2_STAMP_DIR)/.copied
 grub2-clean:
 	@ rm -f $(GRUB2_DIR)/grub2.lar
 	@ rm -f $(GRUB2_DIR)/grub2.elf
+	@ rm -f $(GRUB2_STAMP_DIR)/.configured
 	@ rm -f $(GRUB2_STAMP_DIR)/.copied
 	@ rm -f $(GRUB2_STAMP_DIR)/.installed
 ifneq ($(wildcard $(GRUB_SRC_DIR)/Makefile),)

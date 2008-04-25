@@ -50,10 +50,11 @@ coreinfo: $(COREINFO_STAMP_DIR) $(COREINFO_LOG_DIR) $(COREINFO_STAMP_DIR)/.copie
 
 coreinfo-clean:
 	@ echo "Cleaning coreinfo..."
+	@ rm -f $(COREINFO_STAMP_DIR)/.installed
+	@ rm -f $(COREINFO_STAMP_DIR)/.copied
 ifneq ($(wildcard $(COREINFO_SRC_DIR)/Makefile),)
 	@ $(MAKE) -C $(COREINFO_SRC_DIR) clean > /dev/null 2>&1
 endif
-	@ rm -f $(COREINFO_STAMP_DIR)/.installed
 
 coreinfo-distclean:
 	@ rm -rf $(COREINFO_DIR)/*

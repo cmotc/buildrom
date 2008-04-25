@@ -32,10 +32,10 @@ $(KEXEC_STAMP_DIR):
 kexec-tools: $(KEXEC_STAMP_DIR) $(INITRD_DIR)/sbin/kexec-tools
 
 kexec-tools-clean:
+	@ rm -f $(KEXEC_STAMP_DIR)/.configured 
 ifneq ($(wildcard $(KEXEC_SRC_DIR)/Makefile),)
 	$(MAKE) -C $(KEXEC_SRC_DIR) clean
 endif
-	rm -f $(KEXEC_SRC_DIR)/.config
 
 kexec-tools-distclean:
 	rm -rf $(KEXEC_DIR)/*
