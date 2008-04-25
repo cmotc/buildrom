@@ -71,12 +71,10 @@ else
 
 # If compressing the payload in v3, parse the elf and tell lar to compress it.
 # Parsing the elf without compression bloats the ROM with bss zeroes.
-ifeq ($(CONFIG_USE_LZMA),y)
-LAR_PAYLOAD_FLAGS=-a -e -C lzma
-else
-LAR_PAYLOAD_FLAGS=-a
-endif
-	
+
+LAR_PAYLOAD_FLAGS-y=-a -e
+LAR_PAYLOAD_FLAGS-$(CONFIG_USE_LZMA) += -C lzma
+
 ifeq ($(or $(CONFIG_VSA_LEGACY), $(CONFIG_VSA_OPENVSA)),)
 else
 OPTIONROM_TARGETS+=geodevsa
@@ -84,15 +82,15 @@ endif
 
 rom: $(HOSTTOOLS-y) payload $(COREBOOT-y)
 	@ cp $(CBV3_OUTPUT) $(TARGET_ROM_FILE)
-	@ $(STAGING_DIR)/bin/lar $(LAR_PAYLOAD_FLAGS) $(TARGET_ROM_FILE) $(CBV3_PAYLOAD_TARGET):normal/payload
+	@ $(STAGING_DIR)/bin/lar $(LAR_PAYLOAD_FLAGS-y) $(TARGET_ROM_FILE) $(CBV3_PAYLOAD_TARGET):normal/payload
 ifeq ($(CONFIG_VSA_LEGACY),y)
-	@ $(STAGING_DIR)/bin/lar $(LAR_PAYLOAD_FLAGS) $(TARGET_ROM_FILE) $(SOURCE_DIR)/amd_vsa_lx_1.01.bin:blob/vsa
+	@ $(STAGING_DIR)/bin/lar $(LAR_PAYLOAD_FLAGS-y) $(TARGET_ROM_FILE) $(SOURCE_DIR)/amd_vsa_lx_1.01.bin:blob/vsa
 endif
 ifeq ($(CONFIG_VSA_OPENVSA),y)
 	@ echo "Adding OpenVSA: TODO FIXME - let's actually implement this?"
 endif
 	@ for file in `ls $(ROM_DIR)`; do \
-		$(STAGING_DIR)/bin/lar $(LAR_PAYLOAD_FLAGS) $(TARGET_ROM_FILE) $(ROM_DIR)/$$file:$$file; \
+		$(STAGING_DIR)/bin/lar $(LAR_PAYLOAD_FLAGS-y) $(TARGET_ROM_FILE) $(ROM_DIR)/$$file:$$file; \
 	done
 	@ $(STAGING_DIR)/bin/lar -z $(TARGET_ROM_FILE)
 endif
