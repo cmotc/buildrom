@@ -115,9 +115,14 @@ endif
 # The following code gets all the make targets, but filters out the kernel
 # targets which are implicitly set by the platform configuration
 
-MKTARGETS:= $(shell ls $(PACKAGE_DIR)/*/*.mk)
+ifneq ($(PAYLOAD_AND_DEP_MK),)
+include $(PAYLOAD_AND_DEP_MK)
+endif
 
-include $(filter-out $(PACKAGE_DIR)/kernel/% $(PACKAGE_DIR)/coreboot-v2/% $(PACKAGE_DIR)/coreboot-v3/%,$(MKTARGETS))
+include $(PACKAGE_DIR)/nrv2b/nrv2b.mk
+include $(PACKAGE_DIR)/lzma/lzma.mk
+include $(PACKAGE_DIR)/geodevsa/geodevsa.mk
+include $(PACKAGE_DIR)/roms/roms.mk
 
 include $(KERNEL_MK)
 
