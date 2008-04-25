@@ -40,7 +40,7 @@ nrv2b: $(NRV2B_STAMP_DIR) $(NRV2B_LOG_DIR) $(STAGING_DIR)/bin/nrv2b
 
 nrv2b-clean:
 	@ echo "Cleaning nrv2b..."
-ifneq ($(wildcard "$(NRV2B_SRC_DIR)/Makefile"),)
+ifneq ($(wildcard $(NRV2B_SRC_DIR)/Makefile),)
 	@ $(MAKE) -C $(NRV2B_SRC_DIR) clean > /dev/null 2>&1
 endif
 

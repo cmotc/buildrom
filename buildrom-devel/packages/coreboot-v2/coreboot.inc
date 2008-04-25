@@ -109,7 +109,7 @@ endif
 generic-coreboot-clean:
 	@ echo "Cleaning coreboot..."
 	@ rm -f $(CBV2_PAYLOAD_TARGET)
-ifneq ($(wildcard "$(CBV2_BUILD_DIR)/Makefile"),)
+ifneq ($(wildcard $(CBV2_BUILD_DIR)/Makefile),)
 	$(MAKE) -C $(CBV2_BUILD_DIR) clean > /dev/null 2>&1;
 endif
 	@ rm -f $(CBV2_OUTPUT)

@@ -51,7 +51,7 @@ $(STAGING_DIR)/sbin/mkelfImage: $(MKELFIMAGE_SRC_DIR)/objdir/sbin/mkelfImage
 mkelfimage: $(STAGING_DIR)/sbin/mkelfImage
 
 mkelfimage-clean:
-ifneq ($(wildcard "$(MKELFIMAGE_SRC_DIR)/Makefile"),)
+ifneq ($(wildcard $(MKELFIMAGE_SRC_DIR)/Makefile),)
 	$(MAKE) -C $(MKELFIMAGE_SRC_DIR) clean 
 endif
 

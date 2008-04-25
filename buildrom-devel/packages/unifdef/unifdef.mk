@@ -38,7 +38,7 @@ $(UNIFDEF_STAMP_DIR) $(UNIFDEF_LOG_DIR):
 unifdef: $(STAGING_DIR)/host/bin/unifdef
 
 unifdef-clean:
-ifneq ($(wildcard "$(UNIFDEF_SRC_DIR)/Makefile"),)
+ifneq ($(wildcard $(UNIFDEF_SRC_DIR)/Makefile),)
 	@ $(MAKE) -C $(UNIFDEF_SRC_DIR) clean > /dev/null 2>&1
 endif
 

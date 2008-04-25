@@ -65,7 +65,7 @@ libpayload: $(LIBPAYLOAD_STAMP_DIR) $(LIBPAYLOAD_LOG_DIR) $(LIBPAYLOAD_STAMP_DIR
 
 libpayload-clean:
 	@ echo "Cleaning libpayload..."
-ifneq ($(wildcard "$(LIBPAYLOAD_SRC_DIR)/Makefile"),)
+ifneq ($(wildcard $(LIBPAYLOAD_SRC_DIR)/Makefile),)
 	@ $(MAKE) -C $(LIBPAYLOAD_SRC_DIR) clean > /dev/null 2>&1
 endif
 	@ rm -f $(LIBPAYLOAD_STAMP_DIR)/.installed

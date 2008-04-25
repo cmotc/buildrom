@@ -56,7 +56,7 @@ kexec-boot-loader: $(KBL_STAMP_DIR) $(KBL_LOG_DIR) $(KBL_TARGET)
 
 kexec-boot-loader-clean:
 	@ echo "Cleaning kexec-boot-loader..."
-ifneq ($(wildcard "$(KBL_SRC_DIR)/Makefile"),)
+ifneq ($(wildcard $(KBL_SRC_DIR)/Makefile),)
 	@ $(MAKE) -C $(KBL_SRC_DIR) clean > /dev/null 2>&1
 endif
 

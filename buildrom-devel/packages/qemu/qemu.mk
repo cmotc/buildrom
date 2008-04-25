@@ -45,7 +45,7 @@ $(QEMU_STAMP_DIR) $(QEMU_LOG_DIR):
 qemu: $(QEMU_STAMP_DIR) $(QEMU_LOG_DIR) $(QEMU_SRC_DIR)/i386-softmmu/qemu
 
 qemu-clean:
-ifneq ($(wildcard "$(QEMU_SRC_DIR)/Makefile"),)
+ifneq ($(wildcard $(QEMU_SRC_DIR)/Makefile),)
 	$(MAKE) -C $(QEMU_SRC_DIR) clean 
 endif
 

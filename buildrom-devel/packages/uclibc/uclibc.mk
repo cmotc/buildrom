@@ -80,7 +80,7 @@ uclibc: $(UCLIBC_STAMP_DIR) $(UCLIBC_LOG_DIR) $(STAGING_DIR)/lib/libc.a
 
 uclibc-clean:
 	@ echo "Cleaning uclibc..."
-ifneq ($(wildcard "$(UCLIBC_SRC_DIR)/Makefile"),)
+ifneq ($(wildcard $(UCLIBC_SRC_DIR)/Makefile),)
 	@ $(MAKE) -C $(UCLIBC_SRC_DIR) clean > /dev/null 2>&1
 endif
 

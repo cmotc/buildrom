@@ -51,7 +51,7 @@ wireless-tools: $(WIRELESS_STAMP_DIR) $(WIRELESS_LOG_DIR) $(INITRD_DIR)/sbin/iwc
 
 wireless-tools-clean:
 	@ echo "Cleaning wireless-tools..."
-ifneq ($(wildcard "$(WIRELESS_SRC_DIR)/Makefile"),)
+ifneq ($(wildcard $(WIRELESS_SRC_DIR)/Makefile),)
 	@ $(MAKE) -C $(WIRELESS_SRC_DIR) realclean > /dev/null 2>&1
 endif
 	@ rm -f $(WIRELESS_SRC_DIR)/.config

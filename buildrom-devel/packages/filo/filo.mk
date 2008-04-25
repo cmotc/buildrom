@@ -66,7 +66,7 @@ filo: $(FILO_STAMP_DIR) $(FILO_LOG_DIR) $(FILO_STAMP_DIR)/.copied
 
 filo-clean:
 	@ echo "Cleaning filo..."
-ifneq ($(wildcard "$(FILO_SRC_DIR)/Makefile"),)
+ifneq ($(wildcard $(FILO_SRC_DIR)/Makefile),)
 	@ $(MAKE) -C $(FILO_SRC_DIR) clean > /dev/null 2>&1
 endif
 	@ rm -f $(FILO_STAMP_DIR)/.copied
