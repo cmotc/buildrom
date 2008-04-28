@@ -30,7 +30,7 @@ endif
 
 $(SOURCE_DIR)/$(GRUB2_TAR):
 	@ mkdir -p $(SOURCE_DIR)
-	@ wget -O $@ $(GRUB2_URL)
+	@ wget $(WGET_Q) -O $@ $(GRUB2_URL)
 
 $(GRUB2_STAMP_DIR)/.unpacked: $(SOURCE_DIR)/$(GRUB2_TAR) | $(GRUB2_DIR) $(GRUB2_STAMP_DIR)
 	@ tar -C $(GRUB2_DIR) -xf $(SOURCE_DIR)/$(GRUB2_TAR)

@@ -28,7 +28,7 @@ endif
 
 $(SOURCE_DIR)/$(KBL_SOURCE):
 	@ mkdir -p $(SOURCE_DIR)
-	@ wget -P $(SOURCE_DIR) $(KBL_URL)/$(KBL_SOURCE)
+	@ wget $(WGET_Q) -P $(SOURCE_DIR) $(KBL_URL)/$(KBL_SOURCE)
 
 $(KBL_STAMP_DIR)/.unpacked: $(SOURCE_DIR)/$(KBL_SOURCE)
 	@ echo "Unpacking kexec-boot-loader..."

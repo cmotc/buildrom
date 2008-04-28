@@ -13,11 +13,11 @@ KERNEL_PATCHES += $(TINY_DIR)
 
 $(SOURCE_DIR)/$(KERNEL_SOURCE):
 	@ mkdir -p $(SOURCE_DIR)
-	@ wget -P $(SOURCE_DIR) $(KERNEL_URL)/$(KERNEL_SOURCE)
+	@ wget $(WGET_Q) -P $(SOURCE_DIR) $(KERNEL_URL)/$(KERNEL_SOURCE)
 
 $(SOURCE_DIR)/$(TINY_SOURCE):
 	@ mkdir -p $(SOURCE_DIR)
-	@ wget -P $(SOURCE_DIR) $(TINY_URL)/$(TINY_SOURCE)
+	@ wget $(WGET_Q) -P $(SOURCE_DIR) $(TINY_URL)/$(TINY_SOURCE)
 
 include $(PACKAGE_DIR)/kernel/kernel.inc
 

@@ -7,7 +7,7 @@ KERNEL_SOURCE=linux-$(KERNEL_VERSION).tar.bz2
 
 $(SOURCE_DIR)/$(KERNEL_SOURCE):
 	@ mkdir -p $(SOURCE_DIR)
-	@ wget -P $(SOURCE_DIR) $(KERNEL_URL)/$(KERNEL_SOURCE)
+	@ wget $(WGET_Q) -P $(SOURCE_DIR) $(KERNEL_URL)/$(KERNEL_SOURCE)
 
 include $(PACKAGE_DIR)/kernel/kernel.inc
 

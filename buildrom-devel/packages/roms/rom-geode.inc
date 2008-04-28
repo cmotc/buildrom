@@ -6,7 +6,7 @@ GEODE_VSA=lx_vsa.36k.bin
 
 $(SOURCE_DIR)/$(GEODE_VSA):
 	@ echo "Fetching the VSA code..."
-	@ wget -P $(SOURCE_DIR) $(VSA_URL)/$(GEODE_VSA).gz -O $@
+	@ wget $(wGET_Q) -P $(SOURCE_DIR) $(VSA_URL)/$(GEODE_VSA).gz -O $@
 
 # Copy the file to the ROM_DIR - it should have the same name that it
 # will have in the LAR

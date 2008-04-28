@@ -22,7 +22,7 @@ endif
 
 $(SOURCE_DIR)/$(MEMTEST_SOURCE):
 	@ mkdir -p $(SOURCE_DIR)
-	@ wget -P $(SOURCE_DIR) $(MEMTEST_URL)/$(MEMTEST_SOURCE)
+	@ wget $(WGET_Q) -P $(SOURCE_DIR) $(MEMTEST_URL)/$(MEMTEST_SOURCE)
 
 $(MEMTEST_STAMP_DIR)/.unpacked: $(SOURCE_DIR)/$(MEMTEST_SOURCE)
 	@ echo "Unpacking memtest..."

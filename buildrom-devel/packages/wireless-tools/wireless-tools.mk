@@ -17,7 +17,7 @@ endif
 
 $(SOURCE_DIR)/$(WIRELESS_SOURCE):
 	@ mkdir -p $(SOURCE_DIR)
-	@ wget -P $(SOURCE_DIR) $(WIRELESS_URL)/$(WIRELESS_SOURCE)
+	@ wget $(WGET_Q) -P $(SOURCE_DIR) $(WIRELESS_URL)/$(WIRELESS_SOURCE)
 
 $(WIRELESS_STAMP_DIR)/.unpacked: $(SOURCE_DIR)/$(WIRELESS_SOURCE)
 	@ echo "Unpacking wireless-tools..."

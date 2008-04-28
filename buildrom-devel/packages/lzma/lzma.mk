@@ -15,7 +15,7 @@ endif
 
 $(SOURCE_DIR)/$(LZMA_SOURCE):
 	@ mkdir -p $(SOURCE_DIR)
-	@ wget -P $(SOURCE_DIR) $(LZMA_URL)/$(LZMA_SOURCE)
+	@ wget $(WGET_Q) -P $(SOURCE_DIR) $(LZMA_URL)/$(LZMA_SOURCE)
 
 $(LZMA_STAMP_DIR)/.unpacked: $(SOURCE_DIR)/$(LZMA_SOURCE) | $(LZMA_STAMP_DIR)
 	@ mkdir -p $(LZMA_SRC_DIR)

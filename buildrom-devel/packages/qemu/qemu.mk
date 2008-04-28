@@ -19,7 +19,7 @@ endif
 
 $(SOURCE_DIR)/$(QEMU_SOURCE):
 	@ mkdir -p $(SOURCE_DIR)
-	@ wget -P $(SOURCE_DIR) $(QEMU_URL)/$(QEMU_SOURCE)
+	@ wget $(WGET_Q) -P $(SOURCE_DIR) $(QEMU_URL)/$(QEMU_SOURCE)
 
 $(QEMU_STAMP_DIR)/.unpacked: $(SOURCE_DIR)/$(QEMU_SOURCE)
 	@ echo "Unpacking qemu..."

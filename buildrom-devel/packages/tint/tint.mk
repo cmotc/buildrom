@@ -16,10 +16,10 @@ TINT_BUILD_LOG=$(TINT_LOG_DIR)/build.log
 endif
 
 $(SOURCE_DIR)/$(TINT_TARBALL):
-	@ wget --quiet -P $(SOURCE_DIR) -O $@ $(TINT_ORIG_URL)/$(TINT_TARBALL)
+	@ wget $(WGET_Q) -P $(SOURCE_DIR) -O $@ $(TINT_ORIG_URL)/$(TINT_TARBALL)
 
 $(SOURCE_DIR)/$(TINT_PATCH):
-	@ wget --quiet -P $(SOURCE_DIR) -O $@ $(TINT_PATCH_URL)
+	@ wget $(WGET_Q) -P $(SOURCE_DIR) -O $@ $(TINT_PATCH_URL)
 
 $(TINT_STAMP_DIR)/.unpacked: $(SOURCE_DIR)/$(TINT_TARBALL) | $(TINT_DIR)
 	@ tar -C $(TINT_DIR) -zxf $(SOURCE_DIR)/$(TINT_TARBALL)

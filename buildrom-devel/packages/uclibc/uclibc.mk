@@ -33,7 +33,7 @@ endif
 $(SOURCE_DIR)/$(UCLIBC_SOURCE):
 	@ echo "Downloading uclibc..." 
 	@ mkdir -p $(SOURCE_DIR)
-	@ wget -P $(SOURCE_DIR) $(UCLIBC_URL)/$(UCLIBC_SOURCE)
+	@ wget $(WGET_Q) -P $(SOURCE_DIR) $(UCLIBC_URL)/$(UCLIBC_SOURCE)
 
 $(UCLIBC_STAMP_DIR)/.unpacked: $(SOURCE_DIR)/$(UCLIBC_SOURCE) | $(UCLIBC_STAMP_DIR) $(UCLIBC_DIR)
 	@ echo "Unpacking uclibc..." 

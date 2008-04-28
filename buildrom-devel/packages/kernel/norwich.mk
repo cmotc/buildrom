@@ -10,7 +10,7 @@ KERNEL_CONFIG=$(PACKAGE_DIR)/kernel/conf/defconfig-norwich
 
 $(SOURCE_DIR)/$(KERNEL_SOURCE):
 	@ mkdir -p $(SOURCE_DIR)
-	@ wget -P $(SOURCE_DIR) $(KERNEL_URL)/$(KERNEL_SOURCE)
+	@ wget $(wGET_Q) -P $(SOURCE_DIR) $(KERNEL_URL)/$(KERNEL_SOURCE)
 
 include $(PACKAGE_DIR)/kernel/kernel.inc
 

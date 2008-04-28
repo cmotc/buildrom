@@ -34,6 +34,13 @@ all: .config
 else
 -include .config
 
+# Pass -q to wget if the user doesn't want to see a download progressbar.
+ifeq ($(CONFIG_SHOW_DOWNLOAD_PROGRESSBAR),y)
+WGET_Q = ""
+else
+WGET_Q = "-q"
+endif
+	
 include $(CONFIG_DIR)/platforms/platforms.conf
 include $(CONFIG_DIR)/payloads/payloads.conf
 

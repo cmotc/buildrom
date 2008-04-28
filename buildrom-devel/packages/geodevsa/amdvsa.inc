@@ -12,7 +12,7 @@ AMDVSA_BIN=amd_vsa_lx_1.01.bin
 
 $(SOURCE_DIR)/$(AMDVSA_BIN):
 	@ echo "Fetching the AMD VSA binary..."
-	wget -P $(SOURCE_DIR) $(AMDVSA_URL)/$(AMDVSA_BIN).gz -O $@.gz
+	wget $(WGET_Q) -P $(SOURCE_DIR) $(AMDVSA_URL)/$(AMDVSA_BIN).gz -O $@.gz
 	@ if file $@.gz | grep -q "gzip"; then \
 	gunzip -q $@.gz; else mv $@.gz $@; fi
 

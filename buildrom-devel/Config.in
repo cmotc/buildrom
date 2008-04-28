@@ -32,6 +32,14 @@ config VERBOSE
 	  See the entire build output on stdout. Otherwise, it will
 	  be saved off in a series of logs
 
+config SHOW_DOWNLOAD_PROGRESSBAR
+	bool "Show download progress bar"
+	default y
+	help
+	  If enabled, show a download progress bar, so you can estimate
+	  how long the download of the individual packages might take.
+	  Otherwise, do not show the download progress.
+
 config STORE_SVN_INFO
 	bool "Store svn tree information in deployment directory."
 	default y

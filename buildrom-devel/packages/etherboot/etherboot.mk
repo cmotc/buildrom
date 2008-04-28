@@ -21,7 +21,7 @@ endif
 
 $(SOURCE_DIR)/$(ETHERBOOT_SOURCE):
 	@ mkdir -p $(SOURCE_DIR)
-	@ wget -P $(SOURCE_DIR) $(ETHERBOOT_URL)/$(ETHERBOOT_SOURCE)
+	@ wget $(WGET_Q) -P $(SOURCE_DIR) $(ETHERBOOT_URL)/$(ETHERBOOT_SOURCE)
 
 $(ETHERBOOT_STAMP_DIR)/.unpacked: $(SOURCE_DIR)/$(ETHERBOOT_SOURCE)
 	@ echo "Unpacking etherboot..."
