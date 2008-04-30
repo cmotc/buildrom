@@ -1,5 +1,10 @@
 # This is the common code included by all the targets
 
+ifeq ($(CONFIG_CB_CUSTOM_REV),y)
+$(warning Using custom rev $(CONFIG_CB_REVISION))
+CBV2_TAG=$(CONFIG_CB_REVISION)
+endif
+
 CBV2_BASE_DIR=svn
 CBV2_URL=svn://coreboot.org/repos/trunk/coreboot-v2
 CBV2_TARBALL=coreboot-svn-$(CBV2_TAG).tar.gz
