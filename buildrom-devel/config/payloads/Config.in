@@ -47,6 +47,10 @@ config PAYLOAD_OFW
 	depends on !PLATFORM_TYAN_S2891
 	bool "OpenFirmware"
 
+config PAYLOAD_OPENBIOS
+	depends on EXPERIMENTAL
+	bool "OpenBIOS"
+
 config PAYLOAD_MEMTEST
 	depends on !PLATFORM_M57SLI
 	depends on !PLATFORM_TYAN_S2891
