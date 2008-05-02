@@ -37,11 +37,6 @@ CBV3_OUTPUT=$(CBV3_SRC_DIR)/build/coreboot.rom
 
 CBV3_PATCHES ?=
 
-CBV3_PAYLOAD_TARGET=$(CBV3_DIR)/payload.elf
-
-$(CBV3_PAYLOAD_TARGET): $(PAYLOAD_TARGET)
-	@ cp $< $@
-
 $(SOURCE_DIR)/$(CBV3_TARBALL):
 	@ mkdir -p $(SOURCE_DIR)/coreboot-v3
 	@ $(BIN_DIR)/fetchsvn.sh $(CBV3_URL) \
@@ -72,7 +67,7 @@ else
 endif
 	@ touch $@
 
-$(CBV3_OUTPUT): $(CBV3_STAMP_DIR)/.configured $(CBV3_PAYLOAD_TARGET)
+$(CBV3_OUTPUT): $(CBV3_STAMP_DIR)/.configured $(PAYLOAD_TARGET)
 	@ echo "Building coreboot v3..."
 	@ $(MAKE) -C $(CBV3_SRC_DIR) $(CBV3_ROM_SIZE) > $(CBV3_BUILD_LOG) 2>&1
 

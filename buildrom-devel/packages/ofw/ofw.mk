@@ -1,5 +1,8 @@
 # Build the OpenFirmware payload
 
+OFW_SVN_URL=svn://openbios.org/openfirmware
+OFW_SVN_TAG=720
+
 OFW_DIR=$(BUILD_DIR)/ofw
 OFW_SRC_DIR=$(OFW_DIR)/svn
 OFW_BUILD_DIR=$(OFW_SRC_DIR)/cpu/x86/pc/biosload/build

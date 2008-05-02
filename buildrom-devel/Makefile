@@ -89,7 +89,7 @@ endif
 
 rom: $(HOSTTOOLS-y) payload $(COREBOOT-y)
 	@ cp $(CBV3_OUTPUT) $(TARGET_ROM_FILE)
-	@ $(STAGING_DIR)/bin/lar $(LAR_PAYLOAD_FLAGS-y) $(TARGET_ROM_FILE) $(CBV3_PAYLOAD_TARGET):normal/payload
+	@ $(STAGING_DIR)/bin/lar $(LAR_PAYLOAD_FLAGS-y) $(TARGET_ROM_FILE) $(PAYLOAD_TARGET):normal/payload
 ifeq ($(CONFIG_VSA_LEGACY),y)
 	@ $(STAGING_DIR)/bin/lar $(LAR_PAYLOAD_FLAGS-y) $(TARGET_ROM_FILE) $(SOURCE_DIR)/amd_vsa_lx_1.01.bin:blob/vsa
 endif
@@ -101,6 +101,10 @@ endif
 	done
 	@ $(STAGING_DIR)/bin/lar -z $(TARGET_ROM_FILE)
 endif
+
+# These empty dependencies are for the custom payload.
+custom:
+custom-clean:
 
 payload: $(DEPENDS-y) $(PAYLOAD_TARGET)
 

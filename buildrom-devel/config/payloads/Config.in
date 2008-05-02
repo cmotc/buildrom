@@ -77,17 +77,14 @@ config CHOOSE_32BIT
 
 endchoice
 
-menu "Custom Payload"
-depends on PAYLOAD_CUSTOM
 config CUSTOM_PAYLOAD
 	string "Custom payload filename"
+	depends on PAYLOAD_CUSTOM
 	default ""
 	help
 	  Specify a filename for the custom ELF payload you wish to attach
 	  to the ROM.  You can also specify the custom payload with the
 	  CUSTOM_PAYLOAD environment variable.
-
-endmenu
  
 menu "Kernel Configuration"
 depends on PAYLOAD_KERNEL
