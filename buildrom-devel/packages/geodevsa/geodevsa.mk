@@ -31,7 +31,7 @@ $(GEODE_COMPRESSED_VSA): $(GEODE_UNCOMPRESSED_VSA)
 $(GEODE_PADDED_VSA): $(GEODE_COMPRESSED_VSA)
 	@ cp $< $@
 	@ (size=`stat -c %s $<`; count=`expr $(GEODE_VSA_SIZE) - $$size`; \
-	@ dd if=/dev/zero bs=1 count=$$count  >> $@ 2> /dev/null)
+	dd if=/dev/zero bs=1 count=$$count  >> $@ 2> /dev/null)
 
 geodevsa: $(VSA_BUILD_TARGET)
 
