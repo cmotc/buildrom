@@ -59,6 +59,12 @@ TARGET_ROM_FILE=$(OUTPUT_DIR)/$(TARGET_ROM)
 COREBOOT-$(CONFIG_COREBOOT_V2) = coreboot
 COREBOOT-$(CONFIG_COREBOOT_V3) = coreboot-v3 roms
 
+# Add openvsa as a dependency if it is configured to be used; this makes sure
+# that make distclean will clear out work/openvsa (see below)
+ifeq ($(CONFIG_VSA_OPENVSA),y)
+	DEPENDS-y+=openvsa
+endif
+
 # Construct the list of packages we will be building
 
 PKGLIST = $(COREBOOT-y) $(DEPENDS-y) $(PAYLOAD-y) $(HOSTTOOLS-y)
