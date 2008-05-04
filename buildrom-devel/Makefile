@@ -94,7 +94,7 @@ ifeq ($(CONFIG_VSA_LEGACY),y)
 	@ $(STAGING_DIR)/bin/lar $(LAR_PAYLOAD_FLAGS-y) $(TARGET_ROM_FILE) $(SOURCE_DIR)/amd_vsa_lx_1.01.bin:blob/vsa
 endif
 ifeq ($(CONFIG_VSA_OPENVSA),y)
-	@ echo "Adding OpenVSA: TODO FIXME - let's actually implement this?"
+	@ $(STAGING_DIR)/bin/lar $(LAR_PAYLOAD_FLAGS-y) $(TARGET_ROM_FILE) $(OPENVSA_SRC_DIR)/vsa_lx.bin:blob/vsa
 endif
 	@ for file in `ls $(ROM_DIR)`; do \
 		$(STAGING_DIR)/bin/lar $(LAR_PAYLOAD_FLAGS-y) $(TARGET_ROM_FILE) $(ROM_DIR)/$$file:$$file; \
