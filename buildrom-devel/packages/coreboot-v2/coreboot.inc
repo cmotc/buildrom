@@ -150,7 +150,7 @@ generic-coreboot-clean:
 	@ rm -f $(CBV2_STAMP_DIR)/.configured
 	@ rm -f $(CBV2_PAYLOAD_TARGET)
 ifneq ($(wildcard $(CBV2_BUILD_DIR)/Makefile),)
-	$(MAKE) -C $(CBV2_BUILD_DIR) clean > /dev/null 2>&1;
+	@ $(MAKE) -C $(CBV2_BUILD_DIR) clean > /dev/null 2>&1;
 endif
 	@ rm -f $(CBV2_OUTPUT)
 
