@@ -86,7 +86,7 @@ ifneq ($(OPTIONROM_ID),)
 include $(PACKAGE_DIR)/coreboot-v2/optionroms.inc
 
 # Add it to the front of the list so it is prepended to the coreboot output
-CBV2_COMPONENTS=$(SOURCE_DIR)/$(OPTIONROM_ID).rom $(CBV2_COMPONENTS)
+CBV2_COMPONENTS := $(SOURCE_DIR)/$(OPTIONROM_ID).rom $(CBV2_COMPONENTS)
 endif
 
 $(CBV2_PAYLOAD_TARGET): $(PAYLOAD_TARGET)
