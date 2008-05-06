@@ -40,7 +40,8 @@ WGET_Q = ""
 else
 WGET_Q = "-q"
 endif
-	
+
+DEPENDS-y=
 include $(CONFIG_DIR)/platforms/platforms.conf
 include $(CONFIG_DIR)/payloads/payloads.conf
 
@@ -57,7 +58,7 @@ TARGET_ROM_FILE=$(OUTPUT_DIR)/$(TARGET_ROM)
 # elsewhere, but what the heck - its easy.
 
 COREBOOT-$(CONFIG_COREBOOT_V2) = coreboot
-COREBOOT-$(CONFIG_COREBOOT_V3) = coreboot-v3 roms
+COREBOOT-$(CONFIG_COREBOOT_V3) = coreboot-v3
 
 # Add openvsa as a dependency if it is configured to be used; this makes sure
 # that make distclean will clear out work/openvsa (see below)
@@ -88,23 +89,17 @@ else
 LAR_PAYLOAD_FLAGS-y=-a -e
 LAR_PAYLOAD_FLAGS-$(CONFIG_USE_LZMA) += -C lzma
 
-ifeq ($(or $(CONFIG_VSA_LEGACY), $(CONFIG_VSA_OPENVSA)),)
-else
-OPTIONROM_TARGETS+=geodevsa
-endif
-
 rom: $(HOSTTOOLS-y) payload $(COREBOOT-y)
+	@ mkdir -p $(shell dirname $(TARGET_ROM_FILE))
 	@ cp $(CBV3_OUTPUT) $(TARGET_ROM_FILE)
 	@ $(STAGING_DIR)/bin/lar $(LAR_PAYLOAD_FLAGS-y) $(TARGET_ROM_FILE) $(PAYLOAD_TARGET):normal/payload
-ifeq ($(CONFIG_VSA_LEGACY),y)
-	@ $(STAGING_DIR)/bin/lar $(LAR_PAYLOAD_FLAGS-y) $(TARGET_ROM_FILE) $(SOURCE_DIR)/amd_vsa_lx_1.01.bin:blob/vsa
-endif
-ifeq ($(CONFIG_VSA_OPENVSA),y)
-	@ $(STAGING_DIR)/bin/lar $(LAR_PAYLOAD_FLAGS-y) $(TARGET_ROM_FILE) $(OPENVSA_SRC_DIR)/vsa_lx.bin:blob/vsa
-endif
-	@ for file in `ls $(ROM_DIR)`; do \
-		$(STAGING_DIR)/bin/lar $(LAR_PAYLOAD_FLAGS-y) $(TARGET_ROM_FILE) $(ROM_DIR)/$$file:$$file; \
-	done
+	@ if [ -d $(ROM_DIR) ]; then \
+		for file in `find $(ROM_DIR) -type f`; do \
+		b=`echo $$file | sed -e s:^$(ROM_DIR)\/*::`; \
+	        $(STAGING_DIR)/bin/lar $(LAR_PAYLOAD_FLAGS-y) \
+		$(TARGET_ROM_FILE) $$file:$$b; \
+		done; \
+	fi
 	@ $(STAGING_DIR)/bin/lar -z $(TARGET_ROM_FILE)
 endif
 
@@ -129,24 +124,16 @@ ifneq ($(PAYLOAD_BUILD),)
 include $(PAYLOAD_BUILD)
 endif
 
-# The following code gets all the make targets, but filters out the kernel
-# targets which are implicitly set by the platform configuration
-
-ifneq ($(PAYLOAD_AND_DEP_MK),)
-include $(PAYLOAD_AND_DEP_MK)
-endif
-
-include $(PACKAGE_DIR)/nrv2b/nrv2b.mk
-include $(PACKAGE_DIR)/lzma/lzma.mk
-include $(PACKAGE_DIR)/geodevsa/geodevsa.mk
-include $(PACKAGE_DIR)/roms/roms.mk
-
-include $(KERNEL_MK)
+INCMK=$(foreach mk,$(DEPENDS-y) $(PAYLOAD-y) $(HOSTTOOLS-y),$(PACKAGE_DIR)/$(mk)/$(mk).mk)
 
 ifeq ($(CONFIG_COREBOOT_V2),y)
-include $(CBV2_MK)
+INCMK += $(PACKAGE_DIR)/coreboot-v2/coreboot-v2.mk
 else
-include $(PACKAGE_DIR)/coreboot-v3/coreboot-v3.mk
+INCMK += $(PACKAGE_DIR)/coreboot-v3/coreboot-v3.mk
+endif
+
+ifneq ($(INCMK),)
+include $(INCMK)
 endif
 
 endif

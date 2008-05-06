@@ -4,7 +4,6 @@
 OPTIONROM_TARGETS?=
 
 OPTIONROM-y =
-OPTIONROM-$(CONFIG_PLATFORM_NORWICH) += rom-geode.inc
 
 ifneq ($(OPTIONROMS-y),)
 include $(OPTIONROM-y)

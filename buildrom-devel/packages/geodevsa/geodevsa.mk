@@ -12,6 +12,10 @@ else
 VSA_BUILD_TARGET = $(GEODE_UNCOMPRESSED_VSA)
 endif
 
+ifeq ($(CONFIG_COREBOOT_V3),y)
+VSA_ROM_FILE = $(ROM_DIR)/blob/vsa
+endif
+
 VSA_CLEAN_TARGET=
 VSA_DISTCLEAN_TARGET=
 
@@ -31,13 +35,19 @@ $(GEODE_COMPRESSED_VSA): $(GEODE_UNCOMPRESSED_VSA)
 $(GEODE_PADDED_VSA): $(GEODE_COMPRESSED_VSA)
 	@ cp $< $@
 	@ (size=`stat -c %s $<`; count=`expr $(GEODE_VSA_SIZE) - $$size`; \
-	dd if=/dev/zero bs=1 count=$$count  >> $@ 2> /dev/null)
+	  dd if=/dev/zero bs=1 count=$$count  >> $@ 2> /dev/null)
 
-geodevsa: $(VSA_BUILD_TARGET)
+ifeq ($(CONFIG_COREBOOT_V3),y)
+$(VSA_ROM_FILE): $(VSA_BUILD_TARGET)
+	mkdir -p $(shell dirname $(VSA_ROM_FILE))
+	cp $(VSA_BUILD_TARGET) $(VSA_ROM_FILE)
+endif
+
+geodevsa: $(VSA_BUILD_TARGET) $(VSA_ROM_FILE)
 
 geodevsa-clean: $(VSA_CLEAN_TARGET)
 	@ rm -f $(GEODE_UNCOMPRESSED_VSA) $(GEODE_COMPRESSED_VSA)
-	@ rm -f $(GEODE_PADDED_VSA)
+	@ rm -f $(GEODE_PADDED_VSA) $(VSA_ROM_FILE)
 
 geodevsa-distclean: $(VSA_DISTCLEAN_TARGET)
-	@ rm -rf $(OUTPUT_DIR)/vsa
+	@ rm -rf $(OUTPUT_DIR)/vsa $(VSA_ROM_FILE)
