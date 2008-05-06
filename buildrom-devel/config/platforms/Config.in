@@ -147,6 +147,7 @@ config PLATFORM_QEMU-X86
 config PLATFORM_SERENGETI_CHEETAH
        bool "AMD Serengeti-Cheetah"
        depends on VENDOR_AMD
+       depends on COREBOOT_V2
        select PLATFORM
        select PLATFORM_SUPPORT_64BIT
 
@@ -160,6 +161,7 @@ config PLATFORM_SUPERMICRO_H8DMR
 config PLATFORM_CHEETAH_FAM10
 	bool "AMD Serengeti-Cheetah with fam10 processor"
 	depends on VENDOR_AMD
+	depends on COREBOOT_V2
 	select PLATFORM
 	select PLATFORM_SUPPORT_64BIT
 endchoice
