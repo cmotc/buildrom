@@ -1,5 +1,13 @@
 # This is the common code included by all the targets
 
+ifeq ($(CONFIG_USE_LZMA),y)
+	CBV2_CONFIG=Config-lab.lb
+	CBV2_PAYLOAD_FILE_EXT=elf.lzma
+else
+	CBV2_CONFIG=Config.lb
+	CBV2_PAYLOAD_FILE_EXT=elf
+endif
+
 ifeq ($(CONFIG_CB_CUSTOM_REV),y)
 $(warning Using custom rev $(CONFIG_CB_REVISION))
 CBV2_TAG=$(CONFIG_CB_REVISION)

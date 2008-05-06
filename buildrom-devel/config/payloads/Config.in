@@ -3,6 +3,16 @@
 
 menu "Payload Configuration"
 
+config USE_LZMA
+	bool "Enable LZMA compression"
+	default y
+	help
+	  Precompress the payload with LZMA when using coreboot v2. This changes
+	  the Config.lb file used.
+
+	  When using COREBOOT_V3, parse the elf and have lar compress the files.
+	  This works with all ELF payloads.
+
 choice
 	prompt "Desired payload"
 	default PAYLOAD_KERNEL
