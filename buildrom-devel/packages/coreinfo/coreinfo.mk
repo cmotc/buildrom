@@ -1,5 +1,5 @@
 COREINFO_URL=svn://coreboot.org/repos/trunk/payloads/coreinfo
-COREINFO_TAG=3228
+COREINFO_TAG=3289
 
 COREINFO_DIR=$(BUILD_DIR)/coreinfo
 COREINFO_SRC_DIR=$(COREINFO_DIR)/svn
@@ -14,7 +14,11 @@ COREINFO_BUILD_LOG=$(COREINFO_LOG_DIR)/build.log
 COREINFO_FETCH_LOG=$(COREINFO_LOG_DIR)/fetch.log
 endif
 
-COREINFO_CONFIG=$(PACKAGE_DIR)/coreinfo/conf/defconfig
+ifeq ($(CONFIG_COREBOOT_V3),y)
+COREINFO_CONFIG=$(PACKAGE_DIR)/coreinfo/conf/defconfig-coreboot-v3
+else
+COREINFO_CONFIG=$(PACKAGE_DIR)/coreinfo/conf/defconfig-coreboot
+endif
 
 COREINFO_TARBALL=coreinfo-svn-$(COREINFO_TAG).tar.gz
 
