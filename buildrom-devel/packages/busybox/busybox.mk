@@ -26,7 +26,7 @@ endif
 $(SOURCE_DIR)/$(BUSYBOX_SOURCE):
 	@ echo "Downloading busybox..."
 	@ mkdir -p $(SOURCE_DIR)
-	@ wget $(WGET_Q) $(SOURCE_DIR) $(BUSYBOX_URL)/$(BUSYBOX_SOURCE)
+	@ wget $(WGET_Q) -P $(SOURCE_DIR) $(BUSYBOX_URL)/$(BUSYBOX_SOURCE)
 
 $(BUSYBOX_STAMP_DIR)/.unpacked: $(SOURCE_DIR)/$(BUSYBOX_SOURCE) | $(BUSYBOX_STAMP_DIR) $(BUSYBOX_DIR)
 	@ echo "Unpacking busybox..."
