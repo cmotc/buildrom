@@ -1,6 +1,6 @@
 TINT_ORIG_URL=http://ftp.debian.org/debian/pool/main/t/tint/
 TINT_TARBALL=tint_0.03b.tar.gz
-TINT_PATCH_REV=3239
+TINT_PATCH_REV=3303
 TINT_PATCH_URL="http://tracker.coreboot.org/trac/coreboot/browser/trunk/payloads/external/tint/libpayload_tint.patch?rev=$(TINT_PATCH_REV)&format=raw"
 TINT_PATCH=libpayload_tint.patch
 
