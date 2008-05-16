@@ -43,13 +43,14 @@ $(SOURCE_DIR)/$(CBV3_TARBALL):
 	$(SOURCE_DIR)/coreboot-v3 $(CBV3_TAG) \
 	$@ > $(CBV3_FETCH_LOG) 2>&1
 
-$(CBV3_STAMP_DIR)/.unpacked: $(SOURCE_DIR)/$(CBV3_TARBALL) | $(CBV3_STAMP_DIR)
-	@ echo "Unpacking coreboot v3..."
+$(CBV3_STAMP_DIR)/.unpacked-$(CBV3_TAG): $(SOURCE_DIR)/$(CBV3_TARBALL) | $(CBV3_STAMP_DIR)
+	@ rm -f $(CBV3_STAMP_DIR)/.unpacked*
+	@ echo "Unpacking coreboot v3 ($(CBV3_TAG))..."
 	@ mkdir -p $(CBV3_DIR)
 	@ tar -C $(CBV3_DIR) -zxf $(SOURCE_DIR)/$(CBV3_TARBALL)
 	@ touch $@
 
-$(CBV3_STAMP_DIR)/.patched: $(CBV3_STAMP_DIR)/.unpacked
+$(CBV3_STAMP_DIR)/.patched: $(CBV3_STAMP_DIR)/.unpacked-$(CBV3_TAG)
 	@ echo "Patching coreboot v3..."
 	@ $(BIN_DIR)/doquilt.sh $(CBV3_SRC_DIR) $(CBV3_PATCHES)
 	@ touch $@

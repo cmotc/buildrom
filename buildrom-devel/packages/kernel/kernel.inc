@@ -31,9 +31,9 @@ KERNEL_BUILD_LOG=$(KERNEL_LOG_DIR)/build.log
 KERNEL_INSTALL_LOG=$(KERNEL_LOG_DIR)/install.log
 endif
 
-$(KERNEL_STAMP_DIR)/.unpacked: $(SOURCE_DIR)/$(KERNEL_SOURCE) | $(KERNEL_STAMP_DIR)
+$(KERNEL_STAMP_DIR)/.unpacked-$(KERNEL_VERSION): $(SOURCE_DIR)/$(KERNEL_SOURCE) | $(KERNEL_STAMP_DIR)
 	@ mkdir -p $(KERNEL_DIR)
-	@ echo "Unpacking kernel..."
+	@ echo "Unpacking kernel ($(KERNEL_VERSION))..."
 	@ tar -C $(KERNEL_DIR) -jxf $(SOURCE_DIR)/$(KERNEL_SOURCE)
 	@ touch $@
 
@@ -45,9 +45,9 @@ $(KERNEL_STAMP_DIR)/.unpacked-tiny: $(SOURCE_DIR)/$(TINY_SOURCE)
 	@ touch $@
 
 ifneq ($(TINY_SOURCE),)
-$(KERNEL_STAMP_DIR)/.patched: $(KERNEL_STAMP_DIR)/.unpacked $(KERNEL_STAMP_DIR)/.unpacked-tiny
+$(KERNEL_STAMP_DIR)/.patched: $(KERNEL_STAMP_DIR)/.unpacked-$(KERNEL_VERSION) $(KERNEL_STAMP_DIR)/.unpacked-tiny
 else
-$(KERNEL_STAMP_DIR)/.patched: $(KERNEL_STAMP_DIR)/.unpacked
+$(KERNEL_STAMP_DIR)/.patched: $(KERNEL_STAMP_DIR)/.unpacked-$(KERNEL_VERSION)
 endif
 	@ echo "Patching kernel..."
 	@ $(BIN_DIR)/doquilt.sh $(KERNEL_SRC_DIR) $(KERNEL_PATCHES)

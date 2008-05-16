@@ -92,12 +92,13 @@ endif
 $(CBV2_PAYLOAD_TARGET): $(PAYLOAD_TARGET)
 	@ cp $< $@
 
-$(CBV2_STAMP_DIR)/.unpacked: $(SOURCE_DIR)/$(CBV2_TARBALL) | $(CBV2_STAMP_DIR) $(CBV2_LOG_DIR)
+$(CBV2_STAMP_DIR)/.unpacked-$(CBV2_TAG): $(SOURCE_DIR)/$(CBV2_TARBALL) | $(CBV2_STAMP_DIR) $(CBV2_LOG_DIR)
+	@ rm -f $(CBV2_STAMP_DIR)/.unpacked*
 	@ echo "Unpacking coreboot ($(CBV2_TARBALL))..."
 	@ tar -C $(CBV2_DIR) -zxf $(SOURCE_DIR)/$(CBV2_TARBALL)
 	@ touch $@	
 
-$(CBV2_STAMP_DIR)/.patched: $(CBV2_STAMP_DIR)/.unpacked 
+$(CBV2_STAMP_DIR)/.patched: $(CBV2_STAMP_DIR)/.unpacked-$(CBV2_TAG)
 	@ echo "Patching coreboot..."
 	@ $(BIN_DIR)/doquilt.sh $(CBV2_SRC_DIR) $(CBV2_PATCHES)
 	@ touch $@
