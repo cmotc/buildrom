@@ -77,7 +77,7 @@ endif
 ifeq ($(CONFIG_CB_USE_BUILD),y)
 CBV2_DIR_TARGET=
 else
-CBV2_DIR_TARGET=$(CBV2_STAMP_DIR)/.configured
+CBV2_DIR_TARGET=$(CBV2_STAMP_DIR)/.configured-$(COREBOOT_BOARD)
 endif
 
 # If an optionrom was specified in the configuration, then use it
@@ -103,7 +103,7 @@ $(CBV2_STAMP_DIR)/.patched: $(CBV2_STAMP_DIR)/.unpacked-$(CBV2_TAG)
 	@ $(BIN_DIR)/doquilt.sh $(CBV2_SRC_DIR) $(CBV2_PATCHES)
 	@ touch $@
 
-$(CBV2_STAMP_DIR)/.configured: $(CBV2_STAMP_DIR)/.patched
+$(CBV2_STAMP_DIR)/.configured-$(COREBOOT_BOARD): $(CBV2_STAMP_DIR)/.patched
 	@ echo "Building target..."
 	@( cd $(CBV2_TARGET_DIR); \
 	./buildtarget $(CBV2_CONFIG_NAME) > $(CBV2_CONFIG_LOG) 2>&1)
@@ -156,7 +156,7 @@ generic-coreboot: $(OUTPUT_DIR)/$(TARGET_ROM)
 
 generic-coreboot-clean:
 	@ echo "Cleaning coreboot..."
-	@ rm -f $(CBV2_STAMP_DIR)/.configured
+	@ rm -f $(CBV2_STAMP_DIR)/.configured*
 	@ rm -f $(CBV2_PAYLOAD_TARGET)
 ifneq ($(wildcard $(CBV2_BUILD_DIR)/Makefile),)
 	@ $(MAKE) -C $(CBV2_BUILD_DIR) clean > /dev/null 2>&1;
