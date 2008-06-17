@@ -1,4 +1,4 @@
-QEMU_URL=http://fabrice.bellard.free.fr/qemu/
+QEMU_URL=http://bellard.org/qemu/
 QEMU_SOURCE=qemu-0.9.0.tar.gz
 QEMU_DIR=$(BUILD_DIR)/qemu
 QEMU_SRC_DIR=$(QEMU_DIR)/qemu-0.9.0
