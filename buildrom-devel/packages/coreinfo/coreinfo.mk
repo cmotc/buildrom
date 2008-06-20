@@ -1,5 +1,5 @@
 COREINFO_URL=svn://coreboot.org/repos/trunk/payloads/coreinfo
-COREINFO_TAG=3289
+COREINFO_TAG=3372
 
 COREINFO_DIR=$(BUILD_DIR)/coreinfo
 COREINFO_SRC_DIR=$(COREINFO_DIR)/svn
