@@ -1,14 +1,14 @@
 Index: svn/makerules
 ===================================================================
---- svn.orig/makerules	2007-05-01 02:15:06.000000000 -0600
-+++ svn/makerules	2007-05-01 02:15:45.000000000 -0600
+--- svn.orig/makerules	2008-06-23 09:25:38.000000000 -0600
++++ svn/makerules	2008-06-23 09:26:54.000000000 -0600
 @@ -6,7 +6,7 @@
  GCCINCDIR = $(shell $(CC) -print-search-dirs | head -n 1 | cut -d' ' -f2)include
  CPPFLAGS = -nostdinc -imacros $(TOPDIR)/config.h -I$(TOPDIR)/include -I$(GCCINCDIR) -MD
  # grub part needs no-strict-aliasing!
 -CFLAGS = -Wall -Os -fomit-frame-pointer -fno-common -ffreestanding \
 +CFLAGS_extra = -Wall -Os -fomit-frame-pointer -fno-common -ffreestanding \
- 	 -fno-strict-aliasing -Wno-pointer-sign -Wno-unused 
+ 	 -fno-strict-aliasing -Wno-unused 
  
  ASFLAGS = -D__ASSEMBLY__
 @@ -30,10 +30,10 @@
