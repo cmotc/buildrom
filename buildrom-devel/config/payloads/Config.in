@@ -5,7 +5,7 @@ menu "Payload Configuration"
 
 config USE_LZMA
 	bool "Enable LZMA compression"
-	depends COREBOOT_V3 || (COREBOOT_V2 && !PLATFORM_GEODE)
+	depends on COREBOOT_V3 || (COREBOOT_V2 && !PLATFORM_GEODE)
 	default y
 	help
 	  Precompress the payload with LZMA when using coreboot v2. This changes
