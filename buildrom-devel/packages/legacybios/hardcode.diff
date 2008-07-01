@@ -1,0 +1,39 @@
+diff --git a/src/config.h b/src/config.h
+index 4ae23dc..5ed9799 100644
+--- a/src/config.h
++++ b/src/config.h
+@@ -14,17 +14,17 @@
+ #endif
+ 
+ // Configure as a payload coreboot payload.
+-#define CONFIG_COREBOOT 0
++#define CONFIG_COREBOOT 1
+ 
+-#define CONFIG_DEBUG_SERIAL 0
++#define CONFIG_DEBUG_SERIAL 1
+ 
+-#define CONFIG_FLOPPY_SUPPORT 1
++#define CONFIG_FLOPPY_SUPPORT 1
+ #define CONFIG_PS2_MOUSE 1
+ #define CONFIG_ATA 1
+ #define CONFIG_KBD_CALL_INT15_4F 1
+ #define CONFIG_CDROM_BOOT 1
+ #define CONFIG_CDROM_EMU 1
+-#define CONFIG_PCIBIOS 1
++#define CONFIG_PCIBIOS 0
+ 
+ /* define it if the (emulated) hardware supports SMM mode */
+ #define CONFIG_USE_SMM 1
+diff --git a/src/post.c b/src/post.c
+index a6f7c3d..7890d65 100644
+--- a/src/post.c
++++ b/src/post.c
+@@ -83,7 +83,7 @@ ram_probe(void)
+     u32 rs;
+     if (CONFIG_COREBOOT) {
+         // XXX - just hardcode for now.
+-        rs = 128*1024*1024;
++        rs = 128*1024*1024;
+     } else {
+         // On emulators, get memory size from nvram.
+         rs = (inb_cmos(CMOS_MEM_EXTMEM2_LOW)
