@@ -1,3 +1,29 @@
+export src := $(shell pwd)
+export srctree := $(src)
+export srck := $(src)/scripts/kconfig
+export obj := $(src)/build
+export objk := $(src)/build/scripts/kconfig
+
+export KERNELVERSION      := 0.1.0
+export KCONFIG_AUTOHEADER := $(obj)/config.h
+export KCONFIG_AUTOCONFIG := $(obj)/auto.conf
+
+CONFIG_SHELL := sh
+KBUILD_DEFCONFIG := scripts/defconfig
+UNAME_RELEASE := $(shell uname -r)
+MAKEFLAGS += -rR --no-print-directory
+
+# Make is silent per default, but 'make V=1' will show all compiler calls.
+ifneq ($(V),1)
+Q := @
+endif
+
+HOSTCC = gcc
+HOSTCXX = g++
+HOSTCFLAGS := -I$(srck) -I$(objk)
+HOSTCXXFLAGS := -I$(srck) -I$(objk)
+
+
 BASE_DIR:=$(shell pwd)
 
 SCRIPT_DIR=$(BASE_DIR)/scripts
@@ -21,13 +47,13 @@ dot-config := 0
 config-targets := 1
 endif
 
-ifneq ($(filter textconfig oldconfig defconfig menuconfig,$(MAKECMDGOALS)),)
+ifneq ($(filter config oldconfig defconfig menuconfig xconfig gconfig allyesconfig allnoconfig allmodconfig randconfig,$(MAKECMDGOALS)),)
 config-targets := 1
 dot-config := 0
 endif
 
 ifeq ($(dot-config),0)
-all: .config
+all: prepare .config
 
 .config: oldconfig
 	@echo "Configuration completed - type make to build your ROM"
@@ -139,32 +165,14 @@ endif
 endif
 
 super-distclean: 
-	@ make -C $(KCONFIG_DIR) clean
+	@ rm -rf build
 	@ rm -rf $(BUILD_DIR)
-	@ rm -f .config tmpconfig.h .kconfig.d .config.old
+	@ rm -f .config tmpconfig.h .kconfig.d .config.old .tmpconfig* ..config.tmp
 
-ifeq ($(config-targets),1)
+prepare:
+	$(Q)mkdir -p $(obj)/scripts/kconfig/lxdialog
 
-$(KCONFIG_DIR)/conf:
-	make -C $(KCONFIG_DIR) conf
+include scripts/kconfig/Makefile
 
-$(KCONFIG_DIR)/mconf:
-	make -C $(KCONFIG_DIR) mconf
+.PHONY: $(PHONY) prepare clean distclean
 
-$(KCONFIG_DIR)/lxdialog/lxdialog:
-	make -C $(KCONFIG_DIR)/lxdialog lxdialog
-
-
-textconfig: $(KCONFIG_DIR)/conf
-	@$(KCONFIG_DIR)/conf $(BASE_DIR)/Config.in
-
-oldconfig: $(KCONFIG_DIR)/conf
-	@$(KCONFIG_DIR)/conf -o $(BASE_DIR)/Config.in
-
-defconfig: $(KCONFIG_DIR)/conf
-	@$(KCONFIG_DIR)/conf -d $(BASE_DIR)/Config.in
-
-menuconfig: $(KCONFIG_DIR)/lxdialog/lxdialog $(KCONFIG_DIR)/mconf
-	@$(KCONFIG_DIR)/mconf $(BASE_DIR)/Config.in
-
-endif
