@@ -52,8 +52,8 @@ config PAYLOAD_LAB
 	bool "Linux As Bootloader"
 	select PAYLOAD_64BIT
 
-config PAYLOAD_LEGACYBIOS
-	bool "LegacyBIOS"
+config PAYLOAD_SEABIOS
+	bool "SeaBIOS"
 
 config PAYLOAD_OFW
 	depends on EXPERIMENTAL

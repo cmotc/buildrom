@@ -1,0 +1,43 @@
+--- a/src/config.h	2008-07-03 15:12:21.000000000 -0600
++++ b/src/config.h	2008-07-03 15:13:23.000000000 -0600
+@@ -14,31 +14,31 @@
+ #endif
+ 
+ // Configure as a coreboot payload.
+-#define CONFIG_COREBOOT 0
++#define CONFIG_COREBOOT 1
+ 
+ // Control how verbose debug output is.
+-#define CONFIG_DEBUG_LEVEL 1
++#define CONFIG_DEBUG_LEVEL 6
+ 
+ // Send debugging information to serial port
+-#define CONFIG_DEBUG_SERIAL 0
++#define CONFIG_DEBUG_SERIAL 1
+ 
+-#define CONFIG_FLOPPY_SUPPORT 1
++#define CONFIG_FLOPPY_SUPPORT 1
+ #define CONFIG_PS2_MOUSE 1
+ #define CONFIG_ATA 1
+ #define CONFIG_KBD_CALL_INT15_4F 1
+ #define CONFIG_CDROM_BOOT 1
+ #define CONFIG_CDROM_EMU 1
+ // Support generation of a PIR table in 0xf000 segment (for emulators)
+-#define CONFIG_PIRTABLE 1
++#define CONFIG_PIRTABLE 1
+ // Support generation of ACPI PIR tables (for emulators)
+-#define CONFIG_ACPI 1
++#define CONFIG_ACPI 1
+ // Support int 1a/b1 PCI BIOS calls
+-#define CONFIG_PCIBIOS 1
++#define CONFIG_PCIBIOS 1
+ // Support int 15/53 APM BIOS calls
+-#define CONFIG_APMBIOS 1
++#define CONFIG_APMBIOS 1
+ 
+ /* define it if the (emulated) hardware supports SMM mode */
+-#define CONFIG_USE_SMM 1
++#define CONFIG_USE_SMM 1
+ 
+ /* if true, put the MP float table and ACPI RSDT in EBDA and the MP
+    table in RAM. Unfortunately, Linux has bugs with that, so we prefer
