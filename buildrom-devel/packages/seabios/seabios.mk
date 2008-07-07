@@ -1,4 +1,4 @@
-SEABIOS_URL=git://git.linuxtogo.org/home/kevin/legacybios/
+SEABIOS_URL=git://git.linuxtogo.org/home/kevin/seabios/
 SEABIOS_TAG=master
 
 SEABIOS_DIR=$(BUILD_DIR)/seabios
