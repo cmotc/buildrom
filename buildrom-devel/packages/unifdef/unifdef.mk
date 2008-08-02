@@ -5,6 +5,8 @@ UNIFDEF_SRC_DIR=$(UNIFDEF_DIR)/unifdef-1.0
 UNIFDEF_STAMP_DIR=$(UNIFDEF_DIR)/stamps
 UNIFDEF_LOG_DIR=$(UNIFDEF_DIR)/logs
 
+UNIFDEF_PATCHES=$(PACKAGE_DIR)/unifdef/patches
+
 ifeq ($(CONFIG_VERBOSE),y)
 UNIFDEF_BUILD_LOG=/dev/stdout
 UNIFDEF_CONFIG_LOG=/dev/stdout
@@ -21,9 +23,14 @@ $(UNIFDEF_STAMP_DIR)/.unpacked: $(SOURCE_DIR)/$(UNIFDEF_SOURCE) | $(UNIFDEF_STAM
 	@ tar -C $(UNIFDEF_DIR) -zxf $(SOURCE_DIR)/$(UNIFDEF_SOURCE)
 	@ rm -f $(UNIFDEF_SRC_DIR)/unifdef 
 	@ rm -f $(UNIFDEF_SRC_DIR)/unifdef.o
-	@ touch $@	
+	@ touch $@
 
-$(UNIFDEF_SRC_DIR)/unifdef: $(UNIFDEF_STAMP_DIR) $(UNIFDEF_LOG_DIR) $(UNIFDEF_STAMP_DIR)/.unpacked
+$(UNIFDEF_STAMP_DIR)/.patched: $(UNIFDEF_STAMP_DIR)/.unpacked
+	@ echo "Patching unifdef..."
+	@ $(BIN_DIR)/doquilt.sh $(UNIFDEF_SRC_DIR) $(UNIFDEF_PATCHES)
+	@ touch $@
+
+$(UNIFDEF_SRC_DIR)/unifdef: $(UNIFDEF_STAMP_DIR) $(UNIFDEF_LOG_DIR) $(UNIFDEF_STAMP_DIR)/.patched
 	@ echo "Building unifdef (host)..."
 	@ $(MAKE) -C $(UNIFDEF_SRC_DIR) CC=$(HOST_CC) > $(UNIFDEF_BUILD_LOG) 2>&1
 
