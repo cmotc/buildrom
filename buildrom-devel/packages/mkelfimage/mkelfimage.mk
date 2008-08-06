@@ -1,16 +1,19 @@
-MKELFIMAGE_URL=ftp://ftp.lnxi.com/pub/mkelfImage/
-MKELFIMAGE_SOURCE=mkelfImage-2.7.tar.gz
 MKELFIMAGE_DIR=$(BUILD_DIR)/mkelfimage
-MKELFIMAGE_SRC_DIR=$(MKELFIMAGE_DIR)/mkelfImage-2.7
+MKELFIMAGE_SRC_DIR=$(MKELFIMAGE_DIR)/svn
 MKELFIMAGE_STAMP_DIR=$(MKELFIMAGE_DIR)/stamps
 MKELFIMAGE_LOG_DIR=$(MKELFIMAGE_DIR)/logs
-MKELFIMAGE_PATCHES=$(PACKAGE_DIR)/mkelfimage/mkelfImage-2.7-x86_64.patch
-MKELFIMAGE_PATCHES+=$(PACKAGE_DIR)/mkelfimage/mkelfimage-autoconf.patch
+MKELFIMAGE_PATCHES=
+
+MKELFIMAGE_TAG=3473
+MKELFIMAGE_TARBALL=mkelfimage-svn-$(MKELFIMAGE_TAG).tar.gz
+MKELFIMAGE_URL=svn://coreboot.org/repos/trunk/util/mkelfImage
 
 ifeq ($(CONFIG_VERBOSE),y)
+MKELFIMAGE_FETCH_LOG=/dev/stdout
 MKELFIMAGE_BUILD_LOG=/dev/stdout
 MKELFIMAGE_CONFIG_LOG=/dev/stdout
 else
+MKELFIMAGE_FETCH_LOG=$(MKELFIMAGE_LOG_DIR)/fetch.log
 MKELFIMAGE_BUILD_LOG=$(MKELFIMAGE_LOG_DIR)/build.log
 MKELFIMAGE_CONFIG_LOG=$(MKELFIMAGE_LOG_DIR)/config.log
 endif
@@ -18,13 +21,15 @@ endif
 $(MKELFIMAGE_STAMP_DIR) $(MKELFIMAGE_LOG_DIR):
 	@ mkdir -p $@
 
-$(SOURCE_DIR)/$(MKELFIMAGE_SOURCE):
+$(SOURCE_DIR)/$(MKELFIMAGE_TARBALL): | $(MKELFIMAGE_LOG_DIR)
+	@ echo "Fetching the mkelfimage rev $(MKELFIMAGE_TAG) code..."
 	@ mkdir -p $(SOURCE_DIR)
-	@ wget $(WGET_Q) -P $(SOURCE_DIR) $(MKELFIMAGE_URL)/$(MKELFIMAGE_SOURCE)
+	@ $(BIN_DIR)/fetchsvn.sh $(MKELFIMAGE_URL) $(SOURCE_DIR)/mkelfimage \
+	$(MKELFIMAGE_TAG) $@ > $(MKELFIMAGE_FETCH_LOG) 2>&1
 
-$(MKELFIMAGE_STAMP_DIR)/.unpacked: $(SOURCE_DIR)/$(MKELFIMAGE_SOURCE) | $(MKELFIMAGE_STAMP_DIR) $(MKELFIMAGE_LOG_DIR) 
+$(MKELFIMAGE_STAMP_DIR)/.unpacked: $(SOURCE_DIR)/$(MKELFIMAGE_TARBALL) | $(MKELFIMAGE_STAMP_DIR) $(MKELFIMAGE_LOG_DIR) 
 	@ echo "Unpacking mkelfimage..."
-	@ tar -C $(MKELFIMAGE_DIR) -zxf $(SOURCE_DIR)/$(MKELFIMAGE_SOURCE)
+	@ tar -C $(MKELFIMAGE_DIR) -zxf $(SOURCE_DIR)/$(MKELFIMAGE_TARBALL)
 	@ touch $@	
 
 $(MKELFIMAGE_STAMP_DIR)/.patched: $(MKELFIMAGE_STAMP_DIR)/.unpacked
@@ -61,7 +66,7 @@ mkelfimage-distclean:
 
 mkelfimage-bom:
 	echo "Package: mkelfimage"
-	echo "Source: $(MKELFIMAGE_URL)/$(MKELFIMAGE_SOURCE)"
+	echo "Source: $(MKELFIMAGE_URL) rev $(MKELFIMAGE_TAG)"
 	echo ""
 
 mkelfimage-extract: $(MKELFIMAGE_STAMP_DIR)/.patched
