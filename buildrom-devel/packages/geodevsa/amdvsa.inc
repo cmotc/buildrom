@@ -11,6 +11,7 @@ AMDVSA_BIN=amd_vsa_lx_1.01.bin
 # Jordan
 
 $(SOURCE_DIR)/$(AMDVSA_BIN):
+	@ mkdir -p $(SOURCE_DIR)
 	@ echo "Fetching the AMD VSA binary..."
 	wget $(WGET_Q) -P $(SOURCE_DIR) $(AMDVSA_URL)/$(AMDVSA_BIN).gz -O $@.gz
 	@ if file $@.gz | grep -q "gzip"; then \
