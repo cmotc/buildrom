@@ -62,9 +62,9 @@ else
 
 # Pass -q to wget if the user doesn't want to see a download progressbar.
 ifeq ($(CONFIG_SHOW_DOWNLOAD_PROGRESSBAR),y)
-WGET_Q = ""
+WGET_Q=
 else
-WGET_Q = "-q"
+WGET_Q=-q
 endif
 
 DEPENDS-y=
