@@ -46,7 +46,7 @@ $(BUSYBOX_SRC_DIR)/busybox: $(BUSYBOX_SRC_DIR)/.config | $(BUSYBOX_LOG_DIR)
 ifneq ($(findstring defconfig,$(BUSYBOX_CONFIG)),defconfig)
 	@ echo "Using custom config $(PACKAGE_DIR)/busybox/conf/$(BUSYBOX_CONFIG)"
 endif
-	@ ( unset CFLAGS; unset LDFLAGS; \
+	@ ( unset MAKEFLAGS; unset CFLAGS; unset LDFLAGS; \
 	export EXTRA_CFLAGS="$(CFLAGS)";\
 	export LDFLAGS="$(LDFLAGS_orig)";\
 	$(MAKE) -C $(BUSYBOX_SRC_DIR) VERBOSE=y \

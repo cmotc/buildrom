@@ -61,8 +61,9 @@ $(KERNEL_BZIMAGE): $(KERNEL_SRC_DIR)/.config | $(KERNEL_LOG_DIR)
 ifneq ($(findstring defconfig,$(KERNEL_CONFIG)),defconfig)
 	@ echo "Using custom kernel config $(KERNEL_CONFIG)"
 endif
-	@ $(MAKE) $(PARALLEL_MAKE) -C $(KERNEL_SRC_DIR) ARCH=$(KERNEL_BUILD_ARCH) \
-	KERNEL_CC="$(CC)" KERNEL_LD="$(LD)" > $(KERNEL_BUILD_LOG) 2>&1
+	@ (unset KCONFIG_AUTOHEADER; unset KCONFIG_AUTOCONFIG; \
+	$(MAKE) $(PARALLEL_MAKE) -C $(KERNEL_SRC_DIR) ARCH=$(KERNEL_BUILD_ARCH) \
+	KERNEL_CC="$(CC)" KERNEL_LD="$(LD)" > $(KERNEL_BUILD_LOG) 2>&1)
 	@ mkdir -p $(OUTPUT_DIR)/config/kernel
 	@ cp $(KERNEL_SRC_DIR)/.config $(OUTPUT_DIR)/config/kernel/
 
