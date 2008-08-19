@@ -33,7 +33,7 @@ $(SEABIOS_STAMP_DIR)/.unpacked: $(SOURCE_DIR)/$(SEABIOS_TARBALL) | $(SEABIOS_STA
 	@ touch $@      
 
 $(SEABIOS_STAMP_DIR)/.patched: $(SEABIOS_STAMP_DIR)/.unpacked
-	@ echo "Patching mkelfimage..."
+	@ echo "Patching SeaBIOS..."
 	@ $(BIN_DIR)/doquilt.sh $(SEABIOS_SRC_DIR) $(SEABIOS_PATCHES)
 	@ touch $@
 
