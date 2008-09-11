@@ -1,5 +1,5 @@
-FILO_URL=svn://coreboot.org/filo/trunk/filo-0.5
-FILO_TAG=49
+FILO_URL=svn://coreboot.org/filo/branches/filo-0.5
+FILO_TAG=59
 
 FILO_DIR=$(BUILD_DIR)/filo
 FILO_SRC_DIR=$(FILO_DIR)/svn
