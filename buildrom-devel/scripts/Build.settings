@@ -19,7 +19,8 @@ find-tool=$(shell set -e; if which $(1) > /dev/null 2>&1; \
 CC ?= gcc
 STRIP ?= strip
 AS ?= as
-LC ?= ld
+LD ?= ld
+AR ?= ar
 
 BUILD_ARCH=$(shell uname -m)
 
@@ -81,6 +82,7 @@ HOSTCC=$(HOST_CC)
 PARALLEL_MAKE=-j$(CONFIG_MAKE_JOBS)
 
 export CC AS CFLAGS LDFLAGS ASFLAGS LIBS PARALLEL_MAKE
+export LD AR STRIP
 
 # Several functions to get a custom config file name
 
