@@ -1,5 +1,5 @@
 FILO_URL=svn://coreboot.org/filo/trunk/filo
-FILO_TAG=62
+FILO_TAG=63
 
 FILO_DIR=$(BUILD_DIR)/filo
 FILO_SRC_DIR=$(FILO_DIR)/svn
