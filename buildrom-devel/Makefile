@@ -11,7 +11,7 @@ export KCONFIG_AUTOCONFIG := $(obj)/auto.conf
 CONFIG_SHELL := sh
 KBUILD_DEFCONFIG := scripts/defconfig
 UNAME_RELEASE := $(shell uname -r)
-MAKEFLAGS += -rR --no-print-directory
+MAKEFLAGS += --no-print-directory
 
 # Make is silent per default, but 'make V=1' will show all compiler calls.
 ifneq ($(V),1)
