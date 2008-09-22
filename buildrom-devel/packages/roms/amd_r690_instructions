@@ -1,0 +1,10 @@
+Please follow these instructions for downloading the video BIOS
+for your R690 platform:
+
+ * Download the latest video BIOS from:
+   http://url.goes.here/
+ * Copy the file to:
+   %DESTFILE%
+   You may need to create the directory first.
+
+After copying the file, start the build again by typing 'make'.

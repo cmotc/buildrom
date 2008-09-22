@@ -1,0 +1,11 @@
+ifeq ($(CONFIG_AMD_R690_USE_VBIOS),y)
+OPTIONROM_TARGETS += $(AMD_R690_VBIOS_LOCATION)
+CBV2_PREPEND := $(AMD_R690_VBIOS_LOCATION)
+endif
+
+$(AMD_R690_VBIOS_LOCATION):
+	@ $(BIN_DIR)/show-instructions.sh \
+	$(PACKAGE_DIR)/roms/amd_r690_instructions \
+	$(AMD_R690_VBIOS_LOCATION)
+	@ echo "Unable to find $(AMD_R690_VBIOS_LOCATION)"
+	@ exit 1
