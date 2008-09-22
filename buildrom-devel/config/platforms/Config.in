@@ -164,6 +164,12 @@ config PLATFORM_CHEETAH_FAM10
 	depends on COREBOOT_V2
 	select PLATFORM
 	select PLATFORM_SUPPORT_64BIT
+
+config PLATFORM_DBM690T
+        bool "AMD dbM690T"
+        depends on VENDOR_AMD
+        select PLATFORM
+        select PLATFORM_SUPPORT_64BIT
 endchoice
 
 choice
@@ -207,5 +213,36 @@ config SIMNOW
 	help
 	  Say 'y' here to patch the build to work on an
 	  emulated platform in the AMD SimNow (TM) simulator
+
+config AMD_R690_HEADLESS
+	bool "Build the R690 platform as headless (without VGA)"
+	depends on ADVANCED && PLATFORM_DBM690T
+	default n
+	help
+	  Say 'y' here to build without the VGA BIOS for the
+	  R690 chipset.  This will result in no video graphics
+	  for the platform.  This is not likely what you want,
+	  so you should say 'n' here unless you are absolutely
+	  sure.
+
+config AMD_R690_USE_VBIOS
+	bool
+	depends on !AMD_R690_HEADLESS
+	default y
+
+config AMD_R690_CUSTOM_VBIOS
+	bool "Specify a custom location for the R690 video BIOS"
+	depends on AMD_R690_USE_VBIOS
+	help
+	  Say 'y' here to specify a custom location for the R690
+	  video BIOS file.  Otherwise, it will be looked for in a
+	  default location.
+
+config AMD_R690_VBIOS
+	string "Location of the RS690 Video BIOS file"
+	depends on AMD_R690_CUSTOM_VBIOS
+	default ""
+	help
+	  Specify the full pathname for your RS690 video BIOS file
 
 endmenu

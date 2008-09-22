@@ -1,12 +1,13 @@
 # Each platform that needs an option ROM or other binary blob is specified
 # here
 
-OPTIONROM_TARGETS?=
+OPTIONROM_TARGETS ?=
 
-OPTIONROM-y =
+OPTIONROMS-y =
+OPTIONROMS-$(CONFIG_PLATFORM_DBM690T) += $(PACKAGE_DIR)/roms/amd_r690.mk
 
 ifneq ($(OPTIONROMS-y),)
-include $(OPTIONROM-y)
+include $(OPTIONROMS-y)
 endif
 
 $(ROM_DIR):
@@ -15,8 +16,5 @@ $(ROM_DIR):
 roms: $(ROM_DIR) $(OPTIONROM_TARGETS)
 
 roms-clean:
-ifneq ($(OPTIONROM_TARGETS),)
-	@ rm -rf $(OPTIONROM_TARGETS)
-endif
 
-roms-distclean: roms-clean
+roms-distclean:

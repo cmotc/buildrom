@@ -22,10 +22,12 @@ GRUB2_MODULES=coreboot cat cmp iso9660 help lspci \
 	      serial terminal lar terminfo memdisk ata ls \
               configfile boot hexdump linux multiboot ext2
 
+ifeq ($(CONFIG_PAYLOAD_GRUB2),y)
 HAVE_RUBY:=$(call find-tool,ruby)
 
 ifeq ($(HAVE_RUBY),n)
 $(error To build GRUB2, you need to install 'ruby')
+endif
 endif
 
 $(SOURCE_DIR)/$(GRUB2_TAR):
