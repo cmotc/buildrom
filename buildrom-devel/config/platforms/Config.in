@@ -190,12 +190,12 @@ endchoice
 
 
 config BUILD_QEMU
-	bool "Build QEMU with patches for LinuxBIOS"
+	bool "Build QEMU with patches for coreboot"
 	depends on PLATFORM_QEMU-X86
 	default n
 	help
 	  Say 'y' here to build a patched version of QEMU to work with
-	  LinuxBIOS. This downloads the correct version and patches it;
+	  coreboot. This downloads the correct version and patches it;
 	  it even builds it if you specify the QEMU_CC correctly.
 
 config QEMU_CC
