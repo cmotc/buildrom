@@ -177,7 +177,7 @@ choice
 	depends on PLATFORM_GEODE
 	default VSA_LEGACY
 	help
-	  Select the SMM handler source to use with Geode platforms
+	  Select the SMM handler source to use with Geode platforms.
 
 config VSA_LEGACY
 	bool "Legacy VSA binary from AMD"
@@ -212,7 +212,7 @@ config SIMNOW
 	default n
 	help
 	  Say 'y' here to patch the build to work on an
-	  emulated platform in the AMD SimNow (TM) simulator
+	  emulated platform in the AMD SimNow (TM) simulator.
 
 config AMD_R690_HEADLESS
 	bool "Build the R690 platform as headless (without VGA)"
@@ -243,6 +243,6 @@ config AMD_R690_VBIOS
 	depends on AMD_R690_CUSTOM_VBIOS
 	default ""
 	help
-	  Specify the full pathname for your RS690 video BIOS file
+	  Specify the full pathname for your RS690 video BIOS file.
 
 endmenu
