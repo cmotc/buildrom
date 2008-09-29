@@ -147,7 +147,6 @@ config PLATFORM_QEMU-X86
 config PLATFORM_SERENGETI_CHEETAH
        bool "AMD Serengeti-Cheetah"
        depends on VENDOR_AMD
-       depends on COREBOOT_V2
        select PLATFORM
        select PLATFORM_SUPPORT_64BIT
 
@@ -209,6 +208,7 @@ config QEMU_CC
 config SIMNOW
 	bool "Build for the AMD SimNow (TM) emulator"
 	depends on PLATFORM_SERENGETI_CHEETAH || PLATFORM_SERENGETI_CHEETAH_64
+	depends on COREBOOT_V2
 	default n
 	help
 	  Say 'y' here to patch the build to work on an
