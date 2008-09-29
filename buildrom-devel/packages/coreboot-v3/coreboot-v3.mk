@@ -10,16 +10,22 @@ endif
 CBV3_URL=svn://coreboot.org/repository/coreboot-v3
 CBV3_TARBALL=coreboot-v3-svn-$(CBV3_TAG).tar.gz
 CBV3_DIR=$(BUILD_DIR)/coreboot-v3
+CBV3_STAMP_DIR=$(CBV3_DIR)/stamps
+CBV3_LOG_DIR=$(CBV3_DIR)/logs
+
+ifeq ($(CONFIG_CB_USE_BUILD),y)
+CBV3_SRC_DIR=$(subst ",,$(CONFIG_CB_BUILDDIR))
+CBV3_BUILD_TARGET=
+else
 CBV3_SRC_DIR=$(CBV3_DIR)/svn
+CBV3_BUILD_TARGET=$(CBV3_STAMP_DIR)/.configured
+endif
 
 ifeq ($(CONFIG_COREBOOT_V3_OVERRIDE_ROM_SIZE),y)
 	CBV3_ROM_SIZE=CONFIG_COREBOOT_ROMSIZE_KB=$(CONFIG_COREBOOT_V3_ROM_SIZE)
 else
 	CBV3_ROM_SIZE=
 endif
-
-CBV3_STAMP_DIR=$(CBV3_DIR)/stamps
-CBV3_LOG_DIR=$(CBV3_DIR)/logs
 
 ifeq ($(CONFIG_VERBOSE),y)
 CBV3_FETCH_LOG=/dev/stdout
@@ -73,11 +79,13 @@ else
 endif
 	@ touch $@
 
-$(CBV3_OUTPUT): $(CBV3_STAMP_DIR)/.configured $(PAYLOAD_TARGET)
+
+$(CBV3_OUTPUT): $(CBV3_STAMP_DIR) $(CBV3_LOG_DIR) $(CBV3_BUILD_TARGET) $(PAYLOAD_TARGET)
 	@ echo "Building coreboot v3..."
 	@ $(MAKE) -C $(CBV3_SRC_DIR) $(CBV3_ROM_SIZE) > $(CBV3_BUILD_LOG) 2>&1
 
-$(CBV3_SRC_DIR)/build/util/lar/lar: $(CBV3_STAMP_DIR)/.configured
+$(CBV3_SRC_DIR)/build/util/lar/lar: $(CBV3_BUILD_TARGET)
+	@ echo "Building LAR..."
 	@ $(MAKE) -C $(CBV3_SRC_DIR)/util lar > $(CBV3_BUILD_LOG) 2>&1
 
 $(STAGING_DIR)/bin/lar: $(CBV3_SRC_DIR)/build/util/lar/lar
