@@ -167,6 +167,7 @@ config PLATFORM_CHEETAH_FAM10
 config PLATFORM_DBM690T
         bool "AMD dbM690T"
         depends on VENDOR_AMD
+	depends on COREBOOT_V2
         select PLATFORM
         select PLATFORM_SUPPORT_64BIT
 endchoice
@@ -216,7 +217,8 @@ config SIMNOW
 
 config AMD_R690_HEADLESS
 	bool "Build the R690 platform as headless (without VGA)"
-	depends on ADVANCED && PLATFORM_DBM690T
+	depends on ADVANCED
+	depends on PLATFORM_DBM690T
 	default n
 	help
 	  Say 'y' here to build without the VGA BIOS for the
@@ -227,6 +229,7 @@ config AMD_R690_HEADLESS
 
 config AMD_R690_USE_VBIOS
 	bool
+	depends on PLATFORM_DBM690T
 	depends on !AMD_R690_HEADLESS
 	default y
 
