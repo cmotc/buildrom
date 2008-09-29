@@ -40,7 +40,7 @@ endif
 # Set the cb-v3 board name to the default if not otherwise
 # specified
 
-CBV3_BOARD ?= $(COREBOOOT_BOARD)
+CBV3_BOARD ?= $(COREBOOT_BOARD)
 
 TARGET_ROM = $(COREBOOT_VENDOR)-$(CBV3_BOARD).rom
 
