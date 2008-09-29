@@ -1,5 +1,5 @@
 LIBPAYLOAD_URL=svn://coreboot.org/repos/trunk/payloads/libpayload
-LIBPAYLOAD_TAG=3583
+LIBPAYLOAD_TAG=3613
 
 LIBPAYLOAD_DIR=$(BUILD_DIR)/libpayload
 LIBPAYLOAD_SRC_DIR=$(LIBPAYLOAD_DIR)/svn
