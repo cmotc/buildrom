@@ -97,6 +97,13 @@ config PLATFORM_ASUS_A8V_E_SE
        select PLATFORM
        select PLATFORM_SUPPORT_64BIT
 
+config PLATFORM_ASUS_A8N_E
+       bool "ASUS A8N-E"
+       depends on VENDOR_ASUS
+       depends on COREBOOT_V2
+       select PLATFORM
+       select PLATFORM_SUPPORT_64BIT
+
 config PLATFORM_GA_2761GXDK
 	bool "GIGABYTE GA-2761GXDK"
 	depends on VENDOR_GIGABYTE
