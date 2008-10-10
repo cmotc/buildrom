@@ -3,7 +3,7 @@
 
 DOPAD=0
 
-if [ "$1" == "-p" ]; then
+if [ "$1" = "-p" ]; then
 	DOPAD=1
 	shift
 fi
