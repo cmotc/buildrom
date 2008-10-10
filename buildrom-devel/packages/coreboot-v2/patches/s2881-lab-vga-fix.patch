@@ -1,0 +1,14 @@
+Index: src/mainboard/tyan/s2881/Config.lb
+===================================================================
+--- a/src/mainboard/tyan/s2881/Config.lb	(revision 3646)
++++ a/src/mainboard/tyan/s2881/Config.lb	(working copy)
+@@ -231,7 +231,8 @@
+                                                 end
+                                                 chip drivers/pci/onboard
+                                                         device pci 6.0 on end
+-							register "rom_address" = "0xfff80000"
++							#register "rom_address" = "0xfff80000" #for 512K
++							register "rom_address" = "0xfff00000" #for 1M
+                                                 end
+ 					end
+ 					device pci 1.0 on

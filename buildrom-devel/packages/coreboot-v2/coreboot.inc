@@ -3,6 +3,9 @@
 ifeq ($(CONFIG_USE_LZMA),y)
 	CBV2_CONFIG=Config-lab.lb
 	CBV2_PAYLOAD_FILE_EXT=elf.lzma
+ifeq ($(COREBOOT_BOARD),s2881)
+	CBV2_PATCHES += $(PACKAGE_DIR)/coreboot-v2/patches/s2881-lab-vga-fix.patch 
+endif
 else
 	CBV2_CONFIG=Config.lb
 	CBV2_PAYLOAD_FILE_EXT=elf
@@ -150,6 +153,7 @@ $(SOURCE_DIR)/$(CBV2_TARBALL):
 
 $(OUTPUT_DIR)/$(TARGET_ROM): $(CBV2_COMPONENTS)
 	@ mkdir -p $(OUTPUT_DIR)
+	@ echo $(BIN_DIR)/construct-rom.sh $(PLATFORM_DOPAD) $(CBV2_COMPONENTS) 
 	@ $(BIN_DIR)/construct-rom.sh $(PLATFORM_DOPAD) $(CBV2_COMPONENTS) > $@
 
 generic-coreboot: $(OUTPUT_DIR)/$(TARGET_ROM)
