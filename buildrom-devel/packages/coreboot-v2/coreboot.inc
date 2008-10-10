@@ -153,7 +153,6 @@ $(SOURCE_DIR)/$(CBV2_TARBALL):
 
 $(OUTPUT_DIR)/$(TARGET_ROM): $(CBV2_COMPONENTS)
 	@ mkdir -p $(OUTPUT_DIR)
-	@ echo $(BIN_DIR)/construct-rom.sh $(PLATFORM_DOPAD) $(CBV2_COMPONENTS) 
 	@ $(BIN_DIR)/construct-rom.sh $(PLATFORM_DOPAD) $(CBV2_COMPONENTS) > $@
 
 generic-coreboot: $(OUTPUT_DIR)/$(TARGET_ROM)
