@@ -2,7 +2,7 @@ Please follow these instructions for downloading the video BIOS
 for your R690 platform:
 
  * Download the latest video BIOS from:
-   http://url.goes.here/
+   http://wwwd.amd.com/amd/developer.nsf/
  * Copy the file to:
    %DESTFILE%
    You may need to create the directory first.
