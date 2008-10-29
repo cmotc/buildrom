@@ -1,9 +1,14 @@
 #
 # Automatically generated make config: don't edit
 # libpayload version: 0.1.0
-# Fri Oct 10 13:50:14 2008
+# Wed Oct 29 09:53:16 2008
 #
 CONFIG_TARGET_I386=y
+
+#
+# Architecture Options
+#
+CONFIG_MULTIBOOT=y
 
 #
 # Standard Libraries
