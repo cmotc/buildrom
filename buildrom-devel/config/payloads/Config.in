@@ -5,6 +5,9 @@ menu "Payload Configuration"
 
 config USE_LZMA
 	bool "Enable LZMA compression"
+	depends on !PAYLOAD_FILO
+	depends on !PAYLOAD_GRUB2
+	depends on !PAYLOAD_ETHERBOOT
 	depends on COREBOOT_V3 || (COREBOOT_V2 && !PLATFORM_GEODE)
 	default y
 	help
