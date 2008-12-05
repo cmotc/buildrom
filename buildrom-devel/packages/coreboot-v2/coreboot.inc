@@ -144,7 +144,7 @@ ifeq ($(CONFIG_STORE_SVN_INFO),y)
 	@ svn status > $(OUTPUT_DIR)/config/svn/svn.status
 endif
 
-$(SOURCE_DIR)/$(CBV2_TARBALL):
+$(SOURCE_DIR)/$(CBV2_TARBALL): | $(CBV2_LOG_DIR)
 	@ echo "Fetching the coreboot rev $(CBV2_TAG) code..."
 	@ mkdir -p $(SOURCE_DIR)/coreboot
 	@ $(BIN_DIR)/fetchsvn.sh $(CBV2_URL) $(SOURCE_DIR)/coreboot \

@@ -15,7 +15,7 @@ NRV2B_BUILD_LOG=$(NRV2B_LOG_DIR)/build.log
 NRV2B_FETCH_LOG=$(NRV2B_LOG_DIR)/fetch.log
 endif
 
-$(SOURCE_DIR)/$(NRV2B_TARBALL):
+$(SOURCE_DIR)/$(NRV2B_TARBALL): | $(NRV2B_LOG_DIR)
 	@ mkdir -p $(SOURCE_DIR)/nrv2b
 	@ $(BIN_DIR)/fetchsvn.sh $(NRV2B_URL) $(SOURCE_DIR)/nrv2b \
 	$(NRV2B_TAG) $@ > $(NRV2B_FETCH_LOG) 2>&1

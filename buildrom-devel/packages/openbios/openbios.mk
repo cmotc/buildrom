@@ -31,7 +31,7 @@ ifeq ($(HAVE_FCODE_UTILS),n)
 $(error To build OpenBIOS, you need to install 'fcode-utils')
 endif
 
-$(SOURCE_DIR)/$(OPENBIOS_TARBALL):
+$(SOURCE_DIR)/$(OPENBIOS_TARBALL): | $(OPENBIOS_LOG_DIR)
 	@ echo "Fetching OpenBIOS..."
 	@ echo "SVN Checkout rev $(OPENBIOS_SVN_TAG)"
 	@ $(BIN_DIR)/fetchsvn.sh $(OPENBIOS_SVN_URL) $(SOURCE_DIR)/openbios \

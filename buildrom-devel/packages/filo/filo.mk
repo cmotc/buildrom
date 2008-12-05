@@ -24,7 +24,7 @@ else
 	FILO_CONFIG = $(FILO_SRC_DIR)/configs/defconfig
 endif
 
-$(SOURCE_DIR)/$(FILO_TARBALL): 
+$(SOURCE_DIR)/$(FILO_TARBALL): | $(FILO_LOG_DIR)
 	@ mkdir -p $(SOURCE_DIR)/filo
 	@ $(BIN_DIR)/fetchsvn.sh $(FILO_URL) $(SOURCE_DIR)/filo \
 	$(FILO_TAG) $(SOURCE_DIR)/$(FILO_TARBALL) \
@@ -75,7 +75,7 @@ endif
 filo-distclean:
 	@ rm -rf $(FILO_DIR)/*
 
-filo-extract: $(FILO_STAMP_DIR)/.patched
+filo-extract: | $(FILO_STAMP_DIR)/.unpacked
 
 filo-config: | $(FILO_STAMP_DIR)/.configured
 ifeq ($(shell if [ -f $(PACKAGE_DIR)/filo/conf/customconfig--$(PAYLOAD)--$(COREBOOT_VENDOR)-$(COREBOOT_BOARD) ]; then echo 1; fi),1)

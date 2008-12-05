@@ -22,7 +22,7 @@ endif
 
 COREINFO_TARBALL=coreinfo-svn-$(COREINFO_TAG).tar.gz
 
-$(SOURCE_DIR)/$(COREINFO_TARBALL):
+$(SOURCE_DIR)/$(COREINFO_TARBALL): | $(COREINFO_LOG_DIR)
 	@ mkdir -p $(SOURCE_DIR)/coreinfo
 	@ $(BIN_DIR)/fetchsvn.sh $(COREINFO_URL) $(SOURCE_DIR)/coreinfo \
 	$(COREINFO_TAG) $(SOURCE_DIR)/$(COREINFO_TARBALL) \

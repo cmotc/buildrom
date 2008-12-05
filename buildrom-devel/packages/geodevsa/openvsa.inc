@@ -17,7 +17,7 @@ OPENVSA_BUILD_LOG=$(OPENVSA_LOG_DIR)/build.log
 OPENVSA_FETCH_LOG=$(OPENVSA_LOG_DIR)/fetch.log
 endif
 
-$(SOURCE_DIR)/$(OPENVSA_TARBALL):
+$(SOURCE_DIR)/$(OPENVSA_TARBALL): | $(OPENVSA_LOG_DIR)
 	@ mkdir -p $(SOURCE_DIR)/openvsa
 	@ mkdir -p $(OPENVSA_LOG_DIR)
 	@ echo "Fetching openvsa..."

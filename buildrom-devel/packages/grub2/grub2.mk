@@ -29,7 +29,7 @@ else
 	GRUB2_CONFIG = $(GRUB2_SRC_DIR)/configs/defconfig
 endif
 
-$(SOURCE_DIR)/$(GRUB2_TARBALL): 
+$(SOURCE_DIR)/$(GRUB2_TARBALL): | $(GRUB2_LOG_DIR)
 	@ mkdir -p $(SOURCE_DIR)/grub2
 	@ $(BIN_DIR)/fetchsvn.sh $(GRUB2_URL) $(SOURCE_DIR)/grub2 \
 	$(GRUB2_TAG) $(SOURCE_DIR)/$(GRUB2_TARBALL) \

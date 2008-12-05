@@ -48,7 +48,7 @@ CBV3_OUTPUT=$(CBV3_SRC_DIR)/build/coreboot.rom
 
 CBV3_PATCHES ?=
 
-$(SOURCE_DIR)/$(CBV3_TARBALL):
+$(SOURCE_DIR)/$(CBV3_TARBALL): | $(CBV3_LOG_DIR)
 	@ mkdir -p $(SOURCE_DIR)/coreboot-v3
 	@ $(BIN_DIR)/fetchsvn.sh $(CBV3_URL) \
 	$(SOURCE_DIR)/coreboot-v3 $(CBV3_TAG) \

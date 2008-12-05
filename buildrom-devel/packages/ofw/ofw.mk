@@ -26,7 +26,7 @@ endif
 # NOTE - this should be replaced by the GIT fetch or tarball fetch
 # as appropriate
 
-$(SOURCE_DIR)/$(OFW_TARBALL):
+$(SOURCE_DIR)/$(OFW_TARBALL): | $(OFW_LOG_DIR)
 	@ echo "Fetching OpenFirmware..."
 	@ echo "SVN Checkout rev $(OFW_SVN_TAG)"
 	@ $(BIN_DIR)/fetchsvn.sh $(OFW_SVN_URL) $(SOURCE_DIR)/ofw \
