@@ -1,5 +1,5 @@
 GRUB2_URL=svn://svn.savannah.gnu.org/grub/trunk/grub2
-GRUB2_TAG=1929
+GRUB2_TAG=1946
 
 GRUB2_DIR=$(BUILD_DIR)/grub2
 GRUB2_SRC_DIR=$(GRUB2_DIR)/svn
