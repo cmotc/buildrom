@@ -79,20 +79,23 @@ filo-extract: | $(FILO_STAMP_DIR)/.unpacked
 
 filo-config: | $(FILO_STAMP_DIR)/.configured
 ifeq ($(shell if [ -f $(PACKAGE_DIR)/filo/conf/customconfig--$(PAYLOAD)--$(COREBOOT_VENDOR)-$(COREBOOT_BOARD) ]; then echo 1; fi),1)
-	@ echo
-	@ echo "Found an existing custom configuration file:"
-	@ echo "  $(PACKAGE_DIR)/filo/conf/customconfig--$(PAYLOAD)--$(COREBOOT_VENDOR)-$(COREBOOT_BOARD)"
-	@ echo "Please modify this file by hand."
-	@ echo "Remove the above file and re-run this command if you want to create a new custom configuration from scratch for this payload/board."
-	@ echo
-else
+	@ cp -f $(PACKAGE_DIR)/filo/conf/customconfig--$(PAYLOAD)--$(COREBOOT_VENDOR)-$(COREBOOT_BOARD) $(FILO_SRC_DIR)/.config
+endif
+ifeq (filo,$(filter filo,$(PAYLOAD-y)))
 	@ echo "Configure filo..."
 	@ $(MAKE) -C $(FILO_SRC_DIR) menuconfig
 	@ cp -f $(FILO_SRC_DIR)/.config $(PACKAGE_DIR)/filo/conf/customconfig--$(PAYLOAD)--$(COREBOOT_VENDOR)-$(COREBOOT_BOARD)
 	@ echo
 	@ echo "Your custom FILO config has been saved as "
 	@ echo "  $(PACKAGE_DIR)/filo/conf/customconfig--$(PAYLOAD)--$(COREBOOT_VENDOR)-$(COREBOOT_BOARD)"
-	@ echo "Please edit it to your liking."
+	@ echo
+endif
+ifeq ($(shell if [ -f $(PACKAGE_DIR)/filo/conf/customconfig--$(PAYLOAD)--$(COREBOOT_VENDOR)-$(COREBOOT_BOARD) ]; then echo 1; fi),1)
+	@ echo
+	@ echo "Found an existing custom configuration file:"
+	@ echo "  $(PACKAGE_DIR)/filo/conf/customconfig--$(PAYLOAD)--$(COREBOOT_VENDOR)-$(COREBOOT_BOARD)"
+	@ echo "I've copied it back to the source directory for modification."
+	@ echo "Remove the above file and re-run this command if you want to create a new custom configuration from scratch for this payload/board."
 	@ echo
 endif
 
