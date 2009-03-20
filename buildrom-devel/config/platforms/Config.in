@@ -164,6 +164,13 @@ config PLATFORM_SUPERMICRO_H8DMR
        select PLATFORM
        select PLATFORM_SUPPORT_64BIT
 
+config PLATFORM_SUPERMICRO_H8DME
+       bool "Supermicro H8DME"
+       depends on VENDOR_SUPERMICRO
+       depends on COREBOOT_V2
+       select PLATFORM
+       select PLATFORM_SUPPORT_64BIT
+
 config PLATFORM_CHEETAH_FAM10
 	bool "AMD Serengeti-Cheetah with fam10 processor"
 	depends on VENDOR_AMD
