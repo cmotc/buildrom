@@ -11,7 +11,7 @@ NAME=$5
 
 if [ ! -d $DIR/.git ]; then 
 	echo "Cloning $URL..."
-	git-clone $URL $DIR
+	git clone $URL $DIR
 	if [ $? -ne 0 ]; then
 		echo "Couldn't clone $URL."
 		exit 1
@@ -22,10 +22,10 @@ fi
 
 export GIT_DIR=$DIR/.git
 
-git-fetch $URL
-git-fetch --tags $URL
-git-prune-packed
-git-pack-redundant --all | xargs -r rm
+git fetch $URL
+git fetch --tags $URL
+git prune-packed
+git pack-redundant --all | xargs -r rm
 
 # Make the tarball 
-git-tar-tree $TAG $NAME-$TAG | bzip2 > $TARBALL
+git tar-tree $TAG $NAME-$TAG | bzip2 > $TARBALL
