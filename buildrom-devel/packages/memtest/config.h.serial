@@ -1,9 +1,9 @@
-/* config.h - MemTest-86  Version 3.0
+/* config.h - MemTest-86  Version 3.3
  *
  * Compile time configuration options
  *
  * Released under version 2 of the Gnu Public License.
- * By Chris Brady, cbrady@sgi.com
+ * By Chris Brady
  */
 
 /* PARITY_MEM - Enables support for reporting memory parity errors */
@@ -15,11 +15,11 @@
 /*	to enable. */
 #define SERIAL_CONSOLE_DEFAULT 1
 
+/* SERIAL_TTY - The default serial port to use. 0=ttyS0, 1=ttyS1 */ 
+#define SERIAL_TTY 0
+
 /* SERIAL_BAUD_RATE - Baud rate for the serial console */
 #define SERIAL_BAUD_RATE 115200
-
-/* BEEP_MODE - Beep on error. Default off, Change to 1 to enable */
-#define BEEP_MODE 0
 
 /* SCRN_DEBUG - extra check for SCREEN_BUFFER
  */ 
