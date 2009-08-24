@@ -1,8 +1,10 @@
---- a/src/config.h	2008-07-21 10:56:45.000000000 -0600
-+++ b/src/config.h	2008-07-21 10:59:39.000000000 -0600
-@@ -13,13 +13,13 @@
- #endif
- 
+Index: seabios-master/src/config.h
+===================================================================
+--- seabios-master.orig/src/config.h
++++ seabios-master/src/config.h
+@@ -15,12 +15,12 @@
+ // Configure for use with KVM.
+ #define CONFIG_KVM 0
  // Configure as a coreboot payload.
 -#define CONFIG_COREBOOT 0
 +#define CONFIG_COREBOOT 1
@@ -10,10 +12,31 @@
  // Control how verbose debug output is.
 -#define CONFIG_DEBUG_LEVEL 1
 +#define CONFIG_DEBUG_LEVEL 6
- 
  // Send debugging information to serial port
 -#define CONFIG_DEBUG_SERIAL 0
 +#define CONFIG_DEBUG_SERIAL 1
+ // Screen writes are also sent to debug ports.
+ #define CONFIG_SCREEN_AND_DEBUG 1
  
- // Support for int13 floppy drive access
- #define CONFIG_FLOPPY_SUPPORT 1
+@@ -64,10 +64,10 @@
+ #define CONFIG_PS2_MOUSE 1
+ // If the target machine has multiple independent root buses, the
+ // extra buses may be specified here.
+-#define CONFIG_PCI_ROOT1 0x00
++#define CONFIG_PCI_ROOT1 0x00 // Especially for K8 machines (buses 0x40 & 0x80)
+ #define CONFIG_PCI_ROOT2 0x00
+ // Support searching coreboot flash format.
+-#define CONFIG_COREBOOT_FLASH 0
++#define CONFIG_COREBOOT_FLASH 0 // 1 for CBFS
+ // Support floppy images in the coreboot flash.
+ #define CONFIG_FLASH_FLOPPY 1
+ // Support the lzma decompression algorighm.
+@@ -75,7 +75,7 @@
+ // Support finding and running option roms during post.
+ #define CONFIG_OPTIONROMS 1
+ // Set if option roms are already copied to 0xc0000-0xf0000
+-#define CONFIG_OPTIONROMS_DEPLOYED 1
++#define CONFIG_OPTIONROMS_DEPLOYED 1 // 0 if not running on an emulator
+ // When option roms are not pre-deployed, SeaBIOS can copy an optionrom
+ // from flash for up to 2 devices.
+ #define OPTIONROM_VENDEV_1 0x00000000
