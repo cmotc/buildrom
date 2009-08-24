@@ -3,11 +3,12 @@
 # libpayload version: 0.1.0
 # Wed Oct 29 09:53:16 2008
 #
-CONFIG_TARGET_I386=y
 
 #
 # Architecture Options
 #
+CONFIG_TARGET_I386=y
+# CONFIG_TARGET_POWERPC is not set
 CONFIG_MULTIBOOT=y
 
 #

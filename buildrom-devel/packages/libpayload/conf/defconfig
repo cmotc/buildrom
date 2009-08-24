@@ -1,13 +1,14 @@
 #
 # Automatically generated make config: don't edit
-# libpayload version: 0.1.0
-# Wed Oct 29 09:53:16 2008
+# libpayload version: 0.2.0
+# Thu Aug 20 14:10:16 2009
 #
-CONFIG_TARGET_I386=y
 
 #
 # Architecture Options
 #
+CONFIG_TARGET_I386=y
+# CONFIG_TARGET_POWERPC is not set
 CONFIG_MULTIBOOT=y
 
 #

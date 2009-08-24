@@ -1,5 +1,5 @@
 LIBPAYLOAD_URL=svn://coreboot.org/repos/trunk/payloads/libpayload
-LIBPAYLOAD_TAG=3950
+LIBPAYLOAD_TAG=4500
 
 LIBPAYLOAD_DIR=$(BUILD_DIR)/libpayload
 LIBPAYLOAD_SRC_DIR=$(LIBPAYLOAD_DIR)/svn
@@ -40,6 +40,7 @@ $(LIBPAYLOAD_STAMP_DIR)/.unpacked: $(SOURCE_DIR)/$(LIBPAYLOAD_TARBALL) | $(LIBPA
 	@ touch $@
 
 $(LIBPAYLOAD_SRC_DIR)/.config: $(LIBPAYLOAD_STAMP_DIR)/.unpacked
+	@ echo "Configuring libpayload..."
 	@ cp $(LIBPAYLOAD_CONFIG) $@
 	@ make -C $(LIBPAYLOAD_SRC_DIR) oldconfig >  $(LIBPAYLOAD_BUILD_LOG) 2>&1
 
