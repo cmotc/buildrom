@@ -48,7 +48,7 @@ ifeq ($(findstring customconfig,$(GRUB2_CONFIG)),customconfig)
 	@ echo "Using custom config $(GRUB2_CONFIG)"
 endif
 	@ echo "Building grub2..."
-	@ ln -s $(GRUB2_SRC_DIR)/config.log $(GRUB2_LOG_DIR)
+	@ ln -sf $(GRUB2_SRC_DIR)/config.log $(GRUB2_LOG_DIR)
 	@ (cd $(GRUB2_SRC_DIR) ; sh ./autogen.sh >> $(GRUB2_BUILD_LOG) 2>&1)
 	@ (cd $(GRUB2_SRC_DIR) ; export LIBS= CC= LDFLAGS= CFLAGS=; ./configure --with-platform=coreboot --prefix=$(STAGING_DIR) >> $(GRUB2_BUILD_LOG) 2>&1)
 	@ make -C $(GRUB2_SRC_DIR) >> $(GRUB2_BUILD_LOG) 2>&1
