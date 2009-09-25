@@ -106,7 +106,7 @@ PKG_extract=$(patsubst %, %-extract, $(PKGLIST))
 # by coreboot, for v3 it is built by us, so we have ifdef magic here
 
 ifeq ($(CONFIG_COREBOOT_V2),y)
-rom: $(HOSTTOOLS-y) payload $(COREBOOT-y)
+rom: payload $(COREBOOT-y)
 else
 
 # If compressing the payload in v3, parse the elf and tell lar to compress it.
@@ -115,7 +115,7 @@ else
 LAR_PAYLOAD_FLAGS-y=-a -e
 LAR_PAYLOAD_FLAGS-$(CONFIG_USE_LZMA) += -C lzma
 
-rom: $(HOSTTOOLS-y) payload $(COREBOOT-y)
+rom: payload $(COREBOOT-y)
 	@ mkdir -p $(shell dirname $(TARGET_ROM_FILE))
 	@ cp $(CBV3_OUTPUT) $(TARGET_ROM_FILE)
 	@ $(STAGING_DIR)/bin/lar $(LAR_PAYLOAD_FLAGS-y) $(TARGET_ROM_FILE) $(PAYLOAD_TARGET):normal/payload
@@ -133,7 +133,7 @@ endif
 custom:
 custom-clean:
 
-payload: $(DEPENDS-y) $(PAYLOAD_TARGET)
+payload: $(HOSTTOOLS-y) $(DEPENDS-y) $(PAYLOAD_TARGET)
 
 extract: $(PKG_extract)
 

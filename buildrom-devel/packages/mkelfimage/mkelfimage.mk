@@ -57,8 +57,9 @@ mkelfimage: $(STAGING_DIR)/sbin/mkelfImage
 
 mkelfimage-clean:
 	@ rm -f $(MKELFIMAGE_STAMP_DIR)/.configured
+	@ rm -f $(STAGING_DIR)/sbin/mkelfImage
 ifneq ($(wildcard $(MKELFIMAGE_SRC_DIR)/Makefile),)
-	$(MAKE) -C $(MKELFIMAGE_SRC_DIR) clean 
+	@ $(MAKE) -C $(MKELFIMAGE_SRC_DIR) clean 
 endif
 
 mkelfimage-distclean:
