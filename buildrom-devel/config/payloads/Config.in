@@ -143,6 +143,12 @@ config BUSYBOX
 	help
 	  Say 'Y' here to include the busybox tools
 
+config LAB_CMDLINE
+	string "Kernel command line for LAB"
+	default "console=tty0 earlyprintk=serial,ttyS0,115200,keep rdinit=/linuxrc"
+	help
+	  Specify the kernel command line to use for the kernel.  This is
+	  passed to mkelfimage when the kernel is built.
 endmenu
 
 menu "Memtest86 Configuration"

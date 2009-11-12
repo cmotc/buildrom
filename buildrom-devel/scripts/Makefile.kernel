@@ -4,7 +4,7 @@ $(OUTPUT_DIR)/kernel-payload.elf: $(PAYLOAD-y)
 	@ echo "Building the ELF payload..."
 	@ rm -f $@
 	@ $(STAGING_DIR)/sbin/mkelfImage --type bzImage-i386 \
-	--command-line=$(COMMAND_LINE) $(OUTPUT_DIR)/bzImage $@
+	--command-line=$(CONFIG_CMDLINE) $(OUTPUT_DIR)/bzImage $@
 	@ chmod 0644 $@
 
 $(OUTPUT_DIR)/kernel-payload.elf.lzma: $(OUTPUT_DIR)/kernel-payload.elf

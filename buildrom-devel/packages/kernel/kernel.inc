@@ -87,6 +87,11 @@ $(KERNEL_STAMP_DIR) $(KERNEL_LOG_DIR):
 
 generic-kernel: $(OUTPUT_DIR)/bzImage $(OUTPUT_DIR)/vmlinux $(KERNEL_STAMP_DIR)/.headers
 
+kernel-refresh:
+	@ echo "Refreshing kernel..."
+	@ touch $(KERNEL_SRC_DIR)/.config
+	@ $(MAKE) payload
+
 generic-kernel-clean:
 	@ echo "Cleaning kernel..."
 	@ rm -f $(KERNEL_STAMP_DIR)/.headers
