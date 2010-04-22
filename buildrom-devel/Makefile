@@ -107,7 +107,19 @@ PKG_extract=$(patsubst %, %-extract, $(PKGLIST))
 
 ifeq ($(CONFIG_COREBOOT_V2),y)
 rom: payload $(COREBOOT-y)
-else
+endif
+
+ifeq ($(CONFIG_PAYLOAD_ONLY),y)
+rom: payload
+	@ echo ""
+	@ echo "CONFIG_PAYLOAD_ONLY was set"
+	@ echo ""
+	@ echo "1. cp deploy/your_payload.elf coreboot/svn/payload.elf"
+	@ echo "2. configure the payload to be payload.elf and build it."
+	@ echo ""
+endif
+
+ifeq ($(CONFIG_COREBOOT_V3),y)
 
 # If compressing the payload in v3, parse the elf and tell lar to compress it.
 # Parsing the elf without compression bloats the ROM with bss zeroes.
@@ -154,7 +166,9 @@ INCMK=$(foreach mk,$(DEPENDS-y) $(PAYLOAD-y) $(HOSTTOOLS-y),$(PACKAGE_DIR)/$(mk)
 
 ifeq ($(CONFIG_COREBOOT_V2),y)
 INCMK += $(PACKAGE_DIR)/coreboot-v2/coreboot-v2.mk
-else
+endif
+
+ifeq ($(CONFIG_COREBOOT_V3),y)
 INCMK += $(PACKAGE_DIR)/coreboot-v3/coreboot-v3.mk
 endif
 

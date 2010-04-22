@@ -67,7 +67,13 @@ menu "coreboot configuration"
 
 choice
 	prompt "coreboot version"
-	default COREBOOT_V2
+	default PAYLOAD_ONLY
+
+config PAYLOAD_ONLY
+	bool "payload only"
+	help
+		Coreboot is a lot easier to build for v4.  Copy the payload from
+		deploy/ to coreboot/svn/payload.elf and build it.
 
 config COREBOOT_V2
 	bool "coreboot v2"
